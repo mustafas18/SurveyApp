@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.cspro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8E0BF0A7-B836-461C-9918-A45675CAFAF3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{D9C2E063-6BAB-489D-A3F3-8E5E775BA301}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5810EF7F-7E42-463C-AC81-6763497E831C} = {272B8400-F362-4A36-8D26-0B9E2A11D528}
+		{D9C2E063-6BAB-489D-A3F3-8E5E775BA301} = {8E0BF0A7-B836-461C-9918-A45675CAFAF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83859086-41E6-4BDE-8777-F78748E506DF}
