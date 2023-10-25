@@ -10,6 +10,8 @@ namespace Core.Models
     public class Sheet:BaseEntity,IAggregateRoot
     {
         public string SheetId { get; set; }
+        public string Name { get; set; }
+        public string Icon { get; set; }
         public int Version { get; set; }
         public int TemplateId { get; set; }
         public string UserId { get; set; }
