@@ -8,18 +8,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Interfaces.IRepositories;
+using Ardalis.Specification.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
-public class EfRepository<TEntity> : RepositoryBase<TEntity>, IReadRepository<TEntity> where TEntity : class, IAggregateRoot
+public class EfRepository<TEntity>: RepositoryBase<TEntity>, IRepository<TEntity>
 {
     private readonly AppDbContext _context;
-    private readonly IMemoryCache _memoryCache;
 
-    public EfRepository(AppDbContext dbContext,
-        IMemoryCache memoryCache) : base(dbContext)
+    public EfRepository(AppDbContext dbContext) : base(dbContext)
     {
         _context = dbContext;
-        _memoryCache = memoryCache;
     }
 
     public void Add(TEntity entity)
@@ -105,5 +104,8 @@ public class EfRepository<TEntity> : RepositoryBase<TEntity>, IReadRepository<TE
 
     }
 
-
+    Task<IEnumerable<TEntity>> GetAll()
+    {
+        throw new NotImplementedException();
+    }
 }

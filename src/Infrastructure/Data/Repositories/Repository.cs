@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
 {
-    public class Repository<T> where T : class, IRepository
+    public class Repository<T> where T:class, IRepository<T>
     {
         private readonly DapperContext _db;
         public Repository(DapperContext db)
