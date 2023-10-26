@@ -12,7 +12,7 @@ using Core.Interfaces.IRepositories;
 using Ardalis.Specification.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
-public class EfRepository<TEntity>: RepositoryBase<TEntity>, IRepository<TEntity>
+public class EfRepository<TEntity>: RepositoryBase<TEntity>, IEfRepository<TEntity>
 {
     private readonly AppDbContext _context;
 

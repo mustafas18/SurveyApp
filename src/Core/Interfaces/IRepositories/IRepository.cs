@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace Core.Interfaces.IRepositories
 {
     public interface IRepository<T> where T : class
-{
     {
+
         Task<IEnumerable<T>> GetAll();
     }
 }

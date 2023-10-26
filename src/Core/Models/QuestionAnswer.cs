@@ -15,9 +15,6 @@ namespace Core.Models
         public int Amount { get; set; }
         public int MinValue { get; set; }
         public int MaxValue { get; set; }
-        public string Text { get; set; }
-        public string File { get; set; }
-        public string FileType { get; set; }
 
     }
 }
