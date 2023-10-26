@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.IRepositories
 {
-    internal interface IEfRepository<TEntity> : IRepositoryBase<T> where T : class, IAggregateRoot
+    public interface IEfRepository<TEntity> : IRepositoryBase<TEntity> where TEntity : class, IAggregateRoot
     {
         void Add(TEntity entity);
         Task AddAsync(TEntity entity);
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null)
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null);
 
     }
 }
