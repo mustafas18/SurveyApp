@@ -45,7 +45,7 @@ namespace UnitTest.RepositoryTest
 
             // Act
             var repository = new EfRepository<Sheet>(dbContext.Object);
-            repository.Add(sheet);
+            repository.AddAsync(sheet);
 
             //Assert
             dbSetUserMock.Verify(x => x.Add(It.Is<Sheet>(y => y == sheet)));
