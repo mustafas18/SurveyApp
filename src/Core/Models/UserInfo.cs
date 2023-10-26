@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class UserInfo:BaseEntity
+    public class UserInfo : BaseEntity
     {
-
-            public string AppUserId { get; set; }
+        public string AppUserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Gender Gender { get; set; }
+        public GenderEnum Gender { get; set; }
         public string Birthday { get; set; }
 
         public string Country { get; set; }
@@ -27,5 +26,6 @@ namespace Core.Models
         public string AtmCard { get; set; }
         public byte[] CVFileData { get; set; }
         public string FileContent { get; set; }
+        public bool Deleted { get; set; }
     }
 }

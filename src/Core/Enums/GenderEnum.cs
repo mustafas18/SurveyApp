@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Enums
 {
-    public enum Gender
+    public enum GenderEnum
     {
         Male,
         Female,
