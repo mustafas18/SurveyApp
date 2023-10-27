@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Core.Enums
 {
-    public enum VariableTypeEnum
+    public enum MessureEnum
     {
-        Numeric
+        Scale,
     }
 }

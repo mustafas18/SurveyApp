@@ -12,9 +12,7 @@ namespace Core.Models
         public string Text { get; set; }
         public string File { get; set; }
         public string FileType { get; set; }
-        public int Amount { get; set; }
-        public int MinValue { get; set; }
-        public int MaxValue { get; set; }
+        public int Value { get; set; }
 
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace Core
 {
     public static class AppConstants
     {
