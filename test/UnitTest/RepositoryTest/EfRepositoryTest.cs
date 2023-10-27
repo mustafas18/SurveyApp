@@ -27,7 +27,7 @@ namespace UnitTest.RepositoryTest
 
             // Act
             var repository = new EfRepository<Sheet>(dbContext.Object);
-            repository.Add(sheet);
+            repository.AddAsync(sheet);
 
             //Assert
             dbContext.Verify(x => x.Set<Sheet>());

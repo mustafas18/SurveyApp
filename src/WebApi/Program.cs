@@ -1,8 +1,13 @@
 ﻿using Core.Models;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
 
 namespace WebApi
 {
@@ -36,7 +41,7 @@ namespace WebApi
            .AddDefaultTokenProviders();
 
             // Add services to the container.
-            builder.Services.AddMyServices();
+            //builder.Services.AddMyServices();
             builder.Services.AddCors(opt =>
             {
                 opt.AddPolicy("myCorsPolicy", policy =>
@@ -57,11 +62,12 @@ namespace WebApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
+
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Teaching Platform API",
+                    Title = "Survey Platform API",
                     Version = "v1",
                     Description = "پلتفرم آموزش آنلاین",
                 });
@@ -112,9 +118,9 @@ namespace WebApi
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = AppConstants.validIssuer,
-                    ValidAudience = AppConstants.validAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConstants.securityKey))
+                    ValidIssuer = AppConstants.ValidIssuer,
+                    ValidAudience = AppConstants.ValidAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConstants.SecurityKey))
                 };
             });
             builder.Services.AddResponseCaching();
@@ -125,11 +131,19 @@ namespace WebApi
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            //if (app.Environment.IsDevelopment())
+            //{
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            //}
 
+            //app.UseHttpsRedirection();
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
