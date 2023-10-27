@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces.IRepositories;
-using Core.Models;
+using Core.Entities;
 using Dapper;
 using System;
 using System.Collections.Generic;

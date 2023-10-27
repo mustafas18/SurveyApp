@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Models
+namespace Core.Entities
 {
     public class UserInfo : BaseEntity
     {
@@ -14,7 +14,7 @@ namespace Core.Models
         public string LastName { get; set; }
         public GenderEnum Gender { get; set; }
         public string Birthday { get; set; }
-
+        public string PictureBase64 { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
         public int ResearchInterestId { get; set; }

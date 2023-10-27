@@ -1,9 +1,8 @@
-﻿using Core;
+﻿using Core.Constants;
 using Core.Dtos;
 using Core.Interfaces;
-using Core.Models;
+using Core.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
@@ -44,7 +43,7 @@ namespace Infrastructure.Identity
                 throw new Exception("UserName or Password is wrong.");
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(AppConstants.SecurityKey);
+            var key = Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey);
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserName) };
 
@@ -56,10 +55,10 @@ namespace Infrastructure.Identity
 
 
             var tokenOptions = new JwtSecurityToken(
-               issuer: AppConstants.ValidIssuer,
-               audience: AppConstants.ValidAudience,
+               issuer: AuthorizationConstants.ValidIssuer,
+               audience: AuthorizationConstants.ValidAudience,
                claims: claims,
-               expires: DateTime.Now.AddHours(Convert.ToDouble(AppConstants.ExpiryInHours)),
+               expires: DateTime.Now.AddHours(Convert.ToDouble(AuthorizationConstants.ExpiryInHours)),
                signingCredentials: signingCredentials
                );
 

@@ -1,6 +1,6 @@
-﻿namespace Core
+﻿namespace Core.Constants
 {
-    public static class AppConstants
+    public static class AuthorizationConstants
     {
         public const string ValidIssuer = "issuer";
         public const string ValidAudience = "audience";

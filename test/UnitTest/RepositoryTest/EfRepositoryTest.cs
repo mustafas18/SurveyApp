@@ -1,5 +1,5 @@
-﻿using Core.Models;
-using Core.Models;
+﻿using Core.Entities;
+using Core.Entities;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;

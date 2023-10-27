@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Core.Enums;
 using Core.Interfaces;
 
-namespace Core.Models
+namespace Core.Entities
 {
     public class Question : BaseEntity, IAggregateRoot
     {
@@ -15,9 +15,9 @@ namespace Core.Models
         public QuestionTypeEnum Type { get; set; }
         public string UserId { get; set; }
         public string QuestionText { get; set; }
+        public int VariableId { get; set; }
         public string QuestionFileUri { get; set; }
         public string QuestionFileContentType { get; set; }
-        public int VariableId { get; set; }
         public List<QuestionAnswer> QuestionAnswers { get; set; }
         public int ResponseTime { get; set; }
         public bool Required { get; set; }

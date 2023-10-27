@@ -1,7 +1,7 @@
 ﻿using Core.Dtos;
 using System.Threading.Tasks;
 
-namespace Microsoft.eShopWeb.ApplicationCore.Interfaces;
+namespace Core.Interfaces;
 
 public interface ITokenClaimsService
 {

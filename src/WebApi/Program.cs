@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using Core.Constants;
+using Core.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,7 +14,7 @@ namespace WebApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             ConfigurationManager Configuration = builder.Configuration;
@@ -69,7 +70,7 @@ namespace WebApi
                 {
                     Title = "Survey Platform API",
                     Version = "v1",
-                    Description = "پلتفرم آموزش آنلاین",
+                    Description = "پلتفرم پرسشنامه آنلاین",
                 });
                 // To Enable authorization using Swagger (JWT)  
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -118,9 +119,9 @@ namespace WebApi
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = AppConstants.ValidIssuer,
-                    ValidAudience = AppConstants.ValidAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConstants.SecurityKey))
+                    ValidIssuer = AuthorizationConstants.ValidIssuer,
+                    ValidAudience = AuthorizationConstants.ValidAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey))
                 };
             });
             builder.Services.AddResponseCaching();
@@ -129,6 +130,15 @@ namespace WebApi
 
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var scopedProvider = scope.ServiceProvider;
+                var userManager = scopedProvider.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = scopedProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var identityContext = scopedProvider.GetRequiredService<AppDbContext>();
+                await AppDbContextSeed.SeedAsync(identityContext, userManager, roleManager);
+            }
 
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
