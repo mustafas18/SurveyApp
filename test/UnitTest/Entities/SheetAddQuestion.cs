@@ -18,10 +18,10 @@ namespace UnitTest.Entities
 
             // Act
             sheet.AddItem(_sheetId, new Question {SheetId = _sheetId, Id=1 });
-            var firstItem = sheet.Questions.Single();
+            var firstQuestion = sheet.Questions.Single();
 
             // Asset
-            Assert.Equal(_sheetId, firstItem.SheetId);
+            Assert.Equal(_sheetId, firstQuestion.SheetId);
         }
 
     }

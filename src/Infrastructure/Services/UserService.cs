@@ -20,12 +20,12 @@ namespace Infrastructure.Services
         private readonly ITokenClaimsService _token;
 
         public UserService(UserManager<AppUser> userManager,
-            SignInManager<AppUser> _signInManager,
+            SignInManager<AppUser> signInManager,
             UserRepository userRpository,
             ITokenClaimsService token)
         {
             _userManager = userManager;
-            this.signInManager = signInManager;
+            _signInManager = signInManager;
             _userRpository = userRpository;
             _token = token;
         }

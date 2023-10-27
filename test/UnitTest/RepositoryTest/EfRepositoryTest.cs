@@ -14,7 +14,10 @@ namespace UnitTest.RepositoryTest
 {
     public class EfRepositoryTest
     {
-
+        /// <summary>
+        /// This class mock the DbContext and DbSet, then the class call the Add method of the repository,
+        /// and finally, it is verified that those methods from mock objects have been called.
+        /// </summary>
         [Fact]
         public void AddSheet_Should_Call_DbContext()
         {
