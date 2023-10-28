@@ -47,8 +47,22 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = _sheetService.CreateSheetAsync(_mapper.Map<Sheet>(sheetViewModel));
+                var result = _sheetService.CreateAsync(_mapper.Map<Sheet>(sheetViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetById(string sheetId)
+        {
+            try
+            {
+                var result = _sheetService.GetByIdAsync(sheetId);
+                return StatusCode(200, CustomResult.Ok(_mapper.Map<SheetViewModel>(result)));
             }
             catch (Exception ex)
             {

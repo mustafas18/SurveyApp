@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Core.Interfaces.IRepositories
     public interface ISheetRepository
     {
         Task<IEnumerable<Sheet>> GetSheetList();
-        Task<Sheet> GetSheetById(int sheetId);
+        Task<SheetDto> GetSheetById(string sheetId);
 
         /// <summary>
         /// Get the latest version of the sheet

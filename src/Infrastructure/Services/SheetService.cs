@@ -8,18 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Core.Dtos;
 
 namespace Infrastructure.Services
 {
     public class SheetService : ISheetService
     {
         private readonly IEfRepository<Sheet> _sheetRepository;
+        private readonly ISheetRepository _sheetReadRepository;
 
-        public SheetService(IEfRepository<Sheet> sheetRepository)
+        public SheetService(IEfRepository<Sheet> sheetRepository,
+                ISheetRepository sheetReadRepository)
         {
             _sheetRepository = sheetRepository;
+            _sheetReadRepository = sheetReadRepository;
         }
-        public async Task<Sheet> CreateSheetAsync(Sheet sheet)
+        public async Task<Sheet> CreateAsync(Sheet sheet)
         {
             Guard.Against.Null(sheet);
             sheet.CreateTime = DateTime.Now;
@@ -40,6 +44,16 @@ namespace Infrastructure.Services
             await _sheetRepository.UpdateAsync(sheet);
             return sheet;
 
+        }
+
+        public async Task<SheetDto> GetByIdAsync(string sheetId)
+        {
+          return await _sheetReadRepository.GetSheetById(sheetId);
+        }
+
+        public Task<SheetDto> GetByIdWithQuestionsAsync(string sheetId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

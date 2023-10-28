@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Dtos;
 using Core.Entities;
 using WebApi.ViewModels;
 
@@ -10,6 +11,8 @@ namespace WebApi.Profiles
         {
             CreateMap<SheetViewModel, Sheet>();
             CreateMap<Sheet, SheetViewModel>();
+            CreateMap<SheetDto, SheetViewModel>();
+            CreateMap<SheetViewModel, SheetDto>();
         }
        
     }

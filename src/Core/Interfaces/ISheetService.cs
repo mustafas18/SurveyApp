@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Core.Interfaces
 {
     public interface ISheetService
     {
-        Task<Sheet> CreateSheetAsync(Sheet sheet);
+        Task<Sheet> CreateAsync(Sheet sheet);
+        Task<SheetDto> GetByIdAsync(string sheetId);
+        Task<SheetDto> GetByIdWithQuestionsAsync(string sheetId);
         Task<Sheet> AddQuestionToSheet(string sheetId, Question question);
     }
 }

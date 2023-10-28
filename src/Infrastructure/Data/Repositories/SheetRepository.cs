@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Core.Dtos;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -30,18 +31,18 @@ FROM Sheets";
                 return sheets.ToList();
             }
         }
-        public async Task<Sheet> GetSheetById(int sheetId)
+        public async Task<SheetDto> GetSheetById(int sheetId)
         {
             var query = @"
 SELECT 
-    SheetId,Name,Icon,UserId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
+    SheetId,Title,Icon,TemplateId,UserId,LanguageId,WelcomePageId,EndPageId,Link,DurationTime,DeadlineTime,CreateTime
 FROM Sheets
 WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId AND Deleted=0)";
             var dynamicParameters = new DynamicParameters();
             dynamicParameters.Add("SheetId", sheetId);
             using (var connection = _db.CreateConnection())
             {
-                var sheet = await connection.QueryFirstOrDefaultAsync<Sheet>(query,dynamicParameters);
+                var sheet = await connection.QueryFirstOrDefaultAsync<SheetDto>(query,dynamicParameters);
                 return sheet;
             }
         }
