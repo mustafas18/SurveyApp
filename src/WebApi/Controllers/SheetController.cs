@@ -43,7 +43,7 @@ namespace WebApi.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> CreateSheet([FromForm] SheetViewModel sheetViewModel)
+        public async Task<IActionResult> Create([FromForm] SheetViewModel sheetViewModel)
         {
             try
             {
