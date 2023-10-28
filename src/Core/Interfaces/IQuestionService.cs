@@ -10,6 +10,6 @@ namespace Core.Interfaces
 {
     public interface IQuestionService
     {
-        Task CreateOrderAsync(int sheetId, Question question);
+        Task<Question> CreateAsync(string sheetId, Question question);
     }
 }

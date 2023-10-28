@@ -57,6 +57,10 @@ WHERE SheetId=@SheetId AND Deleted=0";
             using (var connection = _db.CreateConnection())
             {
                 var result = connection.QueryFirstOrDefault<int>(query, dynamicParameters);
+                if (result == 0 || result==null)
+                {
+                    return 1;
+                }  
                 return result;
             }
         }
