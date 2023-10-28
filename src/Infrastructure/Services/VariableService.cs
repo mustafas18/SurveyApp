@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
+using Infrastructure.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,15 @@ namespace Infrastructure.Services
     public class VariableService : IVariableService
     {
         private readonly IEfRepository<Variable> _varRepository;
+        private readonly IVariableRepository _varDapperRepository;
         private readonly ISheetRepository _sheetRepository;
 
         public VariableService(IEfRepository<Variable> varRepository,
-            ISheetRepository sheetRepository)
+            ISheetRepository sheetRepository,
+            IVariableRepository varDapperRepository)
         {
             _varRepository = varRepository;
+            _varDapperRepository = varDapperRepository;
             _sheetRepository = sheetRepository;
         }
         public async Task<Variable> Create(Variable variable)
@@ -27,6 +31,12 @@ namespace Infrastructure.Services
             variable.SheetVersion = _sheetRepository.GetLatestVersion(variable.SheetId);
             await _varRepository.AddAsync(variable);
             return variable;
+        }
+        public async Task<Variable> GetByName(string name)
+        {
+            Guard.Against.Null(name);
+            var result = await _varDapperRepository.GetByName(name);
+            return result;
         }
     }
 }

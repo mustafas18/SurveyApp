@@ -31,7 +31,7 @@ FROM Sheets";
                 return sheets.ToList();
             }
         }
-        public async Task<SheetDto> GetSheetById(int sheetId)
+        public async Task<SheetDto> GetSheetById(string sheetId)
         {
             var query = @"
 SELECT 
