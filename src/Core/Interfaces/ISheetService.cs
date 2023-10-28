@@ -10,7 +10,7 @@ namespace Core.Interfaces
 {
     public interface ISheetService
     {
-        Task CreateSheetAsync(Sheet sheet);
+        Task<Sheet> CreateSheetAsync(Sheet sheet);
         Task<Sheet> AddQuestionToSheet(string sheetId, Question question);
     }
 }

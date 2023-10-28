@@ -1,4 +1,7 @@
-﻿using Core.Dtos;
+﻿using AutoMapper;
+using Core.Dtos;
+using Core.Entities;
+using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +14,19 @@ namespace WebApi.Controllers
     public class SheetController : BaseApiController
     {
         private readonly ISheetRepository sheetRepository;
+        private readonly IEfRepository<Sheet> _efRepository;
+        private readonly ISheetService _sheetService;
+        private readonly IMapper _mapper;
 
-        public SheetController(ISheetRepository sheetRepository)
+        public SheetController(ISheetRepository sheetRepository,
+            IEfRepository<Sheet> efRepository,
+            ISheetService sheetService,
+            IMapper mapper)
         {
             this.sheetRepository = sheetRepository;
+            _efRepository = efRepository;
+            _sheetService = sheetService;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> GetSheetList()
@@ -27,6 +39,20 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, CustomResult.InternalError(ex));                
+            }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateSheet([FromForm] SheetViewModel sheetViewModel)
+        {
+            try
+            {
+                var result = _sheetService.CreateSheetAsync(_mapper.Map<Sheet>(sheetViewModel));
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
             }
 
         }

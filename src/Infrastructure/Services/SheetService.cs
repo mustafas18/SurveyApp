@@ -19,10 +19,14 @@ namespace Infrastructure.Services
         {
             _sheetRepository = sheetRepository;
         }
-        public async Task CreateSheetAsync(Sheet sheet)
+        public async Task<Sheet> CreateSheetAsync(Sheet sheet)
         {
             Guard.Against.Null(sheet);
+            sheet.CreateTime = DateTime.Now;
+            sheet.Version = 1;
+            sheet.SheetId = new Guid().ToString();
             await _sheetRepository.AddAsync(sheet);
+            return sheet;
         }
         public async Task<Sheet> AddQuestionToSheet(string sheetId, Question question)
         {
