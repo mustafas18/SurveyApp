@@ -27,6 +27,14 @@ namespace Infrastructure.Services
                 InnerMessage=ex.InnerException?.ToString()
             });
         }
+        public static CustomResultViewModel Invalid(Exception ex)
+        {
+            return new CustomResultViewModel(null, new ErrorViewModel
+            {
+                Message = ex.Message,
+                InnerMessage = ex.InnerException?.ToString()
+            });
+        }
 
     }
 }
