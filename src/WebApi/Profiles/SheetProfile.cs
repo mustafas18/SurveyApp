@@ -9,6 +9,7 @@ namespace WebApi.Profiles
         public SheetProfile()
         {
             CreateMap<SheetViewModel, Sheet>();
+            CreateMap<Sheet, SheetViewModel>();
         }
        
     }
