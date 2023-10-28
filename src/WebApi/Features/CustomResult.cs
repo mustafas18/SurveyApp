@@ -20,6 +20,11 @@ namespace Infrastructure.Services
         {
             return new CustomResultViewModel(null, null);
         }
+        /// <summary>
+        /// 500 InternalError
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
         public static CustomResultViewModel InternalError(Exception ex)
         {
             return new CustomResultViewModel(null, new ErrorViewModel {
@@ -27,7 +32,25 @@ namespace Infrastructure.Services
                 InnerMessage=ex.InnerException?.ToString()
             });
         }
+        /// <summary>
+        /// 400 Invalid
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
         public static CustomResultViewModel Invalid(Exception ex)
+        {
+            return new CustomResultViewModel(null, new ErrorViewModel
+            {
+                Message = ex.Message,
+                InnerMessage = ex.InnerException?.ToString()
+            });
+        }
+        /// <summary>
+        /// 403 Forbidden
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public static CustomResultViewModel Forbidden(Exception ex)
         {
             return new CustomResultViewModel(null, new ErrorViewModel
             {
