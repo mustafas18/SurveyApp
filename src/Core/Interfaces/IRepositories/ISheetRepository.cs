@@ -11,5 +11,12 @@ namespace Core.Interfaces.IRepositories
     {
         Task<IEnumerable<Sheet>> GetSheetList();
         Task<Sheet> GetSheetById(int sheetId);
+
+        /// <summary>
+        /// Get the latest version of the sheet
+        /// </summary>
+        /// <param name="sheetId"></param>
+        /// <returns></returns>
+       int GetLatestVersion(string sheetId);
     }
 }

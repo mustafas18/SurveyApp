@@ -36,7 +36,7 @@ FROM Sheets";
 SELECT 
     SheetId,Name,Icon,UserId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
 FROM Sheets
-WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId)";
+WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId AND Deleted=0)";
             var dynamicParameters = new DynamicParameters();
             dynamicParameters.Add("SheetId", sheetId);
             using (var connection = _db.CreateConnection())
@@ -45,5 +45,20 @@ WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM Sheets WHERE SheetI
                 return sheet;
             }
         }
-    }
+        public int GetLatestVersion(string sheetId)
+        {
+            var query = @"
+SELECT 
+    MAX(Version)
+FROM Sheets
+WHERE SheetId=@SheetId AND Deleted=0";
+            var dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add("SheetId", sheetId);
+            using (var connection = _db.CreateConnection())
+            {
+                var result = connection.QueryFirstOrDefault<int>(query, dynamicParameters);
+                return result;
+            }
+        }
+        }
 }
