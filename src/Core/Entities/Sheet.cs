@@ -18,7 +18,7 @@ namespace Core.Entities
         public string Title { get; set; }
         public string Icon { get; set; }
         public int TemplateId { get; set; }
-        public List<string> UserIds { get; set; }
+        public List<AppUser> Users { get; set; }
         public int LanguageId { get; set; }
         public int WelcomePageId { get; set; }
         public int EndPageId { get; set; }
