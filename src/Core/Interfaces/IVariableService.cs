@@ -10,6 +10,6 @@ namespace Core.Interfaces
     public interface IVariableService
     {
         Task<Variable> Create(Variable variable);
-        Task<Variable> GetByName(string name);
+        Task<Variable> GetByName(string sheetId,string name);
     }
 }

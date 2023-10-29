@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,5 +32,24 @@ namespace Infrastructure.Data
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Variable> Variables { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // EntityFrameworkCore\Add-Migration <Migration-Name> -Project Infrastructure
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=SurveyPlatform;Trusted_Connection=True;MultipleActiveResultSets=true");
+            }
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            base.OnModelCreating(modelBuilder);
+
+
+            modelBuilder.Entity<Language>()
+                .HasData(new Language("Persian", TextDirectionEnum.rlt)
+                        , new Language("English", TextDirectionEnum.ltr));
+                        }
     }
-}
+    }

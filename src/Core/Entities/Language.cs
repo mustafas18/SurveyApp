@@ -9,6 +9,11 @@ namespace Core.Entities
 {
     public class Language:BaseEntity
     {
+        public Language(string title, TextDirectionEnum textDirection)
+        {
+            Title = title;
+            TextDirection = textDirection;
+        }
         public string Title { get; set; }
         public TextDirectionEnum TextDirection { get; set; }
     }

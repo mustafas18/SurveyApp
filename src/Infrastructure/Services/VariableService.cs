@@ -32,10 +32,10 @@ namespace Infrastructure.Services
             await _varRepository.AddAsync(variable);
             return variable;
         }
-        public async Task<Variable> GetByName(string name)
+        public async Task<Variable> GetByName(string sheetId,string name)
         {
             Guard.Against.Null(name);
-            var result = await _varDapperRepository.GetByName(name);
+            var result = await _varDapperRepository.GetByName(sheetId,name);
             return result;
         }
     }
