@@ -48,8 +48,17 @@ namespace Infrastructure.Data
 
 
             modelBuilder.Entity<Language>()
-                .HasData(new Language("Persian", TextDirectionEnum.rlt)
-                        , new Language("English", TextDirectionEnum.ltr));
-                        }
+                .HasData(new Language(1,"Persian", TextDirectionEnum.rlt)
+                        , new Language(2,"English", TextDirectionEnum.ltr));
+            modelBuilder.Entity<UserDegree>()
+            .HasData(
+                new UserDegree(1,"دانشجوی کارشناسی", "BSc Student"),
+                new UserDegree(2,"کارشناسی", "BSc"),
+                new UserDegree(3,"دانشجوی کارشناسی ارشد", "MSc Student"),
+                new UserDegree(4,"کارشناسی ارشد", "MSc"),
+                new UserDegree(5,"دانشجوی دکتری", "Ph.D Student"),
+                new UserDegree(6,"دکتری", "Ph.D"));
+                        
+        }
     }
-    }
+}

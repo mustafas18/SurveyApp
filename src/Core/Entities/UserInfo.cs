@@ -18,8 +18,8 @@ namespace Core.Entities
         public string Country { get; set; }
         public string City { get; set; }
         public int ResearchInterestId { get; set; }
-        public int EducationDegreeId { get; set; }
-        public List<string> Grade { get; set; }
+        public List<UserDegree> EducationDegree { get; set; }
+        public string Grade { get; set; }
         public string Job { get; set; }
         public string Mobile { get; set; }
         public string Address { get; set; }

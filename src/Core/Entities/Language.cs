@@ -9,8 +9,9 @@ namespace Core.Entities
 {
     public class Language:BaseEntity
     {
-        public Language(string title, TextDirectionEnum textDirection)
+        public Language(int id,string title, TextDirectionEnum textDirection)
         {
+            base.Id = id;
             Title = title;
             TextDirection = textDirection;
         }
