@@ -1,4 +1,5 @@
 ﻿using Core.Dtos;
+using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
@@ -22,10 +23,13 @@ namespace WebApi.Controllers
     public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
-        private readonly IRepository<AppUser> _userRepository;
-        public UserController(IUserService userService)
+        private readonly IMapper _mapper;
+
+        public UserController(IUserService userService,
+            IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
         [Authorize(Roles = "Admin,SurveyDesigner")]
         [HttpGet]
@@ -47,7 +51,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                return StatusCode(200, CustomResult.Ok(_userService.Register()));
+                return StatusCode(200, CustomResult.Ok(_userService.Register(_mapper.Map<UserRegisterDto>(register))));
             }
             catch (Exception ex)
             {
