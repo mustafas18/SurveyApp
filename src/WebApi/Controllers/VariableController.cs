@@ -19,6 +19,7 @@ namespace WebApi.Controllers
             _variableService = variableService;
             _mapper = mapper;
         }
+        [HttpPost]
         public IActionResult Create([FromBody] VariableViewModel variableViewModel)
         {
             try
