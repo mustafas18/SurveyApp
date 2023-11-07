@@ -34,7 +34,7 @@ namespace Infrastructure.Data
         public DbSet<Variable> Variables { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // EntityFrameworkCore\Add-Migration <Migration-Name> -Project Infrastructure
+            // Add-Migration <Migration-Name> -Project Infrastructure
 
             if (!optionsBuilder.IsConfigured)
             {
