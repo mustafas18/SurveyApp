@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
@@ -31,13 +31,13 @@ namespace Infrastructure.Services
         }
         public async Task<AppUser> Register(UserRegisterDto userRegister)
         {
-                AppUser user = new AppUser();
-                user.UserName = userRegister.UserName;
-                await _userManager.CreateAsync(user, userRegister.Password);
-                await _userManager.AddToRoleAsync(user, "client");
-                return user;
+            AppUser user = new AppUser();
+            user.UserName = userRegister.UserName;
+            await _userManager.CreateAsync(user, userRegister.Password);
+            await _userManager.AddToRoleAsync(user, "client");
+            return user;
         }
-        async Task<LoginResultDto> Login(LoginInfoDto userDto)
+        public async Task<LoginResultDto> Login(LoginInfoDto userDto)
         {
             var accessToken = await _token.GetTokenAsync(userDto);
             var userRoles = await _token.GetUserRolesAsync(userDto.UserName);
@@ -55,5 +55,8 @@ namespace Infrastructure.Services
             _signInManager.SignOutAsync();
             return true;
         }
+
+
+
     }
 }

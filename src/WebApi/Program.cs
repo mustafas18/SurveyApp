@@ -1,5 +1,6 @@
 ﻿using Core.Constants;
 using Core.Entities;
+using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,7 +43,7 @@ namespace WebApi
            .AddDefaultTokenProviders();
 
             // Add services to the container.
-            //builder.Services.AddMyServices();
+            builder.Services.AddMyServices();
             builder.Services.AddCors(opt =>
             {
                 opt.AddPolicy("myCorsPolicy", policy =>
