@@ -17,7 +17,7 @@ namespace UnitTest.Entities
             var sheet = new Sheet();
 
             // Act
-            sheet.AddItem(_sheetId, new IQuestion {SheetId = _sheetId, Id=1 });
+            sheet.AddItem(_sheetId, new Question {SheetId = _sheetId, Id=1 });
             var firstQuestion = sheet.Questions.Single();
 
             // Asset
