@@ -9,6 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Ardalis.Specification;
+using Infrastructure.Data;
+using Microsoft.Data.SqlClient;
 
 namespace Infrastructure
 {
@@ -16,13 +20,16 @@ namespace Infrastructure
     {
         public static void AddMyServices(this IServiceCollection services)
         {
+            services.AddScoped<DapperContext>();
+            services.AddScoped(typeof(IDapperRepository<>), typeof(DapperRepository<>));
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
-            services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<ISheetRepository, SheetRepository>();
-            services.AddScoped<IVariableService,VariableService>();
+            services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
+            //services.AddScoped<IQuestionService, QuestionService>();
+            //services.AddScoped<ISheetService, SheetService>();
+            //services.AddScoped<IVariableService,VariableService>();
             services.AddScoped<IUserService,UserService>();
         }
     }

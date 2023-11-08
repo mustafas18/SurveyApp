@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class QuestoinService : IQuestionService
+    public class QuestionService : IQuestionService
     {
         private readonly IEfRepository<Question> _questionRepository;
         private readonly ISheetRepository _sheetRepository;
 
-        public QuestoinService(IEfRepository<Question> questionRepository,
+        public QuestionService(IEfRepository<Question> questionRepository,
             ISheetRepository sheetRepository)
         {
             _questionRepository = questionRepository;

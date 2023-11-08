@@ -44,6 +44,7 @@ namespace Infrastructure.Identity
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey);
+
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserName) };
 

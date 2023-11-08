@@ -14,7 +14,7 @@ namespace Infrastructure.Services
     {
         public static CustomResultViewModel Ok(object data)
         {
-            return new CustomResultViewModel(data,null);
+            return new  CustomResultViewModel(data,null);
         }
         public static CustomResultViewModel NotFound()
         {

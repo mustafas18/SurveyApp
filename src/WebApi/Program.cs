@@ -5,7 +5,9 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -42,8 +44,6 @@ namespace WebApi
            .AddEntityFrameworkStores<AppDbContext>()
            .AddDefaultTokenProviders();
 
-            // Add services to the container.
-            builder.Services.AddMyServices();
             builder.Services.AddCors(opt =>
             {
                 opt.AddPolicy("myCorsPolicy", policy =>
@@ -57,13 +57,25 @@ namespace WebApi
 
             builder.Services.AddMemoryCache();
 
-            builder.Services.AddSingleton<DapperContext>();
-
         
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddControllers();
+
+#if DEBUG
+            builder.Services.AddDbContext<AppDbContext>(options =>
+             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+#else
+            builder.Services.AddDbContext<AppDbContext>(options =>
+             options.UseSqlServer(Configuration.GetConnectionString("ReleaseConnectionString")));
+#endif
+
+
+            
+            // Add services to the container.
+            builder.Services.AddMyServices();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 
@@ -101,13 +113,7 @@ namespace WebApi
                     }
                 });
             });
-#if DEBUG
-            builder.Services.AddDbContext<AppDbContext>(options =>
-             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
-#else
-            builder.Services.AddDbContext<AppDbContext>(options =>
-             options.UseSqlServer(Configuration.GetConnectionString("ReleaseConnectionString")));
-#endif
+
 
 
             builder.Services.AddAuthentication(opt =>

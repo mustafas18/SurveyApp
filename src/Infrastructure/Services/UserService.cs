@@ -16,17 +16,14 @@ namespace Infrastructure.Services
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserRepository _userRpository;
         private readonly ITokenClaimsService _token;
 
         public UserService(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            UserRepository userRpository,
             ITokenClaimsService token)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _userRpository = userRpository;
             _token = token;
         }
         public async Task<AppUser> Register(UserRegisterDto userRegister)

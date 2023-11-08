@@ -13,11 +13,11 @@ namespace Infrastructure.Services
 {
     public class VariableService : IVariableService
     {
-        private readonly IEfRepository<Variable> _varRepository;
+        private readonly IRepository<Variable> _varRepository;
         private readonly IVariableRepository _varDapperRepository;
         private readonly ISheetRepository _sheetRepository;
 
-        public VariableService(IEfRepository<Variable> varRepository,
+        public VariableService(IRepository<Variable> varRepository,
             ISheetRepository sheetRepository,
             IVariableRepository varDapperRepository)
         {

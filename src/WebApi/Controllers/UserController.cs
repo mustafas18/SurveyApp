@@ -65,7 +65,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                return StatusCode(200, CustomResult.Ok(_userService.Login(userInfo)));
+                return StatusCode(200, CustomResult.Ok(await _userService.Login(userInfo)));
             }
             catch (Exception ex)
             {
