@@ -29,7 +29,7 @@ namespace UnitTest.RepositoryTest
             var sheet2 = new Sheet { Id = 2, Title = "Sheet2" };
 
             // Act
-            var repository = new EfRepository<Sheet>(dbContext.Object);
+            var repository = new Repository<Sheet>(dbContext.Object);
             repository.AddAsync(sheet);
 
             //Assert
@@ -47,7 +47,7 @@ namespace UnitTest.RepositoryTest
             var course2 = new Sheet { Id = 2, Title = "Sheet2" };
 
             // Act
-            var repository = new EfRepository<Sheet>(dbContext.Object);
+            var repository = new Repository<Sheet>(dbContext.Object);
             repository.AddAsync(sheet);
 
             //Assert

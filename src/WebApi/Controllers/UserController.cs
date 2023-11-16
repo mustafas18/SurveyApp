@@ -63,6 +63,7 @@ namespace WebApi.Controllers
             }
 
         }
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetUserInfoNameList()
         {

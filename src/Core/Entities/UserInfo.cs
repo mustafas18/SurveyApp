@@ -16,19 +16,19 @@ namespace Core.Entities
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
         public GenderEnum Gender { get; set; }
-        public string Birthday { get; set; }
-        public string PictureBase64 { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
-        public int ResearchInterestId { get; set; }
-        public List<UserDegree> EducationDegree { get; set; }
-        public string Grade { get; set; }
-        public string Job { get; set; }
-        public string Mobile { get; set; }
-        public string Address { get; set; }
-        public string AtmCard { get; set; }
-        public byte[] CVFileData { get; set; }
-        public string FileContent { get; set; }
+        public string? Birthday { get; set; }
+        public string? PictureBase64 { get; set; }
+        public string? Country { get; set; }
+        public string? City { get; set; }
+        public int? ResearchInterestId { get; set; }
+        public List<UserDegree>? EducationDegree { get; set; }
+        public string? Grade { get; set; }
+        public string? Job { get; set; }
+        public string? Mobile { get; set; }
+        public string? Address { get; set; }
+        public string? AtmCard { get; set; }
+        public byte[]? CVFileData { get; set; }
+        public string? FileContent { get; set; }
         public bool Deleted { get; set; }
     }
 }
