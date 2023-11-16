@@ -23,12 +23,13 @@ namespace Infrastructure
             services.AddScoped<DapperContext>();
             services.AddScoped(typeof(IDapperRepository<>), typeof(DapperRepository<>));
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            //services.AddScoped(typeof(IEfRepository<>), typeof(IEfRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<ISheetRepository, SheetRepository>();
             services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
             //services.AddScoped<IQuestionService, QuestionService>();
-            //services.AddScoped<ISheetService, SheetService>();
+            services.AddScoped<ISheetService, SheetService>();
             //services.AddScoped<IVariableService,VariableService>();
             services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IUserService,UserService>();

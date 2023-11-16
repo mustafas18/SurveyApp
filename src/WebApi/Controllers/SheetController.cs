@@ -15,13 +15,13 @@ namespace WebApi.Controllers
     public class SheetController : BaseApiController
     {
         private readonly ISheetRepository sheetRepository;
-        private readonly IEfRepository<Sheet> _efRepository;
+        private readonly IRepository<Sheet> _efRepository;
         private readonly ISheetService _sheetService;
         private readonly IUserInfoService _userInfoService;
         private readonly IMapper _mapper;
 
         public SheetController(ISheetRepository sheetRepository,
-            IEfRepository<Sheet> efRepository,
+            IRepository<Sheet> efRepository,
             ISheetService sheetService,
             IUserInfoService userInfoService,
             IMapper mapper)
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] SheetViewModel sheetViewModel)
+        public async Task<IActionResult> Create([FromBody] SheetViewModel sheetViewModel)
         {
             try
             {

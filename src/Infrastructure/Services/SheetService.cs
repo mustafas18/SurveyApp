@@ -14,10 +14,10 @@ namespace Infrastructure.Services
 {
     public class SheetService : ISheetService
     {
-        private readonly IEfRepository<Sheet> _sheetRepository;
+        private readonly IRepository<Sheet> _sheetRepository;
         private readonly ISheetRepository _sheetReadRepository;
 
-        public SheetService(IEfRepository<Sheet> sheetRepository,
+        public SheetService(IRepository<Sheet> sheetRepository,
                 ISheetRepository sheetReadRepository)
         {
             _sheetRepository = sheetRepository;
@@ -34,7 +34,7 @@ namespace Infrastructure.Services
         }
         public async Task<Sheet> AddQuestionToSheet(string sheetId, Question question)
         {
-            var sheet = await _sheetRepository.FirstOrDefaultAsync(q => q.SheetId == sheetId);
+            var sheet = _sheetRepository.FirstOrDefault(q => q.SheetId == sheetId);
             if (sheet == null)
             {
                 throw new Exception("The sheet does not exist.");
