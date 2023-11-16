@@ -18,9 +18,11 @@ namespace Infrastructure.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenClaimsService _token;
 
+
         public UserService(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            ITokenClaimsService token)
+            ITokenClaimsService token,
+            IRepository<AppUser> userRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -52,7 +54,7 @@ namespace Infrastructure.Services
             _signInManager.SignOutAsync();
             return true;
         }
-
+ 
 
 
     }

@@ -1,6 +1,7 @@
 ﻿using Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace Core.Entities
         public string AppUserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [NotMapped]
+        public string FullName { get { return $"{FirstName} {LastName}"; } }
         public GenderEnum Gender { get; set; }
         public string Birthday { get; set; }
         public string PictureBase64 { get; set; }

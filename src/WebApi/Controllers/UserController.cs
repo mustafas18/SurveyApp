@@ -23,12 +23,15 @@ namespace WebApi.Controllers
     public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
+        private readonly IUserInfoService _userInfoService;
         private readonly IMapper _mapper;
 
         public UserController(IUserService userService,
+            IUserInfoService userInfoService,
             IMapper mapper)
         {
             _userService = userService;
+            _userInfoService = userInfoService;
             _mapper = mapper;
         }
         [Authorize(Roles = "Admin,SurveyDesigner")]
@@ -42,6 +45,37 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500,CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetUserInfoName(string userId)
+        {
+            try
+            {
+                var result= _userInfoService.GetUserInfo(userId);
+                UserFullNameViewModel userFullNameViewModel= new UserFullNameViewModel(result.AppUserId,result.FullName);  
+                return StatusCode(200, CustomResult.Ok(userFullNameViewModel));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetUserInfoNameList()
+        {
+            try
+            {
+                var result = _userInfoService.GetUserInfoList();
+                List<UserFullNameViewModel> userFullNameList= new List<UserFullNameViewModel>();
+                result.ForEach(u => { userFullNameList.Add(new UserFullNameViewModel(u)); });
+                return StatusCode(200, CustomResult.Ok(userFullNameList));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
             }
 
         }

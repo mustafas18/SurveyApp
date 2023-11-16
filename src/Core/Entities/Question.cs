@@ -16,8 +16,8 @@ namespace Core.Entities
         public string UserId { get; set; }
         public string QuestionText { get; set; }
         public int VariableId { get; set; }
-        public string QuestionFileUri { get; set; }
-        public string QuestionFileContentType { get; set; }
+        public string? QuestionFileUri { get; set; }
+        public string? QuestionFileContentType { get; set; }
         public List<QuestionAnswer> QuestionAnswers { get; set; }
         public int ResponseTime { get; set; }
         public bool Required { get; set; }

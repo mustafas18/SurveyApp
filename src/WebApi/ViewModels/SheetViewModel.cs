@@ -7,6 +7,7 @@
         public string Icon { get; set; }
         public int TemplateId { get; set; }
         public string UserId { get; set; }
+        public string UserFullName { get; set; }
         public int LanguageId { get; set; }
         public int WelcomePageId { get; set; }
         public int EndPageId { get; set; }
