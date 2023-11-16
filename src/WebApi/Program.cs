@@ -114,6 +114,14 @@ namespace WebApi
                 });
             });
 
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddPolicy("myCorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
+
 
 
             builder.Services.AddAuthentication(opt =>
@@ -139,6 +147,9 @@ namespace WebApi
 
 
             var app = builder.Build();
+
+            // UseCors must be called before UseResponseCaching
+            app.UseCors("myCorsPolicy");
 
             using (var scope = app.Services.CreateScope())
             {
