@@ -22,11 +22,11 @@ namespace Infrastructure.Data.Repositories
         {
             var query = @"
             SELECT 
-                S.SheetId,S.LanguageId,STRING_AGG(CONCAT(UI.FirstName, ',', UI.LastName), ', ') AS UserFullName,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted
+                S.SheetId,S.Title,S.LanguageId,STRING_AGG(CONCAT(UI.FirstName, ',', UI.LastName), ', ') AS UserFullName,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted
             FROM Sheets AS S
-            LEFT JOIN SheetUserInfo AS U ON S.SheetId=U.SheetsId
-            INNER JOIN UserInfos AS UI ON U.UsersId=UI.AppUserId 
-            GROUP BY S.SheetId,S.LanguageId,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted";
+            LEFT JOIN SheetUserInfo AS SU ON S.Id=SU.SheetsId
+            LEFT JOIN UserInfos AS UI ON UI.Id=SU.UsersId
+            GROUP BY S.SheetId,S.Title,S.LanguageId,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted";
             //            var query = @"
             //SELECT 
             //    SheetId,LanguageId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
