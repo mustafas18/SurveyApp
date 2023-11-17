@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.ViewModels;
 
@@ -24,8 +25,25 @@ namespace WebApi.Controllers
         {
             try
             {
+                variableViewModel.Values= _variableService.ConvertStringIntoList(variableViewModel.ValuesAsString);
                 var result = _variableService.Create(_mapper.Map<Variable>(variableViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetBySheetId(string sheetId,int? sheetVersion)
+        {
+            try
+            {
+                var result =await _variableService.GetBySheetId(sheetId,sheetVersion);
+                var variableViewModel= _mapper.Map<VariableViewModel>(result);
+                variableViewModel.ValuesAsString = _variableService.ConvertValueLabelToString(variableViewModel.Values);
+                return StatusCode(200, CustomResult.Ok(variableViewModel));
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Core.Entities
         public VariableTypeEnum Type { get; set; }
         public string Label { get; set; }
         public int MaxValue { get; set; }
+        [NotMapped]
+        public string? ValuesString { get; set; }
         public List<VariableValueLabel> Values { get; set; }
         public MessureEnum Messure { get; set; }
         public string SheetId { get; set; }

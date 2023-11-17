@@ -27,5 +27,22 @@ WHERE Name=@name AND SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId
                 return variable;
             }
         }
+
+        public async Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion)
+        {
+            string versionCondition = string.Empty;
+            if (sheetVersion == null)
+            {
+                versionCondition = " AND SheetVersion=(SELECT MAX(Version)";
+            }
+            var query = @$"SELECT * 
+FROM Variables 
+WHERE Name=@name AND {versionCondition} FROM Sheets WHERE SheetId={sheetId}";
+            using (var connection = _db.CreateConnection())
+            {
+                var variable = await connection.QueryFirstAsync<List<Variable>>(query);
+                return variable;
+            }
+        }
     }
 }
