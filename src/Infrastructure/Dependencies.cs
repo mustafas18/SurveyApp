@@ -30,7 +30,7 @@ namespace Infrastructure
             services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
             //services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ISheetService, SheetService>();
-            //services.AddScoped<IVariableService,VariableService>();
+            services.AddScoped<IVariableService,VariableService>();
             services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IUserService,UserService>();
         }

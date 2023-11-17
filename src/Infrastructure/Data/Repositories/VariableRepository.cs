@@ -33,14 +33,16 @@ WHERE Name=@name AND SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId
             string versionCondition = string.Empty;
             if (sheetVersion == null)
             {
-                versionCondition = " AND SheetVersion=(SELECT MAX(Version)";
+                versionCondition = " SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId) AND ";
             }
+            var parameters = new DynamicParameters();
+            parameters.Add("@SheetId", sheetId);
             var query = @$"SELECT * 
 FROM Variables 
-WHERE Name=@name AND {versionCondition} FROM Sheets WHERE SheetId={sheetId}";
+WHERE {versionCondition} SheetId=@SheetId";
             using (var connection = _db.CreateConnection())
             {
-                var variable = await connection.QueryFirstAsync<List<Variable>>(query);
+                var variable = await connection.QueryFirstOrDefaultAsync<List<Variable>>(query, parameters);
                 return variable;
             }
         }

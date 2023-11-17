@@ -11,5 +11,9 @@ namespace Core.Interfaces
     {
         Task<Variable> Create(Variable variable);
         Task<Variable> GetByName(string sheetId,string name);
+        Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
+        List<VariableValueLabel> ConvertStringIntoList(string values);
+        string ConvertValueLabelToString(List<VariableValueLabel> values);
+
     }
 }

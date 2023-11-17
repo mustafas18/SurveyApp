@@ -41,6 +41,10 @@ namespace WebApi.Controllers
             try
             {
                 var result =await _variableService.GetBySheetId(sheetId,sheetVersion);
+               if(result == null)
+                {
+                    return StatusCode(200, CustomResult.Ok(null));
+                }
                 var variableViewModel= _mapper.Map<VariableViewModel>(result);
                 variableViewModel.ValuesAsString = _variableService.ConvertValueLabelToString(variableViewModel.Values);
                 return StatusCode(200, CustomResult.Ok(variableViewModel));

@@ -10,5 +10,6 @@ namespace Core.Interfaces.IRepositories
     public interface IVariableRepository
     {
         Task<Variable> GetByName(string sheetId, string name);
+        Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
     }
 }
