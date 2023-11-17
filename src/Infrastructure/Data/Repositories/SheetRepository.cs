@@ -18,16 +18,24 @@ namespace Infrastructure.Data.Repositories
         {
             _db = db;
         }
-        public async Task<IEnumerable<Sheet>> GetSheetList()
+        public async Task<IEnumerable<SheetDto>> GetSheetList()
         {
             var query = @"
-SELECT 
-    SheetId,UserId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
-FROM Sheets";
+            SELECT 
+                S.SheetId,S.LanguageId,STRING_AGG(CONCAT(UI.FirstName, ',', UI.LastName), ', ') AS UserFullName,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted
+            FROM Sheets AS S
+            LEFT JOIN SheetUserInfo AS U ON S.SheetId=U.SheetsId
+            INNER JOIN UserInfos AS UI ON U.UsersId=UI.AppUserId 
+            GROUP BY S.SheetId,S.LanguageId,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted";
+            //            var query = @"
+            //SELECT 
+            //    SheetId,LanguageId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
+            //FROM Sheets";
+
 
             using (var connection = _db.CreateConnection())
             {
-                var sheets = await connection.QueryAsync<Sheet>(query);
+                var sheets = await connection.QueryAsync<SheetDto>(query);
                 return sheets.ToList();
             }
         }

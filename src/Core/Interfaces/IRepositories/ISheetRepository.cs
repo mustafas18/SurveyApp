@@ -10,7 +10,7 @@ namespace Core.Interfaces.IRepositories
 {
     public interface ISheetRepository
     {
-        Task<IEnumerable<Sheet>> GetSheetList();
+        Task<IEnumerable<SheetDto>> GetSheetList();
         Task<SheetDto> GetSheetById(string sheetId);
 
         /// <summary>

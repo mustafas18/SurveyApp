@@ -38,7 +38,8 @@ namespace WebApi.Controllers
             try
             {
                 var result = sheetRepository.GetSheetList();
-                return StatusCode(200,CustomResult.Ok(_mapper.Map<SheetViewModel>(result)));
+
+                return StatusCode(200,CustomResult.Ok(_mapper.Map<List<SheetDto>,List<SheetViewModel>>(result.Result.ToList())));
             }
             catch (Exception ex)
             {
