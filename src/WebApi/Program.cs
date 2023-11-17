@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace WebApi
 {
@@ -61,7 +62,11 @@ namespace WebApi
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+            ;
 
 #if DEBUG
             builder.Services.AddDbContext<AppDbContext>(options =>
