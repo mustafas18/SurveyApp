@@ -16,8 +16,8 @@ namespace Core.Entities
         public string Label { get; set; }
         public int MaxValue { get; set; }
         [NotMapped]
-        public string? ValuesString { get; set; }
-        public List<VariableValueLabel> Values { get; set; }
+        public string? ValuesAsString { get; set; }
+        public List<VariableValueLabel>? Values { get; set; }
         public MessureEnum Messure { get; set; }
         public string SheetId { get; set; }
         public int SheetVersion { get; set; }

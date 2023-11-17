@@ -25,7 +25,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                variableViewModel.Values= _variableService.ConvertStringIntoList(variableViewModel.ValuesAsString);
                 var result = _variableService.Create(_mapper.Map<Variable>(variableViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
             }
@@ -45,8 +44,7 @@ namespace WebApi.Controllers
                 {
                     return StatusCode(200, CustomResult.Ok(null));
                 }
-                var variableViewModel= _mapper.Map<VariableViewModel>(result);
-                variableViewModel.ValuesAsString = _variableService.ConvertValueLabelToString(variableViewModel.Values);
+                var variableViewModel= _mapper.Map<List<VariableViewModel>>(result);
                 return StatusCode(200, CustomResult.Ok(variableViewModel));
             }
             catch (Exception ex)

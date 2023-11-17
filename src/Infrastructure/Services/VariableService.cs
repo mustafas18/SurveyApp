@@ -30,6 +30,7 @@ namespace Infrastructure.Services
         public async Task<Variable> Create(Variable variable)
         {
             Guard.Against.Null(variable);
+            variable.Values = ConvertStringIntoList(variable.ValuesAsString);
             variable.SheetVersion = _sheetRepository.GetLatestVersion(variable.SheetId);
             await _varRepository.AddAsync(variable);
             return variable;
@@ -45,10 +46,18 @@ namespace Infrastructure.Services
         {
             Guard.Against.Null(sheetId);
             var result = await _varDapperRepository.GetBySheetId(sheetId, sheetVersion);
+            if (result != null)
+            {
+                result.ForEach(s => s.ValuesAsString = ConvertValueLabelToString(s.Values));
+            }
             return result;
         }
         public List<VariableValueLabel> ConvertStringIntoList(string values)
         {
+            if (String.IsNullOrEmpty(values))
+            {
+                return  null;
+            }
 
             values = values.Trim('{', '}');
 

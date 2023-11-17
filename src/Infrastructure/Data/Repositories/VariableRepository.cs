@@ -31,19 +31,20 @@ WHERE Name=@name AND SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId
         public async Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion)
         {
             string versionCondition = string.Empty;
+
+   
             if (sheetVersion == null)
             {
-                versionCondition = " SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId) AND ";
+                versionCondition = $" SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId='{sheetId}') AND ";
             }
-            var parameters = new DynamicParameters();
-            parameters.Add("@SheetId", sheetId);
+
             var query = @$"SELECT * 
 FROM Variables 
-WHERE {versionCondition} SheetId=@SheetId";
+WHERE {versionCondition} SheetId='{sheetId}'";
             using (var connection = _db.CreateConnection())
             {
-                var variable = await connection.QueryFirstOrDefaultAsync<List<Variable>>(query, parameters);
-                return variable;
+                var variable = await connection.QueryAsync<Variable>(query);
+                return variable.ToList();
             }
         }
     }

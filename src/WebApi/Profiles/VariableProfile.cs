@@ -9,6 +9,8 @@ namespace WebApi.Profiles
         public VariableProfile()
         {
             CreateMap<VariableViewModel, Variable>();
+            //    .ForMember(d => d.ValuesAsString, opt => opt.MapFrom(src => src.ValuesAsString));
+            ;
             CreateMap<Variable, VariableViewModel>();
         }
     }
