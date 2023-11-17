@@ -13,5 +13,6 @@ namespace Core.Interfaces
         Task<AppUser> Register(UserRegisterDto userRegister);
         Task<LoginResultDto> Login(LoginInfoDto userDto);
         Task<bool> SignOut();
+        Task<AppUser> GetCurrentUserAsync();
     }
 }

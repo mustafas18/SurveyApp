@@ -3,7 +3,9 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,8 +56,11 @@ namespace Infrastructure.Services
             _signInManager.SignOutAsync();
             return true;
         }
- 
 
 
+        public async Task<AppUser> GetCurrentUserAsync()
+        {
+            return await _userManager.GetUserAsync(_signInManager.Context.User);
+        }
     }
 }

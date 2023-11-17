@@ -18,18 +18,21 @@ namespace WebApi.Controllers
         private readonly IRepository<Sheet> _efRepository;
         private readonly ISheetService _sheetService;
         private readonly IUserInfoService _userInfoService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
         public SheetController(ISheetRepository sheetRepository,
             IRepository<Sheet> efRepository,
             ISheetService sheetService,
             IUserInfoService userInfoService,
+            IUserService userService,
             IMapper mapper)
         {
             this.sheetRepository = sheetRepository;
             _efRepository = efRepository;
             _sheetService = sheetService;
             _userInfoService = userInfoService;
+            _userService = userService;
             _mapper = mapper;
         }
         [HttpGet]
@@ -67,7 +70,8 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = _sheetService.CreateAsync(_mapper.Map<Sheet>(sheetViewModel));
+                sheetViewModel.CreatedByUserId = _userService.GetCurrentUserAsync().Result?.Id ?? "";
+                var result =await _sheetService.CreateAsync(_mapper.Map<Sheet>(sheetViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
