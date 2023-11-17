@@ -25,6 +25,7 @@ namespace Core.Entities
         public string? Grade { get; set; }
         public string? Job { get; set; }
         public string? Mobile { get; set; }
+        public List<Sheet>? Sheets { get; set; }
         public string? Address { get; set; }
         public string? AtmCard { get; set; }
         public byte[]? CVFileData { get; set; }
