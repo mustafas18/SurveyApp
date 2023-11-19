@@ -28,7 +28,7 @@ namespace Infrastructure.Services
             Guard.Against.Null(sheet);
             sheet.CreateTime = DateTime.Now;
             sheet.Version = 1;
-            sheet.SheetId = Guid.NewGuid().ToString();
+            sheet.SheetId = Guid.NewGuid().ToString().Substring(1,7);
             await _sheetRepository.AddAsync(sheet);
             return sheet;
         }

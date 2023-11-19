@@ -5,6 +5,7 @@ namespace WebApi.ViewModels
 {
     public class VariableViewModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public VariableTypeEnum Type { get; set; }
         public string Label { get; set; }

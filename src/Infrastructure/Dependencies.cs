@@ -28,7 +28,7 @@ namespace Infrastructure
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<ISheetRepository, SheetRepository>();
             services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
-            //services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ISheetService, SheetService>();
             services.AddScoped<IVariableService,VariableService>();
             services.AddScoped<IUserInfoService, UserInfoService>();

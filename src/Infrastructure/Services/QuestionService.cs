@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using System;
@@ -11,20 +12,55 @@ namespace Infrastructure.Services
 {
     public class QuestionService : IQuestionService
     {
-        private readonly IEfRepository<Question> _questionRepository;
+        private readonly IRepository<Question> _questionRepository;
         private readonly ISheetRepository _sheetRepository;
 
-        public QuestionService(IEfRepository<Question> questionRepository,
+        public QuestionService(IRepository<Question> questionRepository,
             ISheetRepository sheetRepository)
         {
             _questionRepository = questionRepository;
             _sheetRepository = sheetRepository;
         }
-        public async Task<Question> CreateAsync(string sheetId, Question question)
+        public async Task<string> CreateAsync(string sheetId, Question question)
         {
+            question.SheetId = sheetId;
+            question.UserId = "";
             question.SheetVersion = _sheetRepository.GetLatestVersion(sheetId);
             await _questionRepository.AddAsync(question);
-            return question;
+            return "OK";
+        }
+
+        public async Task<IEnumerable<QuestionDto>> GetBySheetId(string sheetId, int? sheetVersion)
+        {
+            if (sheetVersion != null)
+            {
+                return _questionRepository
+                      .Where(s => s.SheetId == sheetId && s.SheetVersion == sheetVersion && s.Deleted==false)
+                      .Select(q => new QuestionDto
+                      {
+                          Text = q.Text,
+                          Required = q.Required,
+                          Type = q.Type,
+                          VariableId = q.VariableId,
+                          Order = q.Order
+                      })
+                      .AsEnumerable();
+            }
+            else
+            {
+                return _questionRepository
+                      .Where(s => s.SheetId == sheetId && s.Deleted == false)
+                      .Select(q => new QuestionDto
+                      {
+                          Text = q.Text,
+                          Required = q.Required,
+                          Type = q.Type,
+                          VariableId = q.VariableId,
+                          Order = q.Order
+                      })
+                      .AsEnumerable();
+            }
+
         }
     }
 }

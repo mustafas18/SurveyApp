@@ -8,8 +8,12 @@ namespace WebApi.Profiles
     {
         public QuestionProfile()
         {
-            CreateMap<Question, QuestionViewModel>();
-            CreateMap<QuestionViewModel, Question>();
+            //CreateMap<Question, QuestionViewModel>();
+            //CreateMap<QuestionViewModel, Question>();
+
+            CreateMap<AnswerViewModel, QuestionAnswer>().
+                ForMember(d => d.Value, opt => opt.MapFrom(src => (int)src.Value));
+            
         }
     }
 }
