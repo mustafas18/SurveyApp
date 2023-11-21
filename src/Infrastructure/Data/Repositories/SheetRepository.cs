@@ -17,7 +17,7 @@ namespace Infrastructure.Data.Repositories
         private readonly DapperContext _db;
         private readonly AppDbContext _efContext;
 
-        public SheetRepository(DapperContext db,, AppDbContext efContext)
+        public SheetRepository(DapperContext db, AppDbContext efContext)
         {
             _db = db;
             _efContext = efContext;

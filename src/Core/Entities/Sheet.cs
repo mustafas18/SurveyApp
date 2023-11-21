@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace Core.Entities
         public DateTime CreateTime { get; set; }
         public bool Deleted { get; set; }
 
-        private readonly List<Question> _questions = new List<Question>();
+        private List<Question> _questions = new List<Question>();
         public IReadOnlyCollection<Question> Questions => _questions.AsReadOnly();
         public void AddQuestion(Question question)
         {
@@ -39,11 +40,22 @@ namespace Core.Entities
                 return;
             }
         }
-        public void SetQuestions(List<Question> questions)
+        public void ClearQuestions()
         {
             _questions.Clear();
-                _questions.AddRange(questions);
+            return;
+        }
+        public void SheetQuestions(List<Question> questionList)
+        {
+            if (questionList == null)
                 return;
+            _questions = questionList;
+            return;
+        }
+        public void AddQuestions(List<Question> questions)
+        {
+            _questions.AddRange(questions);
+            return;
         }
         public void ClearQuestions(string sheetId)
         {

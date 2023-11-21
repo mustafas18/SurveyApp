@@ -39,7 +39,7 @@ namespace Infrastructure.Services
             {
                 throw new Exception("The sheet does not exist.");
             }
-            sheet.AddItem(sheetId, question);
+            sheet.AddQuestion(question);
 
             await _sheetRepository.UpdateAsync(sheet);
             return sheet;

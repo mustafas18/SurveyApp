@@ -94,11 +94,13 @@ namespace Infrastructure.Services
             var sheet = _sheetRepository.Where(s => s.SheetId == questionDto.SheetId && s.Version == latestVersion)
                                         .Include(nameof(Sheet.Questions))
                                         .FirstOrDefault();
-
+            if(sheet?.Questions==null)
+            {
+                return null;
+            }
             List<int> orders = questionDto.Questions.OrderBy(q => q.order).Select(s=>s.Id).ToList();
-          var oederedQuestions=  sheet.Questions.OrderBy(o => orders.IndexOf(o.Id)).ToList();
-            sheet.SetQuestions(oederedQuestions);
-            return oederedQuestions;
+            sheet.SheetQuestions(sheet.Questions?.OrderBy(o => orders.IndexOf(o.Id)).ToList());
+            return sheet.Questions.ToList();
         }
     }
 }
