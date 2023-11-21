@@ -44,7 +44,7 @@ namespace WebApi.Controllers
                 {
                     return StatusCode(200, CustomResult.Ok(null));
                 }
-                var variableViewModel= _mapper.Map<List<VariableViewModel>>(result);
+                var variableViewModel= _mapper.Map<IEnumerable<VariableViewModel>>(result);
                 return StatusCode(200, CustomResult.Ok(variableViewModel));
             }
             catch (Exception ex)
