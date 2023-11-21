@@ -10,6 +10,7 @@ namespace Core.Dtos
 {
     public class QuestionDto
     {
+        public int? Id { get; set; }
         public string? SheetId { get; set; }
         public int? SheetVersion { get; set; }
         public QuestionTypeEnum Type { get; set; }

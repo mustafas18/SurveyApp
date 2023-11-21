@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Dtos;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces;
@@ -52,6 +53,20 @@ namespace WebApi.Controllers
                 question.Answers = new List<QuestionAnswer>();
                 questionViewModel.Answers.ForEach(a => question.Answers.Add(new QuestionAnswer(a.Text,a.Value)));
                 var result = _questionService.CreateAsync(questionViewModel.SheetId, question);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuestionOrder([FromBody] QuestionOrderViewModel questionVewModel)
+        {
+            try
+            {
+                var result = _questionService.UpdateQuestionOrder(_mapper.Map<QuestionOrderDto>(questionVewModel));
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)

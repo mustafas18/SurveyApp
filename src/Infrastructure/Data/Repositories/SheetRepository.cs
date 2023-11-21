@@ -8,15 +8,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Core.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
 {
-    public class SheetRepository: ISheetRepository
+    public class SheetRepository : ISheetRepository
     {
         private readonly DapperContext _db;
-        public SheetRepository(DapperContext db)
+        private readonly AppDbContext _efContext;
+
+        public SheetRepository(DapperContext db,, AppDbContext efContext)
         {
             _db = db;
+            _efContext = efContext;
+        }
+        public async Task<Sheet> AddQuestion(string sheetId, Question question)
+        {
+            var sheet = _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == GetLatestVersion(sheetId))
+                .Include(nameof(Sheet.Questions))
+                .FirstOrDefault();
+            sheet.AddQuestion(question);
+            _efContext.Update(sheet);
+            await _efContext.SaveChangesAsync();
+            return sheet;
         }
         public async Task<IEnumerable<SheetDto>> GetSheetList()
         {
@@ -50,7 +64,7 @@ WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM Sheets WHERE SheetI
             dynamicParameters.Add("SheetId", sheetId);
             using (var connection = _db.CreateConnection())
             {
-                var sheet = await connection.QueryFirstOrDefaultAsync<SheetDto>(query,dynamicParameters);
+                var sheet = await connection.QueryFirstOrDefaultAsync<SheetDto>(query, dynamicParameters);
                 return sheet;
             }
         }
@@ -66,10 +80,10 @@ WHERE SheetId=@SheetId AND Deleted=0";
             using (var connection = _db.CreateConnection())
             {
                 var result = connection.QueryFirstOrDefault<int>(query, dynamicParameters);
-                if (result == 0 || result==null)
+                if (result == 0 || result == null)
                 {
                     return 1;
-                }  
+                }
                 return result;
             }
         }

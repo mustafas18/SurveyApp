@@ -31,12 +31,25 @@ namespace Core.Entities
 
         private readonly List<Question> _questions = new List<Question>();
         public IReadOnlyCollection<Question> Questions => _questions.AsReadOnly();
-        public void AddItem(string sheetId, Question question)
+        public void AddQuestion(Question question)
         {
-            if (!Questions.Any(i => i.SheetId == sheetId))
+            if (!Questions.Any(i => i.Id == question.Id))
             {
                 _questions.Add(question);
                 return;
+            }
+        }
+        public void SetQuestions(List<Question> questions)
+        {
+            _questions.Clear();
+                _questions.AddRange(questions);
+                return;
+        }
+        public void ClearQuestions(string sheetId)
+        {
+            if (!Questions.Any(i => i.SheetId == sheetId))
+            {
+                _questions.Clear();
             }
         }
     }

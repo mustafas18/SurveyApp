@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Dtos;
 using Core.Entities;
 using WebApi.ViewModels;
 
@@ -8,7 +9,7 @@ namespace WebApi.Profiles
     {
         public QuestionProfile()
         {
-            //CreateMap<Question, QuestionViewModel>();
+            CreateMap<QuestionOrderViewModel, QuestionOrderDto>();
             //CreateMap<QuestionViewModel, Question>();
 
             CreateMap<AnswerViewModel, QuestionAnswer>().

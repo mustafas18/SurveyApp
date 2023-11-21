@@ -12,6 +12,7 @@ namespace Core.Interfaces.IRepositories
     {
         Task<IEnumerable<SheetDto>> GetSheetList();
         Task<SheetDto> GetSheetById(string sheetId);
+        Task<Sheet> AddQuestion(string sheetId, Question question);
 
         /// <summary>
         /// Get the latest version of the sheet

@@ -71,7 +71,7 @@ namespace WebApi.Controllers
             try
             {
                 sheetViewModel.CreatedByUserId = _userService.GetCurrentUserAsync().Result?.Id ?? "";
-                var result =await _sheetService.CreateAsync(_mapper.Map<Sheet>(sheetViewModel));
+                var result = await _sheetService.CreateAsync(_mapper.Map<Sheet>(sheetViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)

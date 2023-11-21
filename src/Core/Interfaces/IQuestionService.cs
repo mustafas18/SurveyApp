@@ -12,6 +12,8 @@ namespace Core.Interfaces
     public interface IQuestionService
     {
         Task<string> CreateAsync(string sheetId, Question question);
+        Task<QuestionOrderDto> UpdateQuestionOrder(QuestionOrderDto question);
+        int CountSheetQuestion(string sheetId, int? sheetVersion);
         Task<IEnumerable<QuestionDto>> GetBySheetId(string sheetId, int? sheetVersion);
     }
 }
