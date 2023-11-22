@@ -13,7 +13,6 @@ namespace Core.Interfaces
     {
         Task<Sheet> CreateAsync(Sheet sheet);
         Task<SheetDto> GetByIdAsync(string sheetId);
-        Task<SheetDto> GetByIdWithQuestionsAsync(string sheetId);
         Task<Sheet> AddQuestionToSheet(string sheetId, Question question);
     }
 }

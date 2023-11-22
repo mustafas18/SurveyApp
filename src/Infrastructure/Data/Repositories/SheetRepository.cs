@@ -60,18 +60,27 @@ namespace Infrastructure.Data.Repositories
         }
         public async Task<SheetDto> GetSheetById(string sheetId)
         {
-            var query = @"
-SELECT 
-    SheetId,Title,Icon,TemplateId,UserId,LanguageId,WelcomePageId,EndPageId,Link,DurationTime,DeadlineTime,CreateTime
-FROM Sheets
-WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId AND Deleted=0)";
-            var dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("SheetId", sheetId);
-            using (var connection = _db.CreateConnection())
+          var sheet =await  _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == _efContext.Sheets.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version))
+                .Include(s=>s.Questions)
+                .ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync();
+            var sheetDto = new SheetDto
             {
-                var sheet = await connection.QueryFirstOrDefaultAsync<SheetDto>(query, dynamicParameters);
-                return sheet;
-            }
+                LanguageId = sheet.LanguageId,
+                Icon = sheet.Icon,
+                EndPageId = sheet.EndPageId,
+                DurationTime = sheet.DurationTime,
+                DeadlineTime = sheet.DeadlineTime,
+                CreateTime = sheet.CreateTime,
+                Link = sheet.Link,
+                Questions = sheet.Questions.ToList(),
+                SheetId = sheet.SheetId,
+                TemplateId = sheet.TemplateId,
+                Title = sheet.Title,
+                WelcomePageId = sheet.WelcomePageId
+
+            };
+            return sheetDto;
         }
         public int GetLatestVersion(string sheetId)
         {

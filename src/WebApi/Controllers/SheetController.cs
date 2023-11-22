@@ -4,6 +4,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.ViewModels;
 using WebApi.ViewModels.Acconut;
@@ -50,13 +51,14 @@ namespace WebApi.Controllers
             }
 
         }
-
         [HttpGet]
-        public async Task<IActionResult> GetSheetListWithQuestions()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetById(string sheetId)
         {
             try
             {
-                var result = sheetRepository.GetSheetList();
+                var result = await _sheetService.GetByIdAsync(sheetId);
+                //SheetViewModel sheetInfoViewModel = _mapper.Map<SheetViewModel>(result);
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
@@ -80,22 +82,6 @@ namespace WebApi.Controllers
             }
 
         }
-        [HttpGet]
-        public async Task<IActionResult> GetById(string sheetId)
-        {
-            try
-            {
-                var result = _sheetService.GetByIdAsync(sheetId);
-                SheetViewModel sheetInfoViewModel = _mapper.Map<SheetViewModel>(result);
-                var userInfo = _userInfoService.GetUserInfo(sheetInfoViewModel.UserId);
-                sheetInfoViewModel.UserFullName = userInfo.FullName;
-                return StatusCode(200, CustomResult.Ok(sheetInfoViewModel));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, CustomResult.InternalError(ex));
-            }
 
-        }
     }
 }

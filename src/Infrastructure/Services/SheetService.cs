@@ -51,9 +51,6 @@ namespace Infrastructure.Services
           return await _sheetReadRepository.GetSheetById(sheetId);
         }
 
-        public Task<SheetDto> GetByIdWithQuestionsAsync(string sheetId)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

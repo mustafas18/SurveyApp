@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Core.Dtos
         public int? WelcomePageId { get; set; }
         public int? EndPageId { get; set; }
         public string Link { get; set; }
+        public List<Question>? Questions { get; set; }
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
         public DateTime CreateTime { get; set; }
