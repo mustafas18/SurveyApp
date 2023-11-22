@@ -99,7 +99,11 @@ namespace Infrastructure.Services
                 return null;
             }
             List<int> orders = questionDto.Questions.OrderBy(q => q.order).Select(s=>s.Id).ToList();
-            sheet.SheetQuestions(sheet.Questions?.OrderBy(o => orders.IndexOf(o.Id)).ToList());
+            var     orderedQuestion = sheet.Questions?.OrderBy(o => orders.IndexOf(o.Id)).ToList();
+            int i = 1;
+            orderedQuestion.ForEach(q => { q.Order = i++; });
+            sheet.SheetQuestions(orderedQuestion);
+            _sheetDapperRepository.SaveChanges(sheet);
             return sheet.Questions.ToList();
         }
     }

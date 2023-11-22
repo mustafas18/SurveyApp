@@ -20,5 +20,6 @@ namespace Core.Interfaces.IRepositories
         /// <param name="sheetId"></param>
         /// <returns></returns>
        int GetLatestVersion(string sheetId);
+        void SaveChanges(Sheet sheet);
     }
 }

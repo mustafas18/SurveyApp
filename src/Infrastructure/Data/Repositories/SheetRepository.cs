@@ -22,7 +22,12 @@ namespace Infrastructure.Data.Repositories
             _db = db;
             _efContext = efContext;
         }
-        public async Task<Sheet> AddQuestion(string sheetId, Question question)
+        public void SaveChanges(Sheet sheet)
+        {
+            _efContext.Sheets.Update(sheet);
+            _efContext.SaveChanges();
+        }
+            public async Task<Sheet> AddQuestion(string sheetId, Question question)
         {
             var sheet = _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == GetLatestVersion(sheetId))
                 .Include(nameof(Sheet.Questions))

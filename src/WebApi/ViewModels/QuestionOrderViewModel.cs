@@ -1,13 +1,10 @@
-﻿namespace WebApi.ViewModels
+﻿using Core.Dtos;
+
+namespace WebApi.ViewModels
 {
     public class QuestionOrderViewModel
     {
-        public string SheetId;
-        public QuestionOrderQViewModel Questions;
-    }
-    public class QuestionOrderQViewModel
-    {
-        public int id { get; set; }
-        public int order { get; set; }
+        public string SheetId { get; set; }
+        public List<QuestionOrderQDto> Questions { get; set; }
     }
 }
