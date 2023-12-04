@@ -25,6 +25,7 @@ namespace Core.Entities
         public string? FileUri { get; set; }
         public string? FileContentType { get; set; }
         public ICollection<QuestionAnswer>? Answers { get; set; }
+        public ICollection<UserAnswer>? UserAnswers { get; set; }
         public int? ResponseTime { get; set; }
         public int Order { get; set; }
         public bool Required { get; set; }

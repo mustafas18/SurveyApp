@@ -9,5 +9,7 @@ namespace Core.Enums
     public enum MessureEnum
     {
         Scale,
+        Nominal,
+        Ordinal
     }
 }
