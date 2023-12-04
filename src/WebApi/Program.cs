@@ -149,16 +149,7 @@ namespace WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey))
                 };
             });
-            //builder.Services.AddStackExchangeRedisCache(options =>
-            //{
-            //    options.Configuration = builder.Configuration.GetConnectionString("RedisURL");
-            //    options.InstanceName = "Redis_";
-            //});
-            //builder.Services.AddScoped<IDatabase>(cfg =>
-            //{
-            //    IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect($"{builder.Configuration.GetConnectionString("RedisURL")},password=123");
-            //    return multiplexer.GetDatabase();
-            //});
+
             builder.Services.AddResponseCaching();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddControllers();

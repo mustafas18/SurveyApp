@@ -27,42 +27,41 @@ namespace Core.Entities
         public string Link { get; set; }
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
-        public string CreatedByUserId { get; set; }
+        public string? CreatedByUserId { get; set; }
         public DateTime CreateTime { get; set; }
         public bool Deleted { get; set; }
 
-        private List<Question> _questions = new List<Question>();
-        public IReadOnlyCollection<Question> Questions => _questions.AsReadOnly();
+        public List<Question>? Questions { get; set; }
         public void AddQuestion(Question question)
         {
             if (!Questions.Any(i => i.Id == question.Id))
             {
-                _questions.Add(question);
+                Questions.Add(question);
                 return;
             }
         }
         public void ClearQuestions()
         {
-            _questions.Clear();
+            Questions.Clear();
             return;
         }
         public void SheetQuestions(List<Question> questionList)
         {
             if (questionList == null)
                 return;
-            _questions = questionList;
+            Questions = questionList;
             return;
         }
         public void AddQuestions(List<Question> questions)
         {
-            _questions.AddRange(questions);
+            Questions.AddRange(questions);
             return;
         }
         public void ClearQuestions(string sheetId)
         {
             if (!Questions.Any(i => i.SheetId == sheetId))
             {
-                _questions.Clear();
+                Questions.Clear();
             }
         }
     }

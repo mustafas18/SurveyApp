@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Core.Dtos;
+using Core.IntegrationEvents.Events;
+using MediatR;
 
 namespace Infrastructure.Services
 {
@@ -16,12 +18,15 @@ namespace Infrastructure.Services
     {
         private readonly IRepository<Sheet> _sheetRepository;
         private readonly ISheetRepository _sheetReadRepository;
+        private readonly IMediator _mediator;
 
         public SheetService(IRepository<Sheet> sheetRepository,
-                ISheetRepository sheetReadRepository)
+                ISheetRepository sheetReadRepository,
+                IMediator mediator)
         {
             _sheetRepository = sheetRepository;
             _sheetReadRepository = sheetReadRepository;
+            _mediator = mediator;
         }
         public async Task<Sheet> CreateAsync(Sheet sheet)
         {
@@ -30,6 +35,10 @@ namespace Infrastructure.Services
             sheet.Version = 1;
             sheet.SheetId = Guid.NewGuid().ToString().Substring(1,7);
             await _sheetRepository.AddAsync(sheet);
+
+            var domainEvent = new SheetAddedEvent(sheet.SheetId);
+            await _mediator.Publish(domainEvent);
+
             return sheet;
         }
         public async Task<Sheet> AddQuestionToSheet(string sheetId, Question question)

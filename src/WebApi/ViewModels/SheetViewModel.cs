@@ -13,10 +13,10 @@ namespace WebApi.ViewModels
         public int WelcomePageId { get; set; }
         public int EndPageId { get; set; }
         public string Link { get; set; }
-        public List<Question> Questions { get; set; }
+        public List<Question>? Questions { get; set; }
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
-        public string CreatedByUserId { get; set; }
+        public string? CreatedByUserId { get; set; }
         public bool Deleted { get; set; }
 
         

@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ardalis.Specification;
 using Infrastructure.Data;
 using Microsoft.Data.SqlClient;
+using MediatR;
 
 namespace Infrastructure
 {
