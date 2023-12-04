@@ -3,6 +3,7 @@ using Core.Dtos;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces;
+using Infrastructure.Data;
 using Infrastructure.Migrations;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,20 +16,30 @@ namespace WebApi.Controllers
     {
         private readonly IQuestionService _questionService;
         private readonly IMapper _mapper;
+        private readonly IRedisCacheService _redisCacheService;
 
         public QuestionController(IQuestionService questionService,
-            IMapper mapper)
+            IMapper mapper,
+            IRedisCacheService redisCacheService)
         {
             _questionService = questionService;
             _mapper = mapper;
+            _redisCacheService = redisCacheService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetBySheetId(string sheetId,int? sheetVersion)
+        public async Task<IActionResult> GetBySheetId(string sheetId,int? sheetVersion=1)
         {
             try
             {
-                var result =await _questionService.GetBySheetId(sheetId, sheetVersion);
-                return StatusCode(200, CustomResult.Ok(result));
+                var cacheData = _redisCacheService.GetData<IEnumerable<QuestionDto>>($"{sheetId}.{sheetVersion}.question");
+                if (cacheData != null)
+                {
+                    return StatusCode(200, CustomResult.Ok(cacheData));
+                }
+                cacheData = await _questionService.GetBySheetId(sheetId, sheetVersion);
+                var expirationTime = DateTimeOffset.Now.AddDays(1);
+                await _redisCacheService.SetDataAsync<IEnumerable<QuestionDto>>($"{sheetId}.{sheetVersion}.question", cacheData, expirationTime);
+                return StatusCode(200, CustomResult.Ok(cacheData));
             }
             catch (Exception ex)
             {

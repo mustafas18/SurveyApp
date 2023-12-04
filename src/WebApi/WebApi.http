@@ -1,0 +1,28 @@
+﻿@WebApi_HostAddress = https://localhost:44365
+
+GET {{WebApi_HostAddress}}/api/question/GetBySheetId?sheetId=string
+
+###
+
+GET {{WebApi_HostAddress}}/api/question/GetBySheetId?sheetId=1
+
+###
+
+GET {{WebApi_HostAddress}}/api/sheet/GetSheetList
+
+###
+
+POST {{WebApi_HostAddress}}/api/user/Login
+Content-Type: application/json
+
+{
+   "userName": "admin",
+  "password": "Password*",
+  "rememberMe": true
+}
+
+###
+
+GET {{WebApi_HostAddress}}/api/sheet/GetSheetList
+
+###

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -148,10 +149,20 @@ namespace WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey))
                 };
             });
+            //builder.Services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = builder.Configuration.GetConnectionString("RedisURL");
+            //    options.InstanceName = "Redis_";
+            //});
+            //builder.Services.AddScoped<IDatabase>(cfg =>
+            //{
+            //    IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect($"{builder.Configuration.GetConnectionString("RedisURL")},password=123");
+            //    return multiplexer.GetDatabase();
+            //});
             builder.Services.AddResponseCaching();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddControllers();
-
+            builder.AddRedis("redis");
 
             var app = builder.Build();
 
