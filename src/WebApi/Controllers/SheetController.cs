@@ -3,6 +3,7 @@ using Core.Dtos;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
+using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace WebApi.Controllers
         private readonly ISheetService _sheetService;
         private readonly IUserInfoService _userInfoService;
         private readonly IUserService _userService;
+        private readonly IRedisCacheService _redisCacheService;
         private readonly IMapper _mapper;
 
         public SheetController(ISheetRepository sheetRepository,
@@ -53,12 +55,23 @@ namespace WebApi.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetById(string sheetId)
+        public async Task<IActionResult> GetById(string sheetId,bool cache=true)
         {
             try
             {
+                if(cache)
+                {
+                    var cacheData = _redisCacheService.GetData<SheetDto>($"sheet_{sheetId}");
+                    if (cacheData != null)
+                    {
+                        return StatusCode(200, CustomResult.Ok(cacheData));
+                    }
+                    cacheData = await _sheetService.GetByIdAsync(sheetId);
+                    var expirationTime = DateTimeOffset.Now.AddDays(1);
+                    await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}", cacheData, expirationTime);
+                    return StatusCode(200, CustomResult.Ok(cacheData));
+                }
                 var result = await _sheetService.GetByIdAsync(sheetId);
-                //SheetViewModel sheetInfoViewModel = _mapper.Map<SheetViewModel>(result);
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)

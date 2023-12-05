@@ -2,10 +2,12 @@
 using Core.Dtos;
 using Core.Entities;
 using Core.Enums;
+using Core.IntegrationEvents.Events;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Migrations;
 using Infrastructure.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.ViewModels;
 
@@ -16,30 +18,26 @@ namespace WebApi.Controllers
     {
         private readonly IQuestionService _questionService;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
         private readonly IRedisCacheService _redisCacheService;
 
         public QuestionController(IQuestionService questionService,
             IMapper mapper,
+            IMediator mediator,
             IRedisCacheService redisCacheService)
         {
             _questionService = questionService;
             _mapper = mapper;
+            _mediator = mediator;
             _redisCacheService = redisCacheService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetBySheetId(string sheetId,int? sheetVersion=1)
+        public async Task<IActionResult> GetBySheetId(string sheetId, int? sheetVersion = 1)
         {
             try
             {
-                var cacheData = _redisCacheService.GetData<IEnumerable<QuestionDto>>($"{sheetId}.{sheetVersion}.question");
-                if (cacheData != null)
-                {
-                    return StatusCode(200, CustomResult.Ok(cacheData));
-                }
-                cacheData = await _questionService.GetBySheetId(sheetId, sheetVersion);
-                var expirationTime = DateTimeOffset.Now.AddDays(1);
-                await _redisCacheService.SetDataAsync<IEnumerable<QuestionDto>>($"{sheetId}.{sheetVersion}.question", cacheData, expirationTime);
-                return StatusCode(200, CustomResult.Ok(cacheData));
+                var result = await _questionService.GetBySheetId(sheetId, sheetVersion);
+                return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
             {
@@ -62,8 +60,10 @@ namespace WebApi.Controllers
                     Type = (QuestionTypeEnum)questionViewModel.Type,
                 };
                 question.Answers = new List<QuestionAnswer>();
-                questionViewModel.Answers.ForEach(a => question.Answers.Add(new QuestionAnswer(a.Text,a.Value)));
-                var result = _questionService.CreateAsync(questionViewModel.SheetId, question);
+                questionViewModel.Answers.ForEach(a => question.Answers.Add(new QuestionAnswer(a.Text, a.Value)));
+                var result = await _questionService.CreateAsync(questionViewModel.SheetId, question);
+
+
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)

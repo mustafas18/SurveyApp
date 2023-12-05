@@ -57,7 +57,7 @@ namespace WebApi
             });
 
 
-            builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>());
 
             builder.Services.AddMemoryCache();
 

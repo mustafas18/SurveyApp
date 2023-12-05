@@ -1,8 +1,10 @@
 ﻿using Core.Dtos;
 using Core.Entities;
+using Core.IntegrationEvents.Events;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,15 +17,21 @@ namespace Infrastructure.Services
     public class QuestionService : IQuestionService
     {
         private readonly IRepository<Question> _questionRepository;
+        private readonly IRedisCacheService _redisCacheService;
         private readonly IRepository<Sheet> _sheetRepository;
+        private readonly IMediator _mediator;
         private readonly ISheetRepository _sheetDapperRepository;
 
         public QuestionService(IRepository<Question> questionRepository,
+            IRedisCacheService redisCacheService,
             IRepository<Sheet> sheetRepository,
+            IMediator mediator,
             ISheetRepository sheetDapperRepository)
         {
             _questionRepository = questionRepository;
+            _redisCacheService = redisCacheService;
             _sheetRepository = sheetRepository;
+            _mediator = mediator;
             _sheetDapperRepository = sheetDapperRepository;
         }
         public async Task<string> CreateAsync(string sheetId, Question question)
@@ -33,6 +41,7 @@ namespace Infrastructure.Services
             question.SheetVersion = _sheetDapperRepository.GetLatestVersion(sheetId);
             question.Order = CountSheetQuestion(sheetId, question.SheetVersion)+1;
             await _sheetDapperRepository.AddQuestion(sheetId,question);
+            await _mediator.Publish(new SheetUpdatedEvent(sheetId));
             return "OK";
         }
         public int CountSheetQuestion(string sheetId, int? sheetVersion)
@@ -104,6 +113,7 @@ namespace Infrastructure.Services
             orderedQuestion.ForEach(q => { q.Order = i++; });
             sheet.SheetQuestions(orderedQuestion);
             _sheetDapperRepository.SaveChanges(sheet);
+            _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId));
             return sheet.Questions.ToList();
         }
     }

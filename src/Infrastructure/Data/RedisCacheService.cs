@@ -24,7 +24,7 @@ namespace Infrastructure.Data
         public T GetData<T>(string key)
         {
             var value = _db.StringGet(key);
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value) && value!="{[]}")
             {
                 return JsonSerializer.Deserialize<T>(value);
             }
