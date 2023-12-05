@@ -32,20 +32,33 @@ WHERE Name=@name AND SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId
         {
             string versionCondition = string.Empty;
 
-   
+  
             if (sheetVersion == null)
             {
                 versionCondition = $" SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId='{sheetId}') AND ";
             }
 
             var query = @$"SELECT * 
-FROM Variables 
-WHERE {versionCondition} SheetId='{sheetId}'";
+                FROM Variables 
+                WHERE {versionCondition} Deleted=0 AND SheetId='{sheetId}'";
             using (var connection = _db.CreateConnection())
             {
                 var variable = await connection.QueryAsync<Variable>(query);
                 return variable.ToList();
             }
+        }
+        public async Task<bool> DeleteAsync(int variableId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { varId = variableId });
+
+            var query = $@"UPDATE Variables SET Deleted=1 WHERE Id=@varId";
+
+            using (var connection = _db.CreateConnection())
+            {
+                var variable = await connection.ExecuteAsync(query, parameters);
+            }
+            return true;
         }
     }
 }

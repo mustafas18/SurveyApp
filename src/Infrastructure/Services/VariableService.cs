@@ -35,6 +35,11 @@ namespace Infrastructure.Services
             await _varRepository.AddAsync(variable);
             return variable;
         }
+        public async Task<bool> DeleteAsync(int variableId)
+        {
+            await  _varDapperRepository.DeleteAsync(variableId);
+            return true;
+        }
         public async Task<Variable> GetByName(string sheetId,string name)
         {
             Guard.Against.Null(name);
@@ -46,10 +51,6 @@ namespace Infrastructure.Services
         {
             Guard.Against.Null(sheetId);
             var result = await _varDapperRepository.GetBySheetId(sheetId, sheetVersion);
-            if (result != null)
-            {
-                result.ForEach(s => s.ValuesAsString = ConvertValueLabelToString(s.Values));
-            }
             return result;
         }
         public List<VariableValueLabel> ConvertStringIntoList(string values)

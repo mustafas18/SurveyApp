@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="entityName">includeProperties as string seperated by ,</param>
         /// <returns></returns>
-        IQueryable<TEntity> Include(string entityName);
+        IQueryable<TEntity> Include([NotParameterized] string entityProperties);
         IQueryable<TEntity> AsNoTracking();
     }
 }

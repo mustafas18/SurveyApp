@@ -46,10 +46,9 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
 
-
-            modelBuilder.Entity<Language>()
-                .HasData(new Language(1,"Persian", TextDirectionEnum.rlt)
-                        , new Language(2,"English", TextDirectionEnum.ltr));
+           modelBuilder.Entity<Language>()
+                .HasData(new Language(1,"English", TextDirectionEnum.ltr),
+                   new Language(2, "Persian", TextDirectionEnum.rlt));
             modelBuilder.Entity<UserDegree>()
             .HasData(
                 new UserDegree(1,"دانشجوی کارشناسی", "BSc Student"),

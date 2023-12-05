@@ -29,7 +29,8 @@ namespace WebApi.Controllers
             ISheetService sheetService,
             IUserInfoService userInfoService,
             IUserService userService,
-            IMapper mapper)
+            IMapper mapper,
+            IRedisCacheService redisCacheService)
         {
             this.sheetRepository = sheetRepository;
             _efRepository = efRepository;
@@ -37,6 +38,7 @@ namespace WebApi.Controllers
             _userInfoService = userInfoService;
             _userService = userService;
             _mapper = mapper;
+            _redisCacheService = redisCacheService;
         }
         [HttpGet]
         public async Task<IActionResult> GetSheetList()
@@ -67,7 +69,7 @@ namespace WebApi.Controllers
                         return StatusCode(200, CustomResult.Ok(cacheData));
                     }
                     cacheData = await _sheetService.GetByIdAsync(sheetId);
-                    var expirationTime = DateTimeOffset.Now.AddDays(1);
+                    var expirationTime = TimeSpan.FromHours(1);
                     await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}", cacheData, expirationTime);
                     return StatusCode(200, CustomResult.Ok(cacheData));
                 }

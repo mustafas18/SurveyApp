@@ -73,7 +73,7 @@ namespace Infrastructure.Data.Repositories
                 DeadlineTime = sheet.DeadlineTime,
                 CreateTime = sheet.CreateTime,
                 Link = sheet.Link,
-                Questions = sheet.Questions.ToList(),
+                Questions = sheet.Questions?.Where(q=>q.Deleted==false).OrderBy(s=>s.Order).ToList(),
                 SheetId = sheet.SheetId,
                 TemplateId = sheet.TemplateId,
                 Title = sheet.Title,

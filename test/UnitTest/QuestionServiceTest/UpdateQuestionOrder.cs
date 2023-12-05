@@ -12,6 +12,7 @@ using Infrastructure.Services;
 using Core.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using MediatR;
 
 namespace UnitTest.QuestionServiceTest
 {
@@ -35,13 +36,16 @@ namespace UnitTest.QuestionServiceTest
             });
 
             var mockQuestionRepository = new Mock<IRepository<Question>>();
+            var mockRedisCache=new Mock<IRedisCacheService>();
             var mockSheetRepository = new Mock<IRepository<Sheet>>();
             var mockSheetDapperRepository = new Mock<ISheetRepository>();
+            var mockQuestionRepo=new Mock<IQuestionRepository>();
+            var mockMediator = new Mock<IMediator>();
             mockSheetDapperRepository.Setup(s => s.GetLatestVersion(It.IsAny<string>())).Returns(1);
             mockSheetRepository.SetReturnsDefault(sheet);
 
-            var questionService = new QuestionService(mockQuestionRepository.Object, 
-                mockSheetRepository.Object, mockSheetDapperRepository.Object);
+            var questionService = new QuestionService(mockQuestionRepository.Object,
+                mockSheetRepository.Object, mockQuestionRepo.Object, mockMediator.Object, mockSheetDapperRepository.Object);
 
             // Act
             var question = questionService.UpdateQuestionOrder(questionOrderDto);

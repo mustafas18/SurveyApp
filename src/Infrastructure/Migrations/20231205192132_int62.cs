@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class int62 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,32 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,31 +102,13 @@ namespace Infrastructure.Migrations
                     Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DurationTime = table.Column<int>(type: "int", nullable: false),
                     DeadlineTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedByUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedByUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sheets", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserAnswers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserSurveyId = table.Column<int>(type: "int", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
-                    QuestionAnswerId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    InputValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserResponseTime = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserAnswers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -113,18 +121,18 @@ namespace Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    Birthday = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PictureBase64 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ResearchInterestId = table.Column<int>(type: "int", nullable: false),
-                    Grade = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Job = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AtmCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CVFileData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    FileContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureBase64 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResearchInterestId = table.Column<int>(type: "int", nullable: true),
+                    Grade = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Job = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AtmCard = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CVFileData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    FileContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -158,6 +166,7 @@ namespace Infrastructure.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     Label = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaxValue = table.Column<int>(type: "int", nullable: false),
+                    ValuesAsString = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Messure = table.Column<int>(type: "int", nullable: false),
                     SheetId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SheetVersion = table.Column<int>(type: "int", nullable: false),
@@ -187,107 +196,6 @@ namespace Infrastructure.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SheetId = table.Column<int>(type: "int", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Sheets_SheetId",
-                        column: x => x.SheetId,
-                        principalTable: "Sheets",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Questions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SheetId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SheetVersion = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VariableId = table.Column<int>(type: "int", nullable: false),
-                    QuestionFileUri = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QuestionFileContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ResponseTime = table.Column<int>(type: "int", nullable: false),
-                    Required = table.Column<bool>(type: "bit", nullable: false),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false),
-                    SheetId1 = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Questions_Sheets_SheetId1",
-                        column: x => x.SheetId1,
-                        principalTable: "Sheets",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserDegree",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TitleFa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TitleEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserInfoId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserDegree", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserDegree_UserInfos_UserInfoId",
-                        column: x => x.UserInfoId,
-                        principalTable: "UserInfos",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VariableValueLabel",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<int>(type: "int", nullable: false),
-                    Label = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VariableId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VariableValueLabel", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_VariableValueLabel_Variables_VariableId",
-                        column: x => x.VariableId,
-                        principalTable: "Variables",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -376,22 +284,139 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SheetId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SheetVersion = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VariableId = table.Column<int>(type: "int", nullable: true),
+                    FileUri = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResponseTime = table.Column<int>(type: "int", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    Required = table.Column<bool>(type: "bit", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    SheetId1 = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Sheets_SheetId1",
+                        column: x => x.SheetId1,
+                        principalTable: "Sheets",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SheetUserInfo",
+                columns: table => new
+                {
+                    SheetsId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SheetUserInfo", x => new { x.SheetsId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_SheetUserInfo_Sheets_SheetsId",
+                        column: x => x.SheetsId,
+                        principalTable: "Sheets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SheetUserInfo_UserInfos_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "UserInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserDegree",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TitleFa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TitleEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserInfoId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserDegree", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserDegree_UserInfos_UserInfoId",
+                        column: x => x.UserInfoId,
+                        principalTable: "UserInfos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VariableValueLabel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<int>(type: "int", nullable: false),
+                    Label = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VariableId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VariableValueLabel", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VariableValueLabel_Variables_VariableId",
+                        column: x => x.VariableId,
+                        principalTable: "Variables",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "QuestionAnswers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    File = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false)
+                    File = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<int>(type: "int", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_QuestionAnswers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_QuestionAnswers_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAnswers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserSurveyId = table.Column<int>(type: "int", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    QuestionAnswerId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InputValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserResponseTime = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAnswers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAnswers_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
@@ -403,8 +428,8 @@ namespace Infrastructure.Migrations
                 columns: new[] { "Id", "TextDirection", "Title" },
                 values: new object[,]
                 {
-                    { 1, 0, "Persian" },
-                    { 2, 1, "English" }
+                    { 1, 1, "English" },
+                    { 2, 0, "Persian" }
                 });
 
             migrationBuilder.InsertData(
@@ -453,11 +478,6 @@ namespace Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_SheetId",
-                table: "AspNetUsers",
-                column: "SheetId");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -473,6 +493,16 @@ namespace Infrastructure.Migrations
                 name: "IX_Questions_SheetId1",
                 table: "Questions",
                 column: "SheetId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SheetUserInfo_UsersId",
+                table: "SheetUserInfo",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAnswers_QuestionId",
+                table: "UserAnswers",
+                column: "QuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDegree_UserInfoId",
@@ -511,6 +541,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "SheetPages");
+
+            migrationBuilder.DropTable(
+                name: "SheetUserInfo");
 
             migrationBuilder.DropTable(
                 name: "UserAnswers");

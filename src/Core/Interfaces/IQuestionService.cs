@@ -13,6 +13,7 @@ namespace Core.Interfaces
     {
         Task<string> CreateAsync(string sheetId, Question question);
         List<Question> UpdateQuestionOrder(QuestionOrderDto question);
+        Task<bool> DeleteQuestionAsync(int questionId);
         int CountSheetQuestion(string sheetId, int? sheetVersion);
         Task<IEnumerable<QuestionDto>> GetBySheetId(string sheetId, int? sheetVersion);
     }

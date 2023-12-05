@@ -10,6 +10,7 @@ namespace Core.Interfaces
     public interface IVariableService
     {
         Task<Variable> Create(Variable variable);
+        Task<bool> DeleteAsync(int variableId);
         Task<Variable> GetByName(string sheetId,string name);
         Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
         List<VariableValueLabel> ConvertStringIntoList(string values);

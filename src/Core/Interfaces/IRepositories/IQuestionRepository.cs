@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.IRepositories
 {
-    public interface IDapperRepository<T> where T : class
+    public interface IQuestionRepository
     {
-
-        Task<IEnumerable<T>> GetAll();
-        Task<bool> DeleteAsync(int Id);
+        Task<string> DeleteAsync(int Id);
     }
 }

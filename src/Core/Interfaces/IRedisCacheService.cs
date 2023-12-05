@@ -24,7 +24,7 @@ namespace Core.Interfaces
         /// <param name="value"></param>
         /// <param name="expirationTime"></param>
         /// <returns></returns>
-        Task<bool> SetDataAsync<T>(string key, T value, DateTimeOffset? expirationTime);
+        Task<bool> SetDataAsync<T>(string key, T value, TimeSpan expirationTime);
 
         /// <summary>
         /// Remove Data

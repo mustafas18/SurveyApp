@@ -20,6 +20,25 @@ namespace WebApi.Controllers
             _variableService = variableService;
             _mapper = mapper;
         }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetBySheetId(string sheetId, int? sheetVersion)
+        {
+            try
+            {
+                var result = await _variableService.GetBySheetId(sheetId, sheetVersion);
+                if (result == null)
+                {
+                    return StatusCode(200, CustomResult.Ok(null));
+                }
+                var variableViewModel = _mapper.Map<IEnumerable<VariableViewModel>>(result);
+                return StatusCode(200, CustomResult.Ok(variableViewModel));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
         [HttpPost]
         public IActionResult Create([FromBody] VariableViewModel variableViewModel)
         {
@@ -33,24 +52,19 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> GetBySheetId(string sheetId,int? sheetVersion)
+        [HttpDelete]
+        public IActionResult Delete([FromQuery] int variableId)
         {
             try
             {
-                var result =await _variableService.GetBySheetId(sheetId,sheetVersion);
-               if(result == null)
-                {
-                    return StatusCode(200, CustomResult.Ok(null));
-                }
-                var variableViewModel= _mapper.Map<IEnumerable<VariableViewModel>>(result);
-                return StatusCode(200, CustomResult.Ok(variableViewModel));
+                var result = _variableService.DeleteAsync(variableId);
+                return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
             {
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+       
     }
 }

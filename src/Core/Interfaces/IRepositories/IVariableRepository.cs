@@ -9,6 +9,7 @@ namespace Core.Interfaces.IRepositories
 {
     public interface IVariableRepository
     {
+        Task<bool> DeleteAsync(int variableId);
         Task<Variable> GetByName(string sheetId, string name);
         Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
     }

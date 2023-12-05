@@ -15,7 +15,6 @@ namespace Core.Entities
         public VariableTypeEnum Type { get; set; }
         public string Label { get; set; }
         public int MaxValue { get; set; }
-        [NotMapped]
         public string? ValuesAsString { get; set; }
         public List<VariableValueLabel>? Values { get; set; }
         public MessureEnum Messure { get; set; }

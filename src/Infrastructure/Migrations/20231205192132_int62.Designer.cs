@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231118154512_ICollection")]
-    partial class ICollection
+    [Migration("20231205192132_int62")]
+    partial class int62
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,14 +48,14 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            TextDirection = 0,
-                            Title = "Persian"
+                            TextDirection = 1,
+                            Title = "English"
                         },
                         new
                         {
                             Id = 2,
-                            TextDirection = 1,
-                            Title = "English"
+                            TextDirection = 0,
+                            Title = "Persian"
                         });
                 });
 
@@ -106,7 +106,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VariableId")
+                    b.Property<int?>("VariableId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -159,7 +159,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedByUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DeadlineTime")
@@ -272,6 +271,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("UserAnswers");
                 });
@@ -468,6 +469,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
+
+                    b.Property<string>("ValuesAsString")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -741,6 +745,15 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("QuestionId");
                 });
 
+            modelBuilder.Entity("Core.Entities.UserAnswer", b =>
+                {
+                    b.HasOne("Core.Entities.Question", null)
+                        .WithMany("UserAnswers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Entities.UserDegree", b =>
                 {
                     b.HasOne("Core.Entities.UserInfo", null)
@@ -824,6 +837,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("UserAnswers");
                 });
 
             modelBuilder.Entity("Core.Entities.Sheet", b =>

@@ -5,7 +5,6 @@ using Core.Enums;
 using Core.IntegrationEvents.Events;
 using Core.Interfaces;
 using Infrastructure.Data;
-using Infrastructure.Migrations;
 using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -86,5 +85,20 @@ namespace WebApi.Controllers
             }
 
         }
-    }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromQuery] int questionId)
+        {
+            try
+            {
+                var result=await _questionService.DeleteQuestionAsync(questionId);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+           }
 }

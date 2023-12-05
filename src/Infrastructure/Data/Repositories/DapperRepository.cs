@@ -27,5 +27,14 @@ namespace Infrastructure.Data.Repositories
                 return sheets.ToList();
             }
         }
+        public async Task<bool> DeleteAsync(int Id)
+        {
+            var query = $@"UPDATE {nameof(T)} SET Deleted=1 WHERE Id={Id}";
+            using (var connection = _db.CreateConnection())
+            {
+                var sheets = await connection.ExecuteAsync(query);
+            }
+            return true;
+        }
     }
 }

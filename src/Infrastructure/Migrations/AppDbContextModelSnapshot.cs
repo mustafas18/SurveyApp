@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -45,14 +45,14 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            TextDirection = 0,
-                            Title = "Persian"
+                            TextDirection = 1,
+                            Title = "English"
                         },
                         new
                         {
                             Id = 2,
-                            TextDirection = 1,
-                            Title = "English"
+                            TextDirection = 0,
+                            Title = "Persian"
                         });
                 });
 
@@ -156,7 +156,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedByUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DeadlineTime")
@@ -269,6 +268,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("UserAnswers");
                 });
@@ -466,6 +467,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<string>("ValuesAsString")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Variables");
@@ -562,7 +566,8 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -738,6 +743,15 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("QuestionId");
                 });
 
+            modelBuilder.Entity("Core.Entities.UserAnswer", b =>
+                {
+                    b.HasOne("Core.Entities.Question", null)
+                        .WithMany("UserAnswers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Entities.UserDegree", b =>
                 {
                     b.HasOne("Core.Entities.UserInfo", null)
@@ -821,6 +835,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("UserAnswers");
                 });
 
             modelBuilder.Entity("Core.Entities.Sheet", b =>

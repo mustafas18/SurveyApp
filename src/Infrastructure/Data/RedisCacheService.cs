@@ -41,10 +41,10 @@ namespace Infrastructure.Data
             return false;
         }
 
-        public async Task<bool> SetDataAsync<T>(string key, T value, DateTimeOffset? expirationTime)
+        public async Task<bool> SetDataAsync<T>(string key, T value,TimeSpan expirationTime)
         {
             var json = JsonSerializer.SerializeToUtf8Bytes(value);
-            var isSet = await _db.StringSetAsync(key, json);
+            var isSet = await _db.StringSetAsync(key, json,expirationTime);
 
             return isSet;
         }
