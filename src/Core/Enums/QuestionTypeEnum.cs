@@ -9,15 +9,14 @@ namespace Core.Enums
     public enum QuestionTypeEnum
     {
         RadioButton,
-        Rateing,
+        Number,
         CheckBox,
-        DropDown,
-        YesNo,
-        FileUpload,
-        ImagePicker,
-        Ranking,
         TextInput,
         TextArea,
+        Rateing,
+        DropDown,
+        FileUpload,
+        ImagePicker,
         ImageUpload
         //SingleSelectMatrix,
 
