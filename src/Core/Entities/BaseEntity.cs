@@ -1,4 +1,4 @@
-﻿using Core.IntegrationEvents.Events;
+﻿using Core.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;

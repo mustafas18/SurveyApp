@@ -2,7 +2,7 @@
 using Core.Dtos;
 using Core.Entities;
 using Core.Enums;
-using Core.IntegrationEvents.Events;
+using Core.Events;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;

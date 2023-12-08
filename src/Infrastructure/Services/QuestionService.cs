@@ -1,6 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Entities;
-using Core.IntegrationEvents.Events;
+using Core.Events;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
@@ -103,7 +103,7 @@ namespace Infrastructure.Services
 
         }
 
-        public List<Question> UpdateQuestionOrder(QuestionOrderDto questionDto)
+        public async Task<List<Question>> UpdateQuestionOrder(QuestionOrderDto questionDto)
         {
             var latestVersion = _sheetDapperRepository.GetLatestVersion(questionDto.SheetId);
             var sheet = _sheetRepository.Where(s => s.SheetId == questionDto.SheetId && s.Version == latestVersion)
@@ -118,8 +118,9 @@ namespace Infrastructure.Services
             int i = 1;
             orderedQuestion.ForEach(q => { q.Order = i++; });
             sheet.SheetQuestions(orderedQuestion);
+         
             _sheetDapperRepository.SaveChanges(sheet);
-            _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId));
+          await  _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId));
             return sheet.Questions.ToList();
         }
     }

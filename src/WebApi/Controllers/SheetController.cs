@@ -69,7 +69,7 @@ namespace WebApi.Controllers
                         return StatusCode(200, CustomResult.Ok(cacheData));
                     }
                     cacheData = await _sheetService.GetByIdAsync(sheetId);
-                    var expirationTime = TimeSpan.FromHours(1);
+                    var expirationTime = TimeSpan.FromMinutes(1);
                     await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}", cacheData, expirationTime);
                     return StatusCode(200, CustomResult.Ok(cacheData));
                 }

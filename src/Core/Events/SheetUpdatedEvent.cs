@@ -1,15 +1,16 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.IntegrationEvents.Events
+namespace Core.Events
 {
-    public class SheetAddedEvent : DomainEventBase
+    public class SheetUpdatedEvent : INotification
     {
         public string SheetId { get; set; }
-        public SheetAddedEvent(string sheetId)
+        public SheetUpdatedEvent(string sheetId)
         {
             SheetId = sheetId;
         }

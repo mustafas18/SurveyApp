@@ -1,5 +1,6 @@
 ﻿using Core.Constants;
 using Core.Entities;
+using Core;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -16,6 +17,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using WebApi.Handllers;
 
 namespace WebApi
 {
@@ -57,8 +59,6 @@ namespace WebApi
             });
 
 
-            builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>());
-
             builder.Services.AddMemoryCache();
 
         
@@ -83,6 +83,13 @@ namespace WebApi
             
             // Add services to the container.
             builder.Services.AddMyServices();
+
+            _ = typeof(SheetUpdatedEventHandler);
+            builder.Services.AddMediatR(cfg => {
+                cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+                });
+            
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

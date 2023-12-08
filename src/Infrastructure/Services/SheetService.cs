@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Core.Dtos;
-using Core.IntegrationEvents.Events;
+using Core.Events;
 using MediatR;
 
 namespace Infrastructure.Services
