@@ -48,8 +48,8 @@ namespace Infrastructure.Data.Repositories
         {
             //try
             //{
-                _context.Set<TEntity>().Update(entity);
-                await _context.SaveChangesAsync();
+            _context.Set<TEntity>().Update(entity);
+            await _context.SaveChangesAsync();
             return entity;
             //}
             //catch (DbUpdateConcurrencyException ex)
@@ -87,7 +87,7 @@ namespace Infrastructure.Data.Repositories
         }
         public IQueryable<TEntity> OrderBy(Expression<Func<TEntity, bool>> filter = null)
         {
-                return _context.Set<TEntity>().OrderBy(filter);
+            return _context.Set<TEntity>().OrderBy(filter);
         }
         public TEntity LastOrDefault()
         {
@@ -107,6 +107,13 @@ namespace Infrastructure.Data.Repositories
         public IQueryable<TEntity> AsNoTracking()
         {
             return _context.Set<TEntity>().AsNoTracking();
+        }
+
+        public Task AddRangeAsync(List<TEntity> entities)
+        {
+            _context.AddRangeAsync(entities);
+            _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
     }
 }

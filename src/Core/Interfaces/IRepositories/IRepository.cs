@@ -12,6 +12,7 @@ namespace Core.Interfaces
     public interface IRepository<TEntity> where TEntity : class
     {
         Task AddAsync(TEntity entity);
+        Task AddRangeAsync(List<TEntity> entities);
         Task<TEntity> UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> filter = null,

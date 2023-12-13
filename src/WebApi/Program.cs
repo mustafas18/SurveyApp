@@ -61,7 +61,7 @@ namespace WebApi
 
             builder.Services.AddMemoryCache();
 
-        
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddControllersWithViews();
 
