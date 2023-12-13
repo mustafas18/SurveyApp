@@ -86,7 +86,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                return StatusCode(200, CustomResult.Ok(_userService.Register(_mapper.Map<UserRegisterDto>(register))));
+                return StatusCode(200, CustomResult.Ok(await _userService.Register(_mapper.Map<UserRegisterDto>(register))));
             }
             catch (Exception ex)
             {
