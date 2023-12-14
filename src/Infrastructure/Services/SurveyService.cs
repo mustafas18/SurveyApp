@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
@@ -13,21 +14,25 @@ namespace Infrastructure.Services
     public class SurveyService : ISurveyService
     {
         private readonly IRepository<UserSurvey> _surveyRepository;
-        private readonly ISheetRepository _sheetRepository;
+        private readonly ISheetService _sheetService;
 
         public SurveyService(IRepository<UserSurvey> surveyRepository,
-            ISheetRepository sheetRepository)
+            ISheetService sheetService)
         {
             _surveyRepository = surveyRepository;
-            _sheetRepository = sheetRepository;
+            _sheetService = sheetService;
         }
 
         public async Task<UserSurvey> CreateSurveyAsync(string sheetId, string? userName)
         {
+           int sheetVersion = _sheetService.GetLatestVersion(sheetId);
+           SheetDto sheet= await _sheetService.GetSheetInfo(sheetId, sheetVersion);
+
             var survey = new UserSurvey
             {
                 SheetId = sheetId,
-                SheetVersion = _sheetRepository.GetLatestVersion(sheetId),
+                SheetVersion = _sheetService.GetLatestVersion(sheetId),
+                SurveyTitle= sheet?.Title,
                 Link = Guid.NewGuid().ToString(),
                 UserName = userName,
             };

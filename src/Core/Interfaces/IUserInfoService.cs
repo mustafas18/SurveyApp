@@ -9,7 +9,7 @@ namespace Core.Interfaces
 {
     public interface IUserInfoService
     {
-        UserInfo GetUserInfo(string userId);
+        UserInfo GetUserInfo(string userName);
         List<UserInfo> GetUserInfoList();
     }
 }

@@ -10,12 +10,12 @@ namespace Core.Entities
 {
     public class UserInfo : BaseEntity
     {
-        public string AppUserId { get; set; }
+        public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
-        public GenderEnum Gender { get; set; }
+        public GenderEnum? Gender { get; set; }
         public string? Birthday { get; set; }
         public string? PictureBase64 { get; set; }
         public string? Country { get; set; }

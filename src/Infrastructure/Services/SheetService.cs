@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Core.Dtos;
 using Core.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
@@ -57,9 +58,52 @@ namespace Infrastructure.Services
 
         public async Task<SheetDto> GetByIdAsync(string sheetId)
         {
-          return await _sheetReadRepository.GetSheetById(sheetId);
+            var sheet= await _sheetReadRepository.GetSheetById(sheetId).FirstOrDefaultAsync();
+            var sheetDto = new SheetDto
+            {
+                LanguageId = sheet.LanguageId,
+                Icon = sheet.Icon,
+                EndPageId = sheet.EndPageId,
+                DurationTime = sheet.DurationTime,
+                DeadlineTime = sheet.DeadlineTime,
+                CreateTime = sheet.CreateTime,
+                Link = sheet.Link,
+                Questions = sheet.Questions?.Where(q => q.Deleted == false).OrderBy(s => s.Order).ToList(),
+                SheetId = sheet.SheetId,
+                TemplateId = sheet.TemplateId,
+                Title = sheet.Title,
+                WelcomePageId = sheet.WelcomePageId
+
+            };
+            return sheetDto;
+
+        }
+        public async Task<SheetDto> GetSheetInfo(string sheetId, int? sheetVersion)
+        {
+            var sheet= await _sheetReadRepository.GetSheetInfo(sheetId, sheetVersion)
+                .FirstOrDefaultAsync();
+            var sheetDto = new SheetDto
+            {
+                LanguageId = sheet.LanguageId,
+                Icon = sheet.Icon,
+                EndPageId = sheet.EndPageId,
+                DurationTime = sheet.DurationTime,
+                DeadlineTime = sheet.DeadlineTime,
+                CreateTime = sheet.CreateTime,
+                Link = sheet.Link,
+                Questions = null,
+                SheetId = sheet.SheetId,
+                TemplateId = sheet.TemplateId,
+                Title = sheet.Title,
+                WelcomePageId = sheet.WelcomePageId
+
+            };
+            return sheetDto;
         }
 
-
+        public int GetLatestVersion(string sheetId)
+        {
+           return _sheetReadRepository.GetLatestVersion(sheetId);
+        }
     }
 }

@@ -1,20 +1,23 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 
 namespace WebApi.ViewModels
 {
     public class UserFullNameViewModel
     {
-        public UserFullNameViewModel(string id,string fullName)
+        public UserFullNameViewModel(int id,string fullName)
         {
             Id = id;
             FullName = fullName;
         }
-        public UserFullNameViewModel(UserInfo userInfo)
+        public UserFullNameViewModel(UserDto appUser)
         {
-            Id = userInfo.AppUserId;
-            FullName = userInfo.FullName;
+            Id = appUser.Id;
+            UserName = appUser.UserName;
+            FullName = appUser.FullName;
         }
-        public string Id { get; set; }
+        public int Id { get; set; }
+        public string UserName { get; set; }
         public string FullName { get; set; }
     }
 }

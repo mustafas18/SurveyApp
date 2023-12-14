@@ -21,9 +21,9 @@ namespace Infrastructure.Services
             var user = _userInfoRepository.AsNoTracking().ToList();
             return user;
         }
-        public UserInfo GetUserInfo(string userId)
+        public UserInfo GetUserInfo(string userName)
         {
-            var user = _userInfoRepository.AsNoTracking().FirstOrDefault(u => u.AppUserId == userId);
+            var user = _userInfoRepository.AsNoTracking().FirstOrDefault(u => u.UserName == userName);
             return user;
         }
     }

@@ -40,6 +40,9 @@ namespace WebApi.Controllers
             _mapper = mapper;
             _redisCacheService = redisCacheService;
         }
+#if DEBUG
+        [AllowAnonymous]
+#endif
         [HttpGet]
         public async Task<IActionResult> GetSheetList()
         {
@@ -47,21 +50,21 @@ namespace WebApi.Controllers
             {
                 var result = sheetRepository.GetSheetList();
 
-                return StatusCode(200,CustomResult.Ok(_mapper.Map<List<SheetDto>,List<SheetViewModel>>(result.Result.ToList())));
+                return StatusCode(200, CustomResult.Ok(_mapper.Map<List<SheetDto>, List<SheetViewModel>>(result.Result.ToList())));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, CustomResult.InternalError(ex));                
+                return StatusCode(500, CustomResult.InternalError(ex));
             }
 
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetById(string sheetId,bool cache=true)
+        public async Task<IActionResult> GetById(string sheetId, bool cache = true)
         {
             try
             {
-                if(cache)
+                if (cache)
                 {
                     var cacheData = _redisCacheService.GetData<SheetDto>($"sheet_{sheetId}");
                     if (cacheData != null)
@@ -82,6 +85,22 @@ namespace WebApi.Controllers
             }
 
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSheetInfo(string sheetId, int? version)
+        {
+            try
+            {
+                var result = await _sheetService.GetSheetInfo(sheetId, version);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SheetViewModel sheetViewModel)
         {

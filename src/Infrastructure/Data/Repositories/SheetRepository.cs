@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Core.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -27,7 +28,7 @@ namespace Infrastructure.Data.Repositories
             _efContext.Sheets.Update(sheet);
             _efContext.SaveChanges();
         }
-            public async Task<Sheet> AddQuestion(string sheetId, Question question)
+        public async Task<Sheet> AddQuestion(string sheetId, Question question)
         {
             var sheet = _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == GetLatestVersion(sheetId))
                 .Include(nameof(Sheet.Questions))
@@ -37,7 +38,7 @@ namespace Infrastructure.Data.Repositories
             await _efContext.SaveChangesAsync();
             return sheet;
         }
-        public async Task<IEnumerable<SheetDto>> GetSheetList()
+        public async Task<IQueryable<SheetDto>> GetSheetList()
         {
             var query = @"
             SELECT 
@@ -55,32 +56,25 @@ namespace Infrastructure.Data.Repositories
             using (var connection = _db.CreateConnection())
             {
                 var sheets = await connection.QueryAsync<SheetDto>(query);
-                return sheets.ToList();
+                return sheets.AsQueryable();
             }
         }
-        public async Task<SheetDto> GetSheetById(string sheetId)
+        public IQueryable<Sheet> GetSheetById(string sheetId)
         {
-          var sheet =await  _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == _efContext.Sheets.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version))
-                .Include(s=>s.Questions)
-                .ThenInclude(q => q.Answers)
-                .FirstOrDefaultAsync();
-            var sheetDto = new SheetDto
+            var sheet = _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == _efContext.Sheets.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version))?
+                  .Include(s => s.Questions)
+                  .ThenInclude(q => q.Answers).AsQueryable();
+            return sheet;
+        }
+        public IQueryable<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion)
+        {
+            if (sheetVersion==null)
             {
-                LanguageId = sheet.LanguageId,
-                Icon = sheet.Icon,
-                EndPageId = sheet.EndPageId,
-                DurationTime = sheet.DurationTime,
-                DeadlineTime = sheet.DeadlineTime,
-                CreateTime = sheet.CreateTime,
-                Link = sheet.Link,
-                Questions = sheet.Questions?.Where(q=>q.Deleted==false).OrderBy(s=>s.Order).ToList(),
-                SheetId = sheet.SheetId,
-                TemplateId = sheet.TemplateId,
-                Title = sheet.Title,
-                WelcomePageId = sheet.WelcomePageId
-
-            };
-            return sheetDto;
+                sheetVersion = GetLatestVersion(sheetId);
+            }
+            var sheet = _efContext.Sheets
+                                .Where(s => s.SheetId == sheetId && s.Version == sheetVersion);
+            return sheet;
         }
         public int GetLatestVersion(string sheetId)
         {
@@ -93,12 +87,8 @@ WHERE SheetId=@SheetId AND Deleted=0";
             dynamicParameters.Add("SheetId", sheetId);
             using (var connection = _db.CreateConnection())
             {
-                var result = connection.QueryFirstOrDefault<int>(query, dynamicParameters);
-                if (result == 0 || result == null)
-                {
-                    return 1;
-                }
-                return result;
+                var result = connection.QueryFirstOrDefault<int?>(query, dynamicParameters);
+                return result ?? 1;
             }
         }
 

@@ -14,5 +14,7 @@ namespace Core.Interfaces
         Task<Sheet> CreateAsync(Sheet sheet);
         Task<SheetDto> GetByIdAsync(string sheetId);
         Task<Sheet> AddQuestionToSheet(string sheetId, Question question);
+        Task<SheetDto> GetSheetInfo(string sheetId, int? sheetVersion);
+        int GetLatestVersion(string sheetId);
     }
 }

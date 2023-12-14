@@ -14,5 +14,6 @@ namespace Core.Interfaces
         Task<LoginResultDto> Login(LoginInfoDto userDto);
         Task<bool> SignOut();
         Task<AppUser> GetCurrentUserAsync();
+        Task<List<UserDto>> GetUserInfoNameList();
     }
 }

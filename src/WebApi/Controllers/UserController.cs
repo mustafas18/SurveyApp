@@ -49,12 +49,12 @@ namespace WebApi.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> GetUserInfoName(string userId)
+        public async Task<IActionResult> GetUserInfoName(string userName)
         {
             try
             {
-                var result= _userInfoService.GetUserInfo(userId);
-                UserFullNameViewModel userFullNameViewModel= new UserFullNameViewModel(result.AppUserId,result.FullName);  
+                var result= _userInfoService.GetUserInfo(userName);
+                UserFullNameViewModel userFullNameViewModel= new UserFullNameViewModel(result.Id,result.FullName);  
                 return StatusCode(200, CustomResult.Ok(userFullNameViewModel));
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = _userInfoService.GetUserInfoList();
+                var result = await _userService.GetUserInfoNameList();
                 List<UserFullNameViewModel> userFullNameList= new List<UserFullNameViewModel>();
                 result.ForEach(u => { userFullNameList.Add(new UserFullNameViewModel(u)); });
                 return StatusCode(200, CustomResult.Ok(userFullNameList));

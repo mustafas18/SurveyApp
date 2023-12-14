@@ -10,8 +10,9 @@ namespace Core.Interfaces.IRepositories
 {
     public interface ISheetRepository
     {
-        Task<IEnumerable<SheetDto>> GetSheetList();
-        Task<SheetDto> GetSheetById(string sheetId);
+        Task<IQueryable<SheetDto>> GetSheetList();
+        IQueryable<Sheet> GetSheetById(string sheetId);
+        IQueryable<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion);
         Task<Sheet> AddQuestion(string sheetId, Question question);
 
         /// <summary>
