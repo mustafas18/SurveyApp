@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Core.Entities
 {
-    public class UserAnswer:BaseEntity
+    public class UserAnswer : BaseEntity
     {
-
         public int SurveyId { get; set; }
         public int QuestionId { get; set; }
         public string UserName { get; set; }

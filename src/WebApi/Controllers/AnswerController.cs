@@ -30,7 +30,6 @@ namespace WebApi.Controllers
             _userAnswerService = userAnswerService;
         }
         [HttpPost]
-        [AllowAnonymous]
         public IActionResult Create(int surveyId, List<UserAnswerViewModel> answers)
         {
             try
