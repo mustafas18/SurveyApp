@@ -20,6 +20,7 @@ namespace Core.Interfaces
             string includeProperties = "",
             int first = 0, int offset = 0);
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> filter = null);
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null);
         TEntity LastOrDefault();
         IQueryable<TEntity> OrderBy(Expression<Func<TEntity, bool>> filter = null);
         /// <summary>

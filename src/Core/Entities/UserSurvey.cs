@@ -11,7 +11,8 @@ namespace Core.Entities
     {
         public string SheetId { get; set; }
         public int SheetVersion { get; set; }
+        public string? UserName { get; set; }
         public string Link { get; set; }
-        public DateTime ParticipateTime { get; set; }
+        public DateTime? ParticipateTime { get; set; }
     }
 }
