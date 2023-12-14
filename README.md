@@ -4,9 +4,10 @@ The SurveyApp is a web-based platform that allows users to create online surveys
 
 ## Requered Packages
 
+    Microsoft.EntityFrameworkCore
+    Microsoft.EntityFrameworkCore.SqlServer
     Microsoft.AspNetCore.Authentication.JwtBearer
     Microsoft.AspNetCore.Identity
-    Microsoft.EntityFrameworkCore.SqlServer
     Aspire.StackExchange.Redis
     Microsoft.Extensions.Caching.StackExchangeRedis
     StackExchange.Redis
