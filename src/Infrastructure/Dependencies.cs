@@ -34,6 +34,7 @@ namespace Infrastructure
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ISheetService, SheetService>();
             services.AddScoped<IVariableService,VariableService>();
+            services.AddScoped<ISurveyService, SurveyService>();
             services.AddScoped<IUserAnswerService, UserAnswerService>();
             services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IUserService,UserService>();

@@ -109,11 +109,15 @@ namespace Infrastructure.Data.Repositories
             return _context.Set<TEntity>().AsNoTracking();
         }
 
-        public Task AddRangeAsync(List<TEntity> entities)
+        public async Task AddRangeAsync(List<TEntity> entities)
         {
-            _context.AddRangeAsync(entities);
-            _context.SaveChangesAsync();
-            return Task.CompletedTask;
+            await _context.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+           return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
     }
 }
