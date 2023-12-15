@@ -120,7 +120,7 @@ namespace Infrastructure.Services
             sheet.SheetQuestions(orderedQuestion);
          
             _sheetDapperRepository.SaveChanges(sheet);
-            await  _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId, sheet.Version));
+            await _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId, sheet.Version));
             return sheet.Questions.ToList();
         }
     }

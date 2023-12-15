@@ -1,8 +1,10 @@
 ﻿using Core.Dtos;
 using Core.Entities;
+using Core.Enums;
 using Core.Interfaces;
 using Core.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,16 +27,17 @@ namespace Infrastructure.Services
 
         public async Task<UserSurvey> CreateSurveyAsync(string sheetId, string? userName)
         {
-           int sheetVersion = _sheetService.GetLatestVersion(sheetId);
-           SheetDto sheet= await _sheetService.GetSheetInfo(sheetId, sheetVersion);
+            int sheetVersion = _sheetService.GetLatestVersion(sheetId);
+            SheetDto sheet = await _sheetService.GetSheetInfo(sheetId, sheetVersion);
 
             var survey = new UserSurvey
             {
                 SheetId = sheetId,
                 SheetVersion = _sheetService.GetLatestVersion(sheetId),
-                SurveyTitle= sheet?.Title,
+                SurveyTitle = sheet?.Title,
                 Link = Guid.NewGuid().ToString(),
                 UserName = userName,
+                Status = SurveyStatusEnum.Pending
             };
             await _surveyRepository.AddAsync(survey);
             return survey;
@@ -45,6 +48,17 @@ namespace Infrastructure.Services
         public async Task<UserSurvey> GetSurveyAsync(int surveyId)
         {
             return await _surveyRepository.FirstOrDefaultAsync(s => s.Id == surveyId);
+        }
+
+        public async Task<List<UserSurvey>> GetSurveyListAsync(string sheetId)
+        {
+            return await _surveyRepository.AsNoTracking().Where(s=>s.SheetId==sheetId).ToListAsync();
+        }
+
+        public async Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus)
+        {
+            var survey = await _surveyRepository.FirstOrDefaultAsync(s => s.Id == surveyId);
+            await _surveyRepository.UpdateAsync(survey);
         }
     }
 }

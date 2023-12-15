@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Enums;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,5 +17,9 @@ namespace Core.Entities
         public string? UserName { get; set; }
         public string Link { get; set; }
         public DateTime? ParticipateTime { get; set; }
+        public DateTime? CreatedTime { get; set; }
+        public SurveyStatusEnum? Status { get; set; }
     }
+
 }
+

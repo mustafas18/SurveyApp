@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
 #endif
         [HttpPost]
-        public async Task<IActionResult> Create(string sheetId,string? userName)
+        public async Task<IActionResult> Create(string sheetId, string? userName)
         {
             try
             {
@@ -43,6 +43,23 @@ namespace WebApi.Controllers
             {
                 var survey = await _surveyService.GetSurveyAsync(surveyId);
                 return StatusCode(200, CustomResult.Ok(survey));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        [HttpGet]
+        public async Task<IActionResult> GetSurveyList(string sheetId)
+        {
+            try
+            {
+                var surveyList = await _surveyService.GetSurveyListAsync(sheetId);
+                return StatusCode(200, CustomResult.Ok(surveyList));
             }
             catch (Exception ex)
             {

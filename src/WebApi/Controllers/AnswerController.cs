@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Entities;
+using Core.Enums;
 using Core.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -19,18 +20,21 @@ namespace WebApi.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IUserAnswerService _userAnswerService;
+        private readonly ISurveyService _surveyService;
 
         public AnswerController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
-            IUserAnswerService userAnswerService)
+            IUserAnswerService userAnswerService,
+            ISurveyService surveyService)
         {
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _userAnswerService = userAnswerService;
+            _surveyService = surveyService;
         }
         [HttpPost]
-        public IActionResult Create(int surveyId, List<UserAnswerViewModel> answers)
+        public async Task<IActionResult> Create(int surveyId, List<UserAnswerViewModel> answers)
         {
             try
             {
@@ -49,8 +53,8 @@ namespace WebApi.Controllers
                         });
                     });
                 });
-                _userAnswerService.Create(userAnswers);
-
+                await _userAnswerService.Create(userAnswers);
+                await _surveyService.UpdateStatus(surveyId,SurveyStatusEnum.Completed);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
             }
             catch (Exception ex)
