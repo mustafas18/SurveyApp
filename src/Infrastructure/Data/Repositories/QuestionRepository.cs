@@ -19,15 +19,15 @@ namespace Infrastructure.Data.Repositories
             _db = db;
             _efContext = efContext;
         }
-        public async Task<string> DeleteAsync(int Id)
+        public async Task<(string SheetId, int Version)> DeleteAsync(int Id)
         {
-            string sheetId = "";
+            (string,int) sheetId = ("",1);
             var query = $@"
                 UPDATE Questions SET Deleted=1 WHERE Id={Id}
-                SELECT SheetId1 FROM Questions WHERE Id={Id}";
+                SELECT SheetId1 AS SheetId,SheetVersion FROM Questions WHERE Id={Id}";
             using (var connection = _db.CreateConnection())
             {
-                sheetId = await connection.QueryFirstAsync<string>(query);
+                sheetId = await connection.QueryFirstAsync<(string SheetId,int SheetVersion)>(query);
             }
             return sheetId;
         }

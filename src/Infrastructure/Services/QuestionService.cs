@@ -41,13 +41,13 @@ namespace Infrastructure.Services
             question.SheetVersion = _sheetDapperRepository.GetLatestVersion(sheetId);
             question.Order = CountSheetQuestion(sheetId, question.SheetVersion)+1;
             await _sheetDapperRepository.AddQuestion(sheetId,question);
-            await _mediator.Publish(new SheetUpdatedEvent(sheetId));
+            await _mediator.Publish(new SheetUpdatedEvent(sheetId,1));
             return "OK";
         }
         public async Task<bool> DeleteQuestionAsync(int questionId)
         {
             var sheetId = await _questionDapper.DeleteAsync(questionId);
-            await _mediator.Publish(new SheetUpdatedEvent(sheetId));
+            await _mediator.Publish(new SheetUpdatedEvent(sheetId.SheetId,sheetId.Version));
             return true;
         }
         public int CountSheetQuestion(string sheetId, int? sheetVersion)
@@ -120,7 +120,7 @@ namespace Infrastructure.Services
             sheet.SheetQuestions(orderedQuestion);
          
             _sheetDapperRepository.SaveChanges(sheet);
-          await  _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId));
+            await  _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId, sheet.Version));
             return sheet.Questions.ToList();
         }
     }

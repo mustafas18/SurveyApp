@@ -8,6 +8,6 @@ namespace Core.Interfaces.IRepositories
 {
     public interface IQuestionRepository
     {
-        Task<string> DeleteAsync(int Id);
+        Task<(string SheetId,int Version)> DeleteAsync(int Id);
     }
 }

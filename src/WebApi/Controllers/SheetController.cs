@@ -60,20 +60,20 @@ namespace WebApi.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetById(string sheetId, bool cache = true)
+        public async Task<IActionResult> GetById(string sheetId,int version=1, bool cache = true)
         {
             try
             {
                 if (cache)
                 {
-                    var cacheData = _redisCacheService.GetData<SheetDto>($"sheet_{sheetId}");
+                    var cacheData = _redisCacheService.GetData<SheetDto>($"sheet_{sheetId}_{version}");
                     if (cacheData != null)
                     {
                         return StatusCode(200, CustomResult.Ok(cacheData));
                     }
                     cacheData = await _sheetService.GetByIdAsync(sheetId);
                     var expirationTime = TimeSpan.FromMinutes(1);
-                    await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}", cacheData, expirationTime);
+                    await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}_{version}", cacheData, expirationTime);
                     return StatusCode(200, CustomResult.Ok(cacheData));
                 }
                 var result = await _sheetService.GetByIdAsync(sheetId);

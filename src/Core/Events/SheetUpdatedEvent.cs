@@ -10,9 +10,11 @@ namespace Core.Events
     public class SheetUpdatedEvent : INotification
     {
         public string SheetId { get; set; }
-        public SheetUpdatedEvent(string sheetId)
+        public int Version { get; set; }
+        public SheetUpdatedEvent(string sheetId, int version)
         {
             SheetId = sheetId;
+            Version = version;
         }
     }
 }
