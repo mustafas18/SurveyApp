@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 using Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Core.Interfaces
 {
     public interface ISurveyService
     {
-        Task<UserSurvey> CreateSurveyAsync(string sheetId, string? userName);
+        Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto);
         Task<UserSurvey> GetSurveyAsync(int surveyId);
         Task<List<UserSurvey>> GetSurveyListAsync(string sheetId);
         Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus);

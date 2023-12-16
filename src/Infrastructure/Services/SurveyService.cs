@@ -25,18 +25,18 @@ namespace Infrastructure.Services
             _sheetService = sheetService;
         }
 
-        public async Task<UserSurvey> CreateSurveyAsync(string sheetId, string? userName)
+        public async Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto)
         {
-            int sheetVersion = _sheetService.GetLatestVersion(sheetId);
-            SheetDto sheet = await _sheetService.GetSheetInfo(sheetId, sheetVersion);
+            int sheetVersion = _sheetService.GetLatestVersion(invitationDto.sheetId);
+            SheetDto sheet = await _sheetService.GetSheetInfo(invitationDto.sheetId, sheetVersion);
 
             var survey = new UserSurvey
             {
-                SheetId = sheetId,
-                SheetVersion = _sheetService.GetLatestVersion(sheetId),
+                SheetId = invitationDto.sheetId,
+                SheetVersion = sheetVersion,
                 SurveyTitle = sheet?.Title,
-                Link = Guid.NewGuid().ToString(),
-                UserName = userName,
+                Guid = invitationDto.guid,
+                UserName = invitationDto.userName,
                 Status = SurveyStatusEnum.Pending
             };
             await _surveyRepository.AddAsync(survey);

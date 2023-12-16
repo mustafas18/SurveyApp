@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dtos;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,11 +22,11 @@ namespace WebApi.Controllers
         [AllowAnonymous]
 #endif
         [HttpPost]
-        public async Task<IActionResult> Create(string sheetId, string? userName)
+        public async Task<IActionResult> Create(SurveyInvitationDto invitaiton)
         {
             try
             {
-                var survey = await _surveyService.CreateSurveyAsync(sheetId, userName);
+                var survey = await _surveyService.CreateSurveyAsync(invitaiton);
                 return StatusCode(200, CustomResult.Ok(survey));
             }
             catch (Exception ex)

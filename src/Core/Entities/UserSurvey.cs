@@ -15,6 +15,7 @@ namespace Core.Entities
         public int SheetVersion { get; set; }
         public string? SurveyTitle { get; set; }
         public string? UserName { get; set; }
+        public string Guid { get; set; }
         public string Link { get; set; }
         public DateTime? ParticipateTime { get; set; }
         public DateTime? CreatedTime { get; set; }
