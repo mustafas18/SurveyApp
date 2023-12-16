@@ -24,7 +24,7 @@ namespace Core.Entities
         public int LanguageId { get; set; }
         public int WelcomePageId { get; set; }
         public int EndPageId { get; set; }
-        public string Link { get; set; }
+        public string? Link { get; set; }
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
         public string? CreatedByUserId { get; set; }

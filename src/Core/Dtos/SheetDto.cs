@@ -13,6 +13,7 @@ namespace Core.Dtos
         public string Title { get; set; }
         public string? Icon { get; set; }
         public int? TemplateId { get; set; }
+        public string? UserName { get; set; }
         public string? UserFullName { get; set; }
         public int LanguageId { get; set; }
         public int? WelcomePageId { get; set; }

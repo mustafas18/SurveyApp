@@ -58,6 +58,8 @@ namespace Infrastructure.Services
         public async Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus)
         {
             var survey = await _surveyRepository.FirstOrDefaultAsync(s => s.Id == surveyId);
+            survey.Status = surveyStatus;
+            survey.ParticipateTime= DateTime.Now;
             await _surveyRepository.UpdateAsync(survey);
         }
     }

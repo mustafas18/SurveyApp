@@ -1,5 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Entities;
+using Core.Enums;
 using Core.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -61,6 +62,22 @@ namespace WebApi.Controllers
             {
                 var surveyList = await _surveyService.GetSurveyListAsync(sheetId);
                 return StatusCode(200, CustomResult.Ok(surveyList));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        [HttpPut]
+        public async Task<IActionResult> UpdateStatus(int surveyId,int status= (int)SurveyStatusEnum.Completed)
+        {
+            try
+            {
+                await _surveyService.UpdateStatus(surveyId, (SurveyStatusEnum)status);
+                return StatusCode(200, CustomResult.Ok(true));
             }
             catch (Exception ex)
             {

@@ -81,7 +81,9 @@ namespace Infrastructure.Services
         public async Task<SheetDto> GetSheetInfo(string sheetId, int? sheetVersion)
         {
             var sheet= await _sheetReadRepository.GetSheetInfo(sheetId, sheetVersion)
+                .Include(s=>s.Users)
                 .FirstOrDefaultAsync();
+            var users = sheet.Users.FirstOrDefault();
             var sheetDto = new SheetDto
             {
                 LanguageId = sheet.LanguageId,
@@ -91,6 +93,7 @@ namespace Infrastructure.Services
                 DeadlineTime = sheet.DeadlineTime,
                 CreateTime = sheet.CreateTime,
                 Link = sheet.Link,
+                UserName=users?.UserName,
                 Questions = null,
                 SheetId = sheet.SheetId,
                 TemplateId = sheet.TemplateId,
