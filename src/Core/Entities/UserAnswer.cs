@@ -14,6 +14,7 @@ namespace Domain.Entities
         public int QuestionId { get; set; }
         public int? VariableId { get; set; }
         public string UserName { get; set; }
+        public string? InputLabel { get; set; }
         public string? InputValue { get; set; }
         public int UserResponseTime { get; set; }
     }

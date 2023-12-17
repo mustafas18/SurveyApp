@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Newtonsoft.Json.Linq;
 using WebApi.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApi.Controllers
 {
@@ -47,24 +51,37 @@ namespace WebApi.Controllers
             {
                 var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
                 List<UserAnswer> userAnswers = new();
-                answers.ForEach(ans =>
+                foreach(var ans in answers)
                 {
                     var question = _questionRepository.AsNoTracking()
-                                        .FirstOrDefault(v => v.Id == ans.questionId);
+                                        .Include(s=>s.Answers)
+                                        .FirstOrDefault(v => v.Id == ans.questionId && v.Deleted==false);
+                    if(question == null)
+                    {
+                        continue;
+                    }
                     var sheet=_sheetRepository.FirstOrDefault(s=>s.SheetId== question.SheetId && s.Version==question.SheetVersion);
                     ans.answer.ForEach(s =>
                     {
+                        int number = 0;
+                        bool ConvertableToInt = Int32.TryParse(s, out number);
+                        string? inputLabel = null;
+                        if(ConvertableToInt)
+                        {
+                            inputLabel = question.Answers.FirstOrDefault(a => a.Value == number)?.Text;
+                        }
                         userAnswers.Add(new UserAnswer
                         {
                             SheetId=sheet.Id,
                             SurveyId = surveyId,
                             QuestionId = ans.questionId,
                             VariableId = question.VariableId,
+                            InputLabel= inputLabel,
                             InputValue = s,
                             UserName = userName
                         });
                     });
-                });
+                }
                 await _userAnswerService.Create(userAnswers);
                 await _surveyService.UpdateStatus(surveyId,SurveyStatusEnum.Completed);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
@@ -88,5 +105,20 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
-    }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ReportBySheetId(string sheetId,int? version)
+        {
+            try
+            {
+                var userAnswers =  _userAnswerService.ReportBySurveyId(sheetId,version);
+                return StatusCode(200, CustomResult.Ok(userAnswers));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+        }
 }

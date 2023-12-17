@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Domain.Interfaces
     {
         Task Create(List<UserAnswer> answers);
         Task<List<UserAnswer>> GetBySurveyId(int surveyId);
+        List<UserQuestionResultDto> ReportBySurveyId(string sheetId, int? version);
     }
 }

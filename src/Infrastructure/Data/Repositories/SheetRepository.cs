@@ -40,6 +40,7 @@ namespace Infrastructure.Data.Repositories
         }
         public async Task<IQueryable<SheetDto>> GetSheetList()
         {
+            /*
             var query = @"
             SELECT 
                 S.SheetId,S.Title,S.LanguageId,STRING_AGG(CONCAT(UI.FirstName, ',', UI.LastName), ', ') AS UserFullName,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted
@@ -47,10 +48,11 @@ namespace Infrastructure.Data.Repositories
             LEFT JOIN SheetUserInfo AS SU ON S.Id=SU.SheetsId
             LEFT JOIN UserInfos AS UI ON UI.Id=SU.UsersId
             GROUP BY S.SheetId,S.Title,S.LanguageId,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted";
-            //            var query = @"
-            //SELECT 
-            //    SheetId,LanguageId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
-            //FROM Sheets";
+            */
+            var query = @"
+            SELECT 
+                SheetId,Title,LanguageId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
+            FROM Sheets";
 
 
             using (var connection = _db.CreateConnection())
