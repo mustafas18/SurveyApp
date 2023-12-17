@@ -21,17 +21,20 @@ namespace WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly IUserAnswerService _userAnswerService;
         private readonly ISurveyService _surveyService;
+        private readonly IRepository<Question> _questionRepository;
 
         public AnswerController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IUserAnswerService userAnswerService,
-            ISurveyService surveyService)
+            ISurveyService surveyService,
+            IRepository<Question> questionRepository)
         {
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _userAnswerService = userAnswerService;
             _surveyService = surveyService;
+            _questionRepository = questionRepository;
         }
         [HttpPost]
         public async Task<IActionResult> Create(int surveyId, List<UserAnswerViewModel> answers)
@@ -42,11 +45,14 @@ namespace WebApi.Controllers
                 List<UserAnswer> userAnswers = new();
                 answers.ForEach(ans =>
                 {
+                    var question = _questionRepository.AsNoTracking()
+                                        .FirstOrDefault(v => v.Id == ans.questionId);
                     ans.answer.ForEach(s =>
                     {
                         userAnswers.Add(new UserAnswer
                         {
                             QuestionId = ans.questionId,
+                            VariableId = question.VariableId,
                             InputValue = s,
                             UserName = userName,
                             SurveyId = surveyId
