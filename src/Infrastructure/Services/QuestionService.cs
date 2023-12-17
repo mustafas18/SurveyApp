@@ -1,8 +1,8 @@
-﻿using Core.Dtos;
-using Core.Entities;
-using Core.Events;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
+﻿using Domain.Dtos;
+using Domain.Entities;
+using Domain.Events;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

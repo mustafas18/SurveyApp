@@ -1,5 +1,5 @@
-﻿using Core.Dtos;
-using Core.Interfaces;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

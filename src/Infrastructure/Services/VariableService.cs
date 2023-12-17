@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
-using Core.Entities;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
+using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
 using System;
 using System.Collections.Generic;

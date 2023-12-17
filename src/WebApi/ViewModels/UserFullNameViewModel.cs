@@ -1,5 +1,5 @@
-﻿using Core.Dtos;
-using Core.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 
 namespace WebApi.ViewModels
 {

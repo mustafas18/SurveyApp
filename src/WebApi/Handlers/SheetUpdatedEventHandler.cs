@@ -1,5 +1,5 @@
-﻿using Core.Events;
-using Core.Interfaces;
+﻿using Domain.Events;
+using Domain.Interfaces;
 using MediatR;
 namespace WebApi.Handllers;
 public class SheetUpdatedEventHandler : INotificationHandler<SheetUpdatedEvent>

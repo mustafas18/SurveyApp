@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.IRepositories;
+﻿using Domain.Interfaces.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using Core.Interfaces;
+﻿using Domain.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities
+namespace Domain.Entities
 {
     public class Sheet : BaseEntity, IAggregateRoot
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Core.Events
+namespace Domain.Events
 {
     public abstract class DomainEventBase : INotification
     {

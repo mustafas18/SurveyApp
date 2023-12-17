@@ -1,6 +1,6 @@
-﻿using Core.Entities;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
+﻿using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;

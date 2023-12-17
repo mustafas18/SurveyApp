@@ -1,15 +1,15 @@
 ﻿using Ardalis.GuardClauses;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
-using Core.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Core.Dtos;
-using Core.Events;
+using Domain.Dtos;
+using Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

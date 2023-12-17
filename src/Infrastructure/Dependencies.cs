@@ -1,5 +1,5 @@
-﻿using Core.Interfaces.IRepositories;
-using Core.Interfaces;
+﻿using Domain.Interfaces.IRepositories;
+using Domain.Interfaces;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Identity;
 using Microsoft.Extensions.DependencyInjection;

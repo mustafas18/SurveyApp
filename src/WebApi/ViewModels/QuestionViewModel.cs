@@ -1,5 +1,5 @@
-﻿using Core.Entities;
-using Core.Enums;
+﻿using Domain.Entities;
+using Domain.Enums;
 
 namespace WebApi.ViewModels
 {

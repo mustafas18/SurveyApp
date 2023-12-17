@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Core.Entities;
-using Core.Enums;
-using Core.Interfaces;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,19 +22,23 @@ namespace WebApi.Controllers
         private readonly IUserAnswerService _userAnswerService;
         private readonly ISurveyService _surveyService;
         private readonly IRepository<Question> _questionRepository;
+        private readonly IRepository<Sheet> _sheetRepository;
 
         public AnswerController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IUserAnswerService userAnswerService,
             ISurveyService surveyService,
-            IRepository<Question> questionRepository)
+            IRepository<Question> questionRepository,
+            IRepository<Sheet> sheetRepository
+         )
         {
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _userAnswerService = userAnswerService;
             _surveyService = surveyService;
             _questionRepository = questionRepository;
+            _sheetRepository = sheetRepository;
         }
         [HttpPost]
         public async Task<IActionResult> Create(int surveyId, List<UserAnswerViewModel> answers)
@@ -47,15 +51,17 @@ namespace WebApi.Controllers
                 {
                     var question = _questionRepository.AsNoTracking()
                                         .FirstOrDefault(v => v.Id == ans.questionId);
+                    var sheet=_sheetRepository.FirstOrDefault(s=>s.SheetId== question.SheetId && s.Version==question.SheetVersion);
                     ans.answer.ForEach(s =>
                     {
                         userAnswers.Add(new UserAnswer
                         {
+                            SheetId=sheet.Id,
+                            SurveyId = surveyId,
                             QuestionId = ans.questionId,
                             VariableId = question.VariableId,
                             InputValue = s,
-                            UserName = userName,
-                            SurveyId = surveyId
+                            UserName = userName
                         });
                     });
                 });

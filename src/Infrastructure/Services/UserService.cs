@@ -1,7 +1,7 @@
-﻿using Core.Dtos;
-using Core.Entities;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
+﻿using Domain.Dtos;
+using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

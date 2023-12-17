@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Core.Dtos;
-using Core.Entities;
+using Domain.Dtos;
+using Domain.Entities;
 using WebApi.ViewModels;
 
 namespace WebApi.Profiles

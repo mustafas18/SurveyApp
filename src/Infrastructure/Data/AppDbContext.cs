@@ -1,10 +1,11 @@
-﻿using Core.Entities;
-using Core.Enums;
+﻿using Domain.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,7 +47,10 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
 
-           modelBuilder.Entity<Language>()
+
+
+
+            modelBuilder.Entity<Language>()
                 .HasData(new Language(1,"English", TextDirectionEnum.ltr),
                    new Language(2, "Persian", TextDirectionEnum.rlt));
             modelBuilder.Entity<UserDegree>()

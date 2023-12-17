@@ -1,8 +1,8 @@
-﻿using Core.Dtos;
-using Core.Entities;
-using Core.Enums;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
+﻿using Domain.Dtos;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;

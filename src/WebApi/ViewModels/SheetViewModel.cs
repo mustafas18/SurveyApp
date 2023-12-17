@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using Domain.Entities;
 
 namespace WebApi.ViewModels
 {

@@ -1,4 +1,4 @@
-﻿namespace Core.Constants
+﻿namespace Domain.Constants
 {
     public static class AuthorizationConstants
     {

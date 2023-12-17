@@ -1,7 +1,7 @@
-﻿using Core.Dtos;
+﻿using Domain.Dtos;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces;
+namespace Domain.Interfaces;
 
 public interface ITokenClaimsService
 {

@@ -1,5 +1,5 @@
-﻿using Core.Interfaces.IRepositories;
-using Core.Entities;
+﻿using Domain.Interfaces.IRepositories;
+using Domain.Entities;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Core.Dtos;
+using Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 

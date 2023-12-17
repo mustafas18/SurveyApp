@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.Interfaces;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Core.Dtos
+namespace Domain.Dtos
 {
     public class UserRegisterDto
     {

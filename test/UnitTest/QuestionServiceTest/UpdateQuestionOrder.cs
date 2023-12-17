@@ -1,6 +1,6 @@
-﻿using Core.Entities;
-using Core.Interfaces.IRepositories;
-using Core.Interfaces;
+﻿using Domain.Entities;
+using Domain.Interfaces.IRepositories;
+using Domain.Interfaces;
 using Infrastructure.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using Infrastructure.Services;
-using Core.Dtos;
+using Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using MediatR;

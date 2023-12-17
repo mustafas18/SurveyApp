@@ -1,6 +1,6 @@
-﻿using Core.Constants;
-using Core.Entities;
-using Core;
+﻿using Domain.Constants;
+using Domain.Entities;
+using Domain;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;

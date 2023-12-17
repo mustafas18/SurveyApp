@@ -1,7 +1,7 @@
-﻿using Core.Dtos;
-using Core.Entities;
-using Core.Enums;
-using Core.Interfaces;
+﻿using Domain.Dtos;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

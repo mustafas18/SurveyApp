@@ -1,7 +1,7 @@
-﻿using Core.Constants;
-using Core.Dtos;
-using Core.Interfaces;
-using Core.Entities;
+﻿using Domain.Constants;
+using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols;

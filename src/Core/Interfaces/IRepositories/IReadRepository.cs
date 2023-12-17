@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces.IRepositories
+namespace Domain.Interfaces.IRepositories
 {
     public interface IReadRepository<T> : IReadRepositoryBase<T> where T : class
     {

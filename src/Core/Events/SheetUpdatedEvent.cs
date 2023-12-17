@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Events
+namespace Domain.Events
 {
     public class SheetUpdatedEvent : INotification
     {

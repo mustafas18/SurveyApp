@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Core.Dtos;
-using Core.Entities;
-using Core.Enums;
-using Core.Events;
-using Core.Interfaces;
+using Domain.Dtos;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Events;
+using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using MediatR;

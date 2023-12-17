@@ -1,8 +1,8 @@
-﻿using Core.Dtos;
+﻿using Domain.Dtos;
 using AutoMapper;
-using Core.Entities;
-using Core.Interfaces;
-using Core.Interfaces.IRepositories;
+using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;

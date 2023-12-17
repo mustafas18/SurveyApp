@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces.IRepositories
+namespace Domain.Interfaces.IRepositories
 {
     public interface IEfRepository<TEntity> : IRepositoryBase<TEntity> where TEntity : class, IAggregateRoot
     {

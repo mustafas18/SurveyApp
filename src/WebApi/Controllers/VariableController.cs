@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Core.Entities;
-using Core.Interfaces;
+using Domain.Entities;
+using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
