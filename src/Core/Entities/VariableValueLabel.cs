@@ -17,7 +17,7 @@ namespace Domain.Entities
             Value = value;
             Label = label;
         }
-        public int Value { get; set; }
-        public string Label { get; set; }
+        public int Value { get; private set; }
+        public string Label { get; private set; }
     }
 }

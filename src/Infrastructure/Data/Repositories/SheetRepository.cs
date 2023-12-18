@@ -38,7 +38,7 @@ namespace Infrastructure.Data.Repositories
             await _efContext.SaveChangesAsync();
             return sheet;
         }
-        public async Task<IQueryable<SheetDto>> GetSheetList()
+        public async Task<IEnumerable<SheetDto>> GetSheetList()
         {
             /*
             var query = @"
@@ -61,21 +61,24 @@ namespace Infrastructure.Data.Repositories
                 return sheets.AsQueryable();
             }
         }
-        public IQueryable<Sheet> GetSheetById(string sheetId)
+        public Sheet GetSheetById(string sheetId)
         {
             var sheet = _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == _efContext.Sheets.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version))?
                   .Include(s => s.Questions)
-                  .ThenInclude(q => q.Answers).AsQueryable();
+                  .ThenInclude(q => q.Answers)
+                   .FirstOrDefault();
             return sheet;
         }
-        public IQueryable<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion)
+        public async Task<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion)
         {
             if (sheetVersion==null)
             {
                 sheetVersion = GetLatestVersion(sheetId);
             }
-            var sheet = _efContext.Sheets
-                                .Where(s => s.SheetId == sheetId && s.Version == sheetVersion);
+            var sheet =await _efContext.Sheets
+                            .Where(s => s.SheetId == sheetId && s.Version == sheetVersion)
+                            .Include(s => s.Users)
+                            .FirstOrDefaultAsync();
             return sheet;
         }
         public int GetLatestVersion(string sheetId)

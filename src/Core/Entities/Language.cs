@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Language:BaseEntity
+    /// <summary>
+    /// Encapsulating fields for setting and providing access to those fields via public methods.
+    /// </summary>
+    public class Language : BaseEntity
     {
         public Language(int id,string title, TextDirectionEnum textDirection)
         {
@@ -15,7 +18,7 @@ namespace Domain.Entities
             Title = title;
             TextDirection = textDirection;
         }
-        public string Title { get; set; }
-        public TextDirectionEnum TextDirection { get; set; }
+        public string Title { get; private set; }
+        public TextDirectionEnum TextDirection { get; private set; }
     }
 }

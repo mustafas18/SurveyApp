@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 
 namespace Domain.Dtos
 {
+    /// <summary>
+    /// This class is an immutable  object. 
+    /// </summary>
     public class UserQuestionResultDto
     {
-        public UserQuestionResultDto(int questionId, string questionText,int totalAnswers, List<UserAnswerResultDto> answers)
+        public UserQuestionResultDto(int questionId, string questionText, int totalAnswers, List<UserAnswerResultDto> answers)
         {
             QuestionId = questionId;
             QuestionText = questionText;
             TotalAnswers = totalAnswers;
             Answers = answers;
         }
-        public int QuestionId { get; set; }
-        public string QuestionText { get; set; }
-        public int TotalAnswers { get; set; }
-        public List<UserAnswerResultDto> Answers { get; set; }
+        public int QuestionId { get; private set; }
+        public string QuestionText { get; private set; }
+        public int TotalAnswers { get; private set; }
+        public List<UserAnswerResultDto> Answers { get; private set; }
     }
 }

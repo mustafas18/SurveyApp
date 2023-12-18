@@ -1,5 +1,6 @@
 ﻿using Domain.Dtos;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -50,6 +51,10 @@ namespace Infrastructure.Services
 
             foreach (var question in questions)
             {
+                if(question.Type == QuestionTypeEnum.TextInput || question.Type == QuestionTypeEnum.TextArea)
+                {
+                    continue;
+                }
                 var answers = question.UserAnswers;
                 Dictionary<string, int> answerCount = new Dictionary<string, int>();
                 int totalAnswers = answers?.GroupBy(s=> new { s.SurveyId }).Count() ?? 0;

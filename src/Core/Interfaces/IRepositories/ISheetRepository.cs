@@ -10,9 +10,9 @@ namespace Domain.Interfaces.IRepositories
 {
     public interface ISheetRepository
     {
-        Task<IQueryable<SheetDto>> GetSheetList();
-        IQueryable<Sheet> GetSheetById(string sheetId);
-        IQueryable<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion);
+        Task<IEnumerable<SheetDto>> GetSheetList();
+        Sheet GetSheetById(string sheetId);
+        Task<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion);
         Task<Sheet> AddQuestion(string sheetId, Question question);
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Domain.Interfaces.IRepositories
         /// </summary>
         /// <param name="sheetId"></param>
         /// <returns></returns>
-       int GetLatestVersion(string sheetId);
+        int GetLatestVersion(string sheetId);
         void SaveChanges(Sheet sheet);
     }
 }

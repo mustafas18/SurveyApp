@@ -58,7 +58,7 @@ namespace Infrastructure.Services
 
         public async Task<SheetDto> GetByIdAsync(string sheetId)
         {
-            var sheet= await _sheetReadRepository.GetSheetById(sheetId).FirstOrDefaultAsync();
+            var sheet=  _sheetReadRepository.GetSheetById(sheetId);
             var sheetDto = new SheetDto
             {
                 LanguageId = sheet.LanguageId,
@@ -80,9 +80,7 @@ namespace Infrastructure.Services
         }
         public async Task<SheetDto> GetSheetInfo(string sheetId, int? sheetVersion)
         {
-            var sheet= await _sheetReadRepository.GetSheetInfo(sheetId, sheetVersion)
-                .Include(s=>s.Users)
-                .FirstOrDefaultAsync();
+            var sheet = await _sheetReadRepository.GetSheetInfo(sheetId, sheetVersion);
             var users = sheet.Users.FirstOrDefault();
             var sheetDto = new SheetDto
             {

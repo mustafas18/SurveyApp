@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
+using Domain.Dtos;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
@@ -14,19 +16,19 @@ namespace Infrastructure.Services
     public class VariableService : IVariableService
     {
         private readonly IRepository<Variable> _varRepository;
-        private readonly IVariableRepository _varDapperRepository;
+        private readonly IVariableRepository _varDataAcess;
         private readonly ISheetRepository _sheetRepository;
 
         public VariableService(IRepository<Variable> varRepository,
             ISheetRepository sheetRepository,
-            IVariableRepository varDapperRepository)
+            IVariableRepository varDataAccess)
         {
             _varRepository = varRepository;
-            _varDapperRepository = varDapperRepository;
+            _varDataAcess = varDataAccess;
             _sheetRepository = sheetRepository;
         }
 
-  
+
         public async Task<Variable> Create(Variable variable)
         {
             Guard.Against.Null(variable);
@@ -37,27 +39,27 @@ namespace Infrastructure.Services
         }
         public async Task<bool> DeleteAsync(int variableId)
         {
-            await  _varDapperRepository.DeleteAsync(variableId);
+            await _varDataAcess.DeleteAsync(variableId);
             return true;
         }
-        public async Task<Variable> GetByName(string sheetId,string name)
+        public async Task<Variable> GetByName(string sheetId, string name)
         {
             Guard.Against.Null(name);
-            var result = await _varDapperRepository.GetByName(sheetId,name);
+            var result = await _varDataAcess.GetByName(sheetId, name);
             return result;
         }
 
         public async Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion)
         {
             Guard.Against.Null(sheetId);
-            var result = await _varDapperRepository.GetBySheetId(sheetId, sheetVersion);
-            return result;
+            var result = await _varDataAcess.GetBySheetId(sheetId, sheetVersion);
+            return result.ToList();
         }
         public List<VariableValueLabel> ConvertStringIntoList(string values)
         {
             if (String.IsNullOrEmpty(values))
             {
-                return  null;
+                return null;
             }
 
             values = values.Trim('{', '}');
@@ -85,13 +87,32 @@ namespace Infrastructure.Services
             {
                 return "";
             }
-            StringBuilder str=new StringBuilder("{");
+            StringBuilder str = new StringBuilder("{");
 
-            values.ForEach(v=>str.Append($"{v.Label}:{v.Value},"));
-            str.Remove(str.Length-1,str.Length);
+            values.ForEach(v => str.Append($"{v.Label}:{v.Value},"));
+            str.Remove(str.Length - 1, str.Length);
             str.Append("}");
             return str.ToString();
         }
 
+        public async Task<List<VariableResultDto>> ReportBySurveyId(string sheetId, int? version)
+        {
+            List<VariableViewDto> varsResult = _varDataAcess.VariableAnswers(sheetId, version).ToList();
+            var variables = await _varDataAcess.GetBySheetId(sheetId, version);
+            var result = new List<VariableResultDto>();
+            foreach (var variable in variables)
+            {
+                var res = varsResult.Where(s => s.VariableId == variable.Id).ToList();
+
+                var varResult = new VariableResultDto(variable.Id, variable.Name, variable.Messure, variable.Label);
+                res.ForEach(s =>
+                {
+                    varResult.AddAnswer(new VariableAnswer(s.InputValue, s.AnswerLabel, s.AnswerCount));
+                });
+                result.Add(varResult);
+            }
+
+            return result;
+        }
     }
 }

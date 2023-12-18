@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
+    /// <summary>
+    /// This class is a non-anemic model, which business concerns are now handled in the domain entites. 
+    /// Like other models, it does not follow S principle in SOLID, since it does not do its responsibility well.
+    /// </summary>
     public class Sheet : BaseEntity, IAggregateRoot
     {
         public Sheet()

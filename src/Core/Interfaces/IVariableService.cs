@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Domain.Interfaces
         Task<List<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
         List<VariableValueLabel> ConvertStringIntoList(string values);
         string ConvertValueLabelToString(List<VariableValueLabel> values);
+        Task<List<VariableResultDto>> ReportBySurveyId(string sheetId, int? version);
 
     }
 }

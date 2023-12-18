@@ -65,6 +65,19 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
-       
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ReportBySheetId(string sheetId, int? version)
+        {
+            try
+            {
+                var userAnswers =await _variableService.ReportBySurveyId(sheetId, version);
+                return StatusCode(200, CustomResult.Ok(userAnswers));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
     }
 }
