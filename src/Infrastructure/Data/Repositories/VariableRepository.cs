@@ -84,7 +84,8 @@ WHERE Name=@name AND SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId
                     ,COUNT(1) AS [AnswerCount]
                 FROM [UserAnswers]  AS A
                 WHERE A.SheetId=(SELECT TOP (1) Id FROM dbo.Sheets WHERE SheetId=@_sheetId AND Version=@_sheetVersion)
-                GROUP BY A.[VariableId],A.[InputValue]";
+                GROUP BY A.[VariableId],A.[InputValue]
+                ORDER BY [AnswerCount] DESC";
 
             using (var connection = _db.CreateConnection())
             {
