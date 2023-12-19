@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,12 +35,29 @@ namespace WebApi.Controllers
 
         }
         [Authorize(Roles = "Admin,SurveyDesigner")]
+#if DEBUG
+        [AllowAnonymous]
+#endif
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UserInfo userInfo)
         {
             try
             {
-                return StatusCode(200, CustomResult.Ok(null));
+                UserInfoDetails userInfoDetails = new UserInfoDetails
+                {
+                    AtmCard = "5859831037000",
+                    Address = "Mashad",
+                    Birthday = "1989",
+                    City = "Mashad",
+                    Country = "Iran",
+                    Gender = GenderEnum.Male,
+                    Grade = "2",
+                    Job = "Student",
+                    Mobile = "09350000"
+                };
+                userInfo.UpdateUserInfo(userInfoDetails);
+                _userInfoService.AddUserInfo(userInfo);
+                return StatusCode(200, CustomResult.Ok(userInfo));
             }
             catch (Exception ex)
             {

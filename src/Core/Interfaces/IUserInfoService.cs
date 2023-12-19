@@ -11,5 +11,6 @@ namespace Domain.Interfaces
     {
         UserInfo GetUserInfo(string userName);
         List<UserInfo> GetUserInfoList();
+        Task AddUserInfo(UserInfo userInfo);
     }
 }

@@ -26,5 +26,9 @@ namespace Infrastructure.Services
             var user = _userInfoRepository.AsNoTracking().FirstOrDefault(u => u.UserName == userName);
             return user;
         }
+        public async Task AddUserInfo(UserInfo userInfo)
+        {
+            await _userInfoRepository.UpdateAsync(userInfo);
+        }
     }
 }
