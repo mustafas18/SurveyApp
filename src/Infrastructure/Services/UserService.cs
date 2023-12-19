@@ -39,12 +39,7 @@ namespace Infrastructure.Services
         {
             AppUser user = new AppUser();
             user.UserName = userRegister.UserName;
-            await _userInfoRepository.AddAsync(new UserInfo
-            {
-                UserName = userRegister.UserName,
-                FirstName = userRegister.FirstName,
-                LastName = userRegister.LastName
-            });
+            await _userInfoRepository.AddAsync(new UserInfo(userRegister.UserName, userRegister.FirstName, userRegister.LastName));
             await _userManager.CreateAsync(user, userRegister.Password);
             await _userManager.AddToRoleAsync(user, "client");
             return user;

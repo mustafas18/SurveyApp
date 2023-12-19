@@ -13,9 +13,9 @@ namespace Domain.Entities
     /// </summary>
     public class UserDegree : BaseEntity
     {
-        public UserDegree(int id,string titleFa, string titleEn)
+        public UserDegree(int id, string titleFa, string titleEn)
         {
-            base.Id= id;
+            Id = id;
             TitleFa = titleFa;
             TitleEn = titleEn;
         }

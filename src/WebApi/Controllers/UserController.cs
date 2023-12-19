@@ -23,49 +23,21 @@ namespace WebApi.Controllers
     public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
-        private readonly IUserInfoService _userInfoService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserController(IUserService userService,
-            IUserInfoService userInfoService,
-            IMapper mapper)
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
-            _userInfoService = userInfoService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
-        [Authorize(Roles = "Admin,SurveyDesigner")]
-        [HttpGet]
-        public async Task<IActionResult> GetUserInfo(string userName)
-        {
-            try
-            {
-                return StatusCode(200, CustomResult.Ok(null));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500,CustomResult.InternalError(ex));
-            }
 
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetUserInfoName(string userName)
-        {
-            try
-            {
-                var result= _userInfoService.GetUserInfo(userName);
-                UserFullNameViewModel userFullNameViewModel= new UserFullNameViewModel(result.Id,result.FullName);  
-                return StatusCode(200, CustomResult.Ok(userFullNameViewModel));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, CustomResult.InternalError(ex));
-            }
-
-        }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetUserInfoNameList()
+        public async Task<IActionResult> GetUserNameList()
         {
             try
             {
@@ -126,7 +98,8 @@ namespace WebApi.Controllers
         {
             try
             {
-                return StatusCode(200, CustomResult.Ok(null));
+                var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
+                return StatusCode(200, CustomResult.Ok(userName));
             }
             catch (Exception ex)
             {
