@@ -155,7 +155,12 @@ namespace WebApi
                     ValidAudience = AuthorizationConstants.ValidAudience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey))
                 };
+            }).AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
+            ;
 
             builder.Services.AddResponseCaching();
             builder.Services.AddEndpointsApiExplorer();

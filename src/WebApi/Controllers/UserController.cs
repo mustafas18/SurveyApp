@@ -25,14 +25,17 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly SignInManager<AppUser> _signInManager;
 
         public UserController(IUserService userService,
             IMapper mapper,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            SignInManager<AppUser> signInManager)
         {
             _userService = userService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _signInManager = signInManager;
         }
 
         [AllowAnonymous]
@@ -73,6 +76,60 @@ namespace WebApi.Controllers
             try
             {
                 return StatusCode(200, CustomResult.Ok(await _userService.Login(userInfo)));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+        /// <summary>
+        /// Handle the External Login Request. 
+        /// This method redirects the user to the respective provider's login page.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> LoginViaGoogle(string provider="Google")
+        {
+            try
+            {
+                var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "User");
+                var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+                return Challenge(properties, provider);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+        /// <summary>
+        /// Handle the External Login Callback
+        /// Implement a method to handle the callback from Google after a successful external login.
+        /// The access token can be obtained using HttpContext.GetTokenAsync("access_token") method
+        /// within the ExternalLoginCallback method.
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback()
+        {
+            try
+            {
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    return StatusCode(400, CustomResult.InternalError(new Exception ("Bad Request")));
+                }
+
+                // Obtain the access token
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+                // Access other user information if needed
+                var user = info.Principal;
+
+                // Process the success login and token as per your requirements
+                return StatusCode(200, CustomResult.Ok(accessToken));
             }
             catch (Exception ex)
             {
