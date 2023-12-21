@@ -90,7 +90,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> LoginViaGoogle(string provider="Google")
+        public async Task<IActionResult> ExternalLogin(string provider="Google")
         {
             try
             {
