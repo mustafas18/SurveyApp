@@ -39,7 +39,7 @@ namespace Infrastructure.Services
         {
             List<UserQuestionResultDto> result = new List<UserQuestionResultDto>();
 
-            var questions = _questionRepository.AsNoTracking().Include("UserAnswers")
+            var questions = _questionRepository.AsNoTracking().Include("UserAnswers,Answers")
                             .Where(s => s.SheetId == sheetId && s.SheetVersion == (version ?? 1))
                             .Select(q => new Question
                             {
@@ -51,15 +51,27 @@ namespace Infrastructure.Services
 
             foreach (var question in questions)
             {
-                if(question.Type == QuestionTypeEnum.TextInput || question.Type == QuestionTypeEnum.TextArea)
+                if (question.Type == QuestionTypeEnum.TextInput || question.Type == QuestionTypeEnum.TextArea)
                 {
                     continue;
                 }
-                var answers = question.UserAnswers;
+                var answers = question.Answers;
+                var userAnswers = question.UserAnswers;
                 Dictionary<string, int> answerCount = new Dictionary<string, int>();
-                int totalAnswers = answers?.GroupBy(s=> new { s.SurveyId }).Count() ?? 0;
+                int totalAnswers = userAnswers?.GroupBy(s => new { s.SurveyId }).Count() ?? 0;
+                //foreach (var ans in answers)
+                //{
+                //    if (answerCount.ContainsKey(ans.Value))
+                //    {
+                //        answerCount[answer.InputValue]++;
+                //    }
+                //    else
+                //    {
+                //        answerCount[answer.InputValue] = 1;
+                //    }
+                //}
                 // Count the frequency of each answer
-                foreach (var answer in answers)
+                foreach (var answer in userAnswers)
                 {
                     if (answer != null)
                     {
@@ -76,7 +88,7 @@ namespace Infrastructure.Services
                 List<UserAnswerResultDto> answerDtos = new List<UserAnswerResultDto>();
                 foreach (var answer in answerCount)
                 {
-                    string? answerLabel = answers.FirstOrDefault(s => s.InputValue == answer.Key)?.InputLabel;
+                    string? answerLabel = userAnswers.FirstOrDefault(s => s.InputValue == answer.Key)?.InputLabel;
                     answerDtos.Add(new UserAnswerResultDto(answer.Key, answer.Value, answerLabel));
                 }
                 result.Add(new UserQuestionResultDto(question.Id, question.Text, totalAnswers, answerDtos.OrderByDescending(s=>s.Count).ToList()));

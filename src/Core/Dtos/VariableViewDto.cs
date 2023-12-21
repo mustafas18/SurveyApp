@@ -13,12 +13,12 @@ namespace Domain.Dtos
         {
             VariableId=variableId;
             AnswerLabel = answerLabel;
-            InputValue= Convert.ToInt32(inputValue);
+            InputValue= inputValue;
             AnswerCount = answerCount;
         }
         public int VariableId { get; private set; }
         public string AnswerLabel { get;private set; }      
-        public int InputValue { get; private set; }
+        public string InputValue { get; private set; }
         public int AnswerCount { get; private set; }
 
     }

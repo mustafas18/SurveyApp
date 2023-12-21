@@ -43,7 +43,7 @@ namespace Domain.Dtos
     }
     public class VariableAnswer
     {
-        public VariableAnswer(int inputValue,string valueLabel, int count)
+        public VariableAnswer(string inputValue,string valueLabel, int count)
         {
             ValueLabel = valueLabel;
             InputValue = inputValue;
@@ -52,7 +52,7 @@ namespace Domain.Dtos
         }
         [JsonIgnore]
         public int VariableId { get; set; }
-        public int InputValue { get;  set; }
+        public string InputValue { get;  set; }
         public string ValueLabel { get;  set; }
         public int Count { get;  set; }
     }
