@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,15 @@ namespace Infrastructure.Services
     {
         private readonly IRepository<UserAnswer> _userAnswerRepository;
         private readonly IRepository<Question> _questionRepository;
+        private readonly IQuestionRepository _questionDapper;
 
         public UserAnswerService(IRepository<UserAnswer> userAnswerRepository,
-            IRepository<Question> questionRepository)
+            IRepository<Question> questionRepository,
+            IQuestionRepository questionDapper)
         {
             _userAnswerRepository = userAnswerRepository;
             _questionRepository = questionRepository;
+            _questionDapper = questionDapper;
         }
         public async Task Create(List<UserAnswer> answers)
         {
@@ -39,37 +43,27 @@ namespace Infrastructure.Services
         {
             List<UserQuestionResultDto> result = new List<UserQuestionResultDto>();
 
-            var questions = _questionRepository.AsNoTracking().Include("UserAnswers,Answers")
+            var questions = _questionRepository.AsNoTracking().Include("UserAnswers")
                             .Where(s => s.SheetId == sheetId && s.SheetVersion == (version ?? 1))
                             .Select(q => new Question
                             {
                                 Id = q.Id,
                                 Text = q.Text,
-                                UserAnswers = q.UserAnswers
+                                UserAnswers = q.UserAnswers,
+                                Answers= q.Answers,
                             })
                             .ToList();
-
+            var answers = _questionDapper.QuestionWithAnswers(sheetId, version);
             foreach (var question in questions)
             {
                 if (question.Type == QuestionTypeEnum.TextInput || question.Type == QuestionTypeEnum.TextArea)
                 {
                     continue;
                 }
-                var answers = question.Answers;
-                var userAnswers = question.UserAnswers;
+                var questionAnswers =answers.Where(s=>s.QuestionId==question.Id);
+                var userAnswers = question.UserAnswers?.Where(s=>s.QuestionType!= QuestionTypeEnum.TextInput && s.QuestionType!=QuestionTypeEnum.TextArea);
                 Dictionary<string, int> answerCount = new Dictionary<string, int>();
                 int totalAnswers = userAnswers?.GroupBy(s => new { s.SurveyId }).Count() ?? 0;
-                //foreach (var ans in answers)
-                //{
-                //    if (answerCount.ContainsKey(ans.Value))
-                //    {
-                //        answerCount[answer.InputValue]++;
-                //    }
-                //    else
-                //    {
-                //        answerCount[answer.InputValue] = 1;
-                //    }
-                //}
                 // Count the frequency of each answer
                 foreach (var answer in userAnswers)
                 {
@@ -86,7 +80,14 @@ namespace Infrastructure.Services
                     }
                 }
                 List<UserAnswerResultDto> answerDtos = new List<UserAnswerResultDto>();
-                foreach (var answer in answerCount)
+                foreach (var ans in questionAnswers)
+                {
+                    if (userAnswers.Where(s => s.AnswerId == ans.AnswerId).Count() == 0)
+                    {
+                        answerDtos.Add(new UserAnswerResultDto("_null_",0, ans.AnswerText));
+                    }
+                }
+                    foreach (var answer in answerCount)
                 {
                     string? answerLabel = userAnswers.FirstOrDefault(s => s.InputValue == answer.Key)?.InputLabel;
                     answerDtos.Add(new UserAnswerResultDto(answer.Key, answer.Value, answerLabel));

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Dtos;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -31,6 +32,27 @@ namespace Infrastructure.Data.Repositories
             }
             return sheetId;
         }
+        public IEnumerable<QuestionWithAnswerDto> QuestionWithAnswers(string sheetId,int? sheetVersion)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _sheetId = sheetId, _sheetVersion = sheetVersion ?? 1 });
+
+            var query = $@"
+               SELECT Q.Id AS [QuestionId]
+	                  ,QA.Id AS AnswerId
+	                  ,QA.Text AS [AnswerText]
+                FROM [dbo].[Questions] AS Q
+                LEFT JOIN dbo.QuestionAnswers AS QA
+                ON Q.Id = QA.QuestionId
+                WHERE Q.SheetId=@_sheetId AND Q.SheetVersion=@_sheetVersion AND Q.Deleted=0";
+
+            using (var connection = _db.CreateConnection())
+            {
+                var answers = connection.Query<QuestionWithAnswerDto>(query, parameters);
+                return answers;
+            }
+        }
 
     }
+
 }

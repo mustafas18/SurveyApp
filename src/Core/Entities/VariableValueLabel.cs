@@ -12,12 +12,12 @@ namespace Domain.Entities
         {
                 
         }
-        public VariableValueLabel(int value,string label)
+        public VariableValueLabel(string value,string label)
         {
             Value = value;
             Label = label;
         }
-        public int Value { get; private set; }
+        public string Value { get; private set; }
         public string Label { get; private set; }
     }
 }

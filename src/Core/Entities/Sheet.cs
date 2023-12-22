@@ -2,9 +2,11 @@
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.Entities
@@ -31,6 +33,8 @@ namespace Domain.Entities
         public string? Link { get; set; }
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
+        [NotMapped]
+        public string DeadlineString { get; set; }
         public string? CreatedByUserId { get; set; }
         public DateTime CreateTime { get; set; }
         public bool Deleted { get; set; }

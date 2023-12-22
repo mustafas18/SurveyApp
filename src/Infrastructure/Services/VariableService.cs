@@ -74,7 +74,9 @@ namespace Infrastructure.Services
                 string[] keyValue = pair.Split(':');
 
                 // Trim any whitespaces from the key and value
-                int key = int.Parse(keyValue[0].Trim());
+                //int key = int.Parse(keyValue[0].Trim());
+                string key = keyValue[0].Trim();
+
                 string value = keyValue[1].Trim('\'');
 
                 valueList.Add(new VariableValueLabel(key, value));
@@ -109,6 +111,17 @@ namespace Infrastructure.Services
                 {
                     varResult.AddAnswer(new VariableAnswer(s.InputValue, s.AnswerLabel, s.AnswerCount));
                 });
+                if(variable.Values != null)
+                {
+                    foreach (var item in variable.Values)
+                    {
+                        if (varResult.Answers.Where(a => a.InputValue == item.Value).Count() == 0)
+                        {
+                            varResult.AddAnswer(new VariableAnswer(item.Value, item.Label, 0));
+                        }
+                    }
+                }
+               
                 result.Add(varResult);
             }
 

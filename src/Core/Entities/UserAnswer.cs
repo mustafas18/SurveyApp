@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Domain.Entities
         public int SheetId { get; set; }
         public int SurveyId { get; set; }
         public int QuestionId { get; set; }
+        public int AnswerId { get; set; }
+        public QuestionTypeEnum QuestionType { get; set; }
         public int? VariableId { get; set; }
         public string UserName { get; set; }
         public string? InputLabel { get; set; }

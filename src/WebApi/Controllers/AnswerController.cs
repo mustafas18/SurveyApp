@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Newtonsoft.Json.Linq;
+using System.Collections.Immutable;
 using WebApi.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -51,39 +52,44 @@ namespace WebApi.Controllers
             {
                 var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
                 List<UserAnswer> userAnswers = new();
-                foreach(var ans in answers)
+                foreach (var ans in answers)
                 {
                     var question = _questionRepository.AsNoTracking()
-                                        .Include(s=>s.Answers)
-                                        .FirstOrDefault(v => v.Id == ans.questionId && v.Deleted==false);
-                    if(question == null)
+                                        .Include(s => s.Answers)
+                                        .FirstOrDefault(v => v.Id == ans.questionId && v.Deleted == false);
+                    if (question == null)
                     {
                         continue;
                     }
-                    var sheet=_sheetRepository.FirstOrDefault(s=>s.SheetId== question.SheetId && s.Version==question.SheetVersion);
+                    var sheet = _sheetRepository.FirstOrDefault(s => s.SheetId == question.SheetId && s.Version == question.SheetVersion);
                     ans.answer.ForEach(s =>
                     {
                         int number = 0;
                         bool ConvertableToInt = Int32.TryParse(s, out number);
                         string? inputLabel = null;
-                        if(ConvertableToInt)
+                        int answerId = 0;
+                        if (ConvertableToInt)
                         {
-                            inputLabel = question.Answers.FirstOrDefault(a => a.Value == number)?.Text;
+                            var answer = question.Answers.FirstOrDefault(a => a.Value == number);
+                            inputLabel = answer?.Text;
+                            answerId = answer?.Id ?? 0;
                         }
                         userAnswers.Add(new UserAnswer
                         {
-                            SheetId=sheet.Id,
+                            SheetId = sheet.Id,
+                            AnswerId = answerId,
+                            QuestionType=question.Type,
                             SurveyId = surveyId,
                             QuestionId = ans.questionId,
                             VariableId = question.VariableId,
-                            InputLabel= inputLabel,
+                            InputLabel = inputLabel,
                             InputValue = s,
                             UserName = userName
                         });
                     });
                 }
                 await _userAnswerService.Create(userAnswers);
-                await _surveyService.UpdateStatus(surveyId,SurveyStatusEnum.Completed);
+                await _surveyService.UpdateStatus(surveyId, SurveyStatusEnum.Completed);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
             }
             catch (Exception ex)
@@ -97,7 +103,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var userAnswers =await _userAnswerService.GetBySurveyId(surveyId);
+                var userAnswers = await _userAnswerService.GetBySurveyId(surveyId);
                 return StatusCode(200, CustomResult.Ok(_mapper.Map<List<UserAnswerDto>>(userAnswers)));
             }
             catch (Exception ex)
@@ -108,11 +114,11 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ReportBySheetId(string sheetId,int? version)
+        public IActionResult ReportBySheetId(string sheetId, int? version)
         {
             try
             {
-                var userAnswers =  _userAnswerService.ReportBySurveyId(sheetId,version);
+                var userAnswers = _userAnswerService.ReportBySurveyId(sheetId, version);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
             }
             catch (Exception ex)
@@ -120,5 +126,5 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
-        }
+    }
 }

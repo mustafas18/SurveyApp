@@ -16,6 +16,7 @@ namespace WebApi.ViewModels
         public List<Question>? Questions { get; set; }
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
+        public string? DeadlineString { get; set; }
         public string? CreatedByUserId { get; set; }
         public bool Deleted { get; set; }
 

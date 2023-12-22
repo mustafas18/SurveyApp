@@ -23,6 +23,7 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly IRedisCacheService _redisCacheService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public SheetController(ISheetRepository sheetRepository,
             IRepository<Sheet> efRepository,
@@ -30,6 +31,7 @@ namespace WebApi.Controllers
             IUserInfoService userInfoService,
             IUserService userService,
             IMapper mapper,
+            IHttpContextAccessor httpContextAccessor,
             IRedisCacheService redisCacheService)
         {
             this.sheetRepository = sheetRepository;
@@ -38,6 +40,7 @@ namespace WebApi.Controllers
             _userInfoService = userInfoService;
             _userService = userService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _redisCacheService = redisCacheService;
         }
 #if DEBUG
@@ -60,7 +63,7 @@ namespace WebApi.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetById(string sheetId,int version=1, bool cache = true)
+        public async Task<IActionResult> GetById(string sheetId, int version = 1, bool cache = true)
         {
             try
             {
@@ -106,7 +109,14 @@ namespace WebApi.Controllers
         {
             try
             {
-                sheetViewModel.CreatedByUserId = _userService.GetCurrentUserAsync().Result?.Id ?? "";
+                var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
+                if (sheetViewModel.DeadlineString != null && sheetViewModel.DeadlineString != "")
+                {
+                    sheetViewModel.DeadlineTime = DateTime.ParseExact(sheetViewModel.DeadlineString, "yyyy-MM-dd HH:mm",
+                                            System.Globalization.CultureInfo.InvariantCulture);
+                }
+
+                sheetViewModel.CreatedByUserId = userName ?? "";
                 var result = await _sheetService.CreateAsync(_mapper.Map<Sheet>(sheetViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
             }

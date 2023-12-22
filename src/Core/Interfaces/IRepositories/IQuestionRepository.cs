@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace Domain.Interfaces.IRepositories
     public interface IQuestionRepository
     {
         Task<(string SheetId,int Version)> DeleteAsync(int Id);
+        IEnumerable<QuestionWithAnswerDto> QuestionWithAnswers(string sheetId, int? sheetVersion);
     }
 }
