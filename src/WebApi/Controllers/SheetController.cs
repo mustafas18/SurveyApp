@@ -126,6 +126,28 @@ namespace WebApi.Controllers
             }
 
         }
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] SheetViewModel sheetViewModel)
+        {
+            try
+            {
+                var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
+                if (sheetViewModel.DeadlineString != null && sheetViewModel.DeadlineString != "")
+                {
+                    sheetViewModel.DeadlineTime = DateTime.ParseExact(sheetViewModel.DeadlineString, "yyyy-MM-dd HH:mm",
+                                            System.Globalization.CultureInfo.InvariantCulture);
+                }
+
+                sheetViewModel.CreatedByUserId = userName ?? "";
+                var result = await _sheetService.UpdateAsync(_mapper.Map<Sheet>(sheetViewModel));
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
 
     }
 }

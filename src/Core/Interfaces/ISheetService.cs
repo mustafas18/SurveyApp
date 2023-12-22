@@ -12,6 +12,7 @@ namespace Domain.Interfaces
     public interface ISheetService
     {
         Task<Sheet> CreateAsync(Sheet sheet);
+        Task<Sheet> UpdateAsync(Sheet sheet);
         Task<SheetDto> GetByIdAsync(string sheetId);
         Task<Sheet> AddQuestionToSheet(string sheetId, Question question);
         Task<SheetDto> GetSheetInfo(string sheetId, int? sheetVersion);

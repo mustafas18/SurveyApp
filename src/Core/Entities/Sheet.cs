@@ -19,23 +19,23 @@ namespace Domain.Entities
     {
         public Sheet()
         {
-                
+
         }
         public string SheetId { get; set; }
         public int Version { get; set; }
-        public string Title { get; set; }
-        public string Icon { get; set; }
-        public int TemplateId { get; set; }
+        public string Title { get; private set; }
+        public string Icon { get; private set; }
+        public int TemplateId { get; private set; }
         public List<UserInfo>? Users { get; set; }
-        public int LanguageId { get; set; }
-        public int WelcomePageId { get; set; }
-        public int EndPageId { get; set; }
-        public string? Link { get; set; }
-        public int DurationTime { get; set; } // in seconds
-        public DateTime DeadlineTime { get; set; }
+        public int LanguageId { get; private set; }
+        public int WelcomePageId { get; private set; }
+        public int EndPageId { get; private set; }
+        public string? Link { get; private set; }
+        public int DurationTime { get; private set; } // in seconds
+        public DateTime DeadlineTime { get; private set; }
         [NotMapped]
-        public string DeadlineString { get; set; }
-        public string? CreatedByUserId { get; set; }
+        public string DeadlineString { get;private set; }
+        public string? CreatedByUserId { get; private set; }
         public DateTime CreateTime { get; set; }
         public bool Deleted { get; set; }
 
@@ -72,5 +72,35 @@ namespace Domain.Entities
                 Questions.Clear();
             }
         }
+        public void UpdateSheetDetail(SheetDetail sheetDetail)
+        {
+            SheetId = sheetDetail.SheetId;
+            Version = sheetDetail.Version;
+            Title = sheetDetail.Title;
+            Icon = sheetDetail.Icon;
+            TemplateId = sheetDetail.TemplateId;
+            LanguageId = sheetDetail.LanguageId;
+            WelcomePageId = sheetDetail.WelcomePageId;
+            EndPageId = sheetDetail.EndPageId;
+            Link = sheetDetail.Link;
+            DeadlineTime = sheetDetail.DeadlineTime;
+            DeadlineString = sheetDetail.DeadlineString;
+        }
+    }
+    public record struct SheetDetail
+    {
+        public string SheetId { get; set; }
+        public int Version { get; set; }
+        public string Title { get; set; }
+        public string Icon { get; set; }
+        public int TemplateId { get; set; }
+        public int LanguageId { get; set; }
+        public int WelcomePageId { get; set; }
+        public int EndPageId { get; set; }
+        public string? Link { get; set; }
+        public int DurationTime { get; set; } // in seconds
+        public DateTime DeadlineTime { get; set; }
+        public string DeadlineString { get; set; }
+        public string? CreatedByUserId { get; set; }
     }
 }

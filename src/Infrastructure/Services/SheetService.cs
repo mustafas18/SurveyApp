@@ -34,13 +34,45 @@ namespace Infrastructure.Services
             Guard.Against.Null(sheet);
             sheet.CreateTime = DateTime.Now;
             sheet.Version = 1;
-            sheet.SheetId = Guid.NewGuid().ToString().Substring(1,7);
+            sheet.SheetId = Guid.NewGuid().ToString().Substring(1, 7);
             await _sheetRepository.AddAsync(sheet);
 
             var domainEvent = new SheetAddedEvent(sheet.SheetId);
             await _mediator.Publish(domainEvent);
 
             return sheet;
+        }
+        public async Task<Sheet> UpdateAsync(Sheet sheet)
+        {
+            Guard.Against.Null(sheet);
+            if (sheet.Version == 0)
+            {
+                sheet.Version = _sheetReadRepository.GetLatestVersion(sheet.SheetId);
+            }
+            var result = _sheetRepository.Where(s => s.SheetId == sheet.SheetId && s.Version == sheet.Version)
+                                .FirstOrDefault();
+            result.UpdateSheetDetail(new SheetDetail
+            {
+                SheetId = sheet.SheetId,
+                Version = sheet.Version,
+                Link = sheet.Link,
+                EndPageId = sheet.EndPageId,
+                WelcomePageId = sheet.WelcomePageId,
+                LanguageId = sheet.LanguageId,
+                TemplateId = sheet.TemplateId,
+                Icon = sheet.Icon,
+                Title = sheet.Title,
+                CreatedByUserId = sheet.CreatedByUserId,
+                DeadlineString = sheet.DeadlineString,
+                DeadlineTime = sheet.DeadlineTime,
+                DurationTime = sheet.DurationTime,
+            });
+            await _sheetRepository.UpdateAsync(result);
+
+            var domainEvent = new SheetAddedEvent(sheet.SheetId);
+            await _mediator.Publish(domainEvent);
+
+            return result;
         }
         public async Task<Sheet> AddQuestionToSheet(string sheetId, Question question)
         {
@@ -58,7 +90,7 @@ namespace Infrastructure.Services
 
         public async Task<SheetDto> GetByIdAsync(string sheetId)
         {
-            var sheet=  _sheetReadRepository.GetSheetById(sheetId);
+            var sheet = _sheetReadRepository.GetSheetById(sheetId);
             var sheetDto = new SheetDto
             {
                 LanguageId = sheet.LanguageId,
@@ -91,7 +123,7 @@ namespace Infrastructure.Services
                 DeadlineTime = sheet.DeadlineTime,
                 CreateTime = sheet.CreateTime,
                 Link = sheet.Link,
-                UserName=users?.UserName,
+                UserName = users?.UserName,
                 Questions = null,
                 SheetId = sheet.SheetId,
                 TemplateId = sheet.TemplateId,
@@ -104,7 +136,7 @@ namespace Infrastructure.Services
 
         public int GetLatestVersion(string sheetId)
         {
-           return _sheetReadRepository.GetLatestVersion(sheetId);
+            return _sheetReadRepository.GetLatestVersion(sheetId);
         }
     }
 }

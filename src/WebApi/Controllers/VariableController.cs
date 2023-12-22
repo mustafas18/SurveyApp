@@ -40,11 +40,11 @@ namespace WebApi.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Create([FromBody] VariableViewModel variableViewModel)
+        public async Task<IActionResult> Create([FromBody] VariableViewModel variableViewModel)
         {
             try
             {
-                var result = _variableService.Create(_mapper.Map<Variable>(variableViewModel));
+                var result = await _variableService.Create(_mapper.Map<Variable>(variableViewModel));
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
@@ -53,11 +53,11 @@ namespace WebApi.Controllers
             }
         }
         [HttpDelete]
-        public IActionResult Delete([FromQuery] int variableId)
+        public async Task<IActionResult> Delete([FromQuery] int variableId)
         {
             try
             {
-                var result = _variableService.DeleteAsync(variableId);
+                var result =await _variableService.DeleteAsync(variableId);
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
