@@ -21,7 +21,8 @@ namespace Infrastructure.Services
 
         public VariableService(IRepository<Variable> varRepository,
             ISheetRepository sheetRepository,
-            IVariableRepository varDataAccess)
+            IVariableRepository varDataAccess
+            )
         {
             _varRepository = varRepository;
             _varDataAcess = varDataAccess;
@@ -111,7 +112,8 @@ namespace Infrastructure.Services
                 {
                     varResult.AddAnswer(new VariableAnswer(s.InputValue, s.AnswerLabel, s.AnswerCount));
                 });
-                if(variable.Values != null)
+                variable.Values = _varDataAcess.GetVariableValues(variable.Id).Result.ToList();
+                if (variable.Values != null)
                 {
                     foreach (var item in variable.Values)
                     {

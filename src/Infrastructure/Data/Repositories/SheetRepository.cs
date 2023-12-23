@@ -51,14 +51,14 @@ namespace Infrastructure.Data.Repositories
             */
             var query = @"
             SELECT 
-                SheetId,Title,LanguageId,Link,DurationTime,DeadlineTime,CreateTime,Deleted
+                SheetId,Title,LanguageId,Link,CreateTime,DurationTime,DeadlineTime,CreateTime,Deleted
             FROM Sheets";
 
 
             using (var connection = _db.CreateConnection())
             {
                 var sheets = await connection.QueryAsync<SheetDto>(query);
-                return sheets.AsQueryable();
+                return sheets;
             }
         }
         public Sheet GetSheetById(string sheetId)
