@@ -9,8 +9,9 @@ namespace Domain.Interfaces
 {
     public interface IUserInfoService
     {
-        UserInfo GetUserInfo(string userName);
         List<UserInfo> GetUserInfoList();
+        UserInfo GetUserInfo(string userName);
+        UserInfo GetUserInfo(int userId);
         Task AddUserInfo(UserInfo userInfo);
     }
 }

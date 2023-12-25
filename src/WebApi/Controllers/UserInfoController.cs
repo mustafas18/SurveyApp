@@ -18,9 +18,37 @@ namespace WebApi.Controllers
         {
             _userInfoService = userInfoService;
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var result = _userInfoService.GetUserInfoList();
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
 
         [HttpGet]
-        public async Task<IActionResult> Get(string userName)
+        public async Task<IActionResult> GetById(int userId)
+        {
+            try
+            {
+                var result = _userInfoService.GetUserInfo(userId);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetByUserName(string userName)
         {
             try
             {
