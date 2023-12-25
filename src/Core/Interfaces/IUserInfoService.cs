@@ -13,5 +13,6 @@ namespace Domain.Interfaces
         UserInfo GetUserInfo(string userName);
         UserInfo GetUserInfo(int userId);
         Task AddUserInfo(UserInfo userInfo);
+        Task UpdateUserInfo(UserInfo userInfo);
     }
 }

@@ -66,6 +66,37 @@ namespace WebApi.Controllers
 #if DEBUG
         [AllowAnonymous]
 #endif
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] UserInfo userInfo)
+        {
+            try
+            {
+                UserInfoDetails userInfoDetails = new UserInfoDetails
+                {
+                    AtmCard = userInfo.AtmCard,
+                    Address = userInfo.Address,
+                    Birthday = userInfo.Birthday,
+                    City = userInfo.City,
+                    Country = userInfo.Country,
+                    Gender = userInfo.Gender,
+                    Grade = userInfo.Grade,
+                    Job = userInfo.Job,
+                    Mobile = userInfo.Mobile
+                };
+                userInfo.UpdateUserInfo(userInfoDetails);
+                _userInfoService.UpdateUserInfo(userInfo);
+                return StatusCode(200, CustomResult.Ok(userInfo));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [Authorize(Roles = "Admin,SurveyDesigner")]
+#if DEBUG
+        [AllowAnonymous]
+#endif
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UserInfo userInfo)
         {
@@ -73,18 +104,18 @@ namespace WebApi.Controllers
             {
                 UserInfoDetails userInfoDetails = new UserInfoDetails
                 {
-                    AtmCard = "5859831037000",
-                    Address = "Mashad",
-                    Birthday = "1989",
-                    City = "Mashad",
-                    Country = "Iran",
-                    Gender = GenderEnum.Male,
-                    Grade = "2",
-                    Job = "Student",
-                    Mobile = "09350000"
+                    AtmCard = userInfo.AtmCard,
+                    Address = userInfo.Address,
+                    Birthday = userInfo.Birthday,
+                    City = userInfo.City,
+                    Country = userInfo.Country,
+                    Gender = userInfo.Gender,
+                    Grade = userInfo.Grade,
+                    Job = userInfo.Job,
+                    Mobile = userInfo.Mobile
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
-                _userInfoService.AddUserInfo(userInfo);
+                _userInfoService.UpdateUserInfo(userInfo);
                 return StatusCode(200, CustomResult.Ok(userInfo));
             }
             catch (Exception ex)

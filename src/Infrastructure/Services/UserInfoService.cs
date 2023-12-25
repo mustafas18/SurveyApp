@@ -33,6 +33,10 @@ namespace Infrastructure.Services
         }
         public async Task AddUserInfo(UserInfo userInfo)
         {
+            await _userInfoRepository.AddAsync(userInfo);
+        }
+        public async Task UpdateUserInfo(UserInfo userInfo)
+        {
             await _userInfoRepository.UpdateAsync(userInfo);
         }
     }

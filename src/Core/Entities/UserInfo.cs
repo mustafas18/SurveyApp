@@ -36,6 +36,7 @@ namespace Domain.Entities
         public string? Grade { get; private set; }
         public string? Job { get; private set; }
         public string? Mobile { get; private set; }
+        public string? Email { get; private set; }
         [JsonIgnore]
         public List<Sheet>? Sheets { get; set; }
         public string? Address { get; private set; }
@@ -58,6 +59,7 @@ namespace Domain.Entities
             Grade = infoDetails.Grade;
             Job = infoDetails.Job;
             Mobile = infoDetails.Mobile;
+            Email = infoDetails.Email;
             Address = infoDetails.Address;
             AtmCard = infoDetails.AtmCard;
             CVFileData = infoDetails.CVFileData;
@@ -78,6 +80,7 @@ namespace Domain.Entities
         public string? Grade { get; set; }
         public string? Job { get; set; }
         public string? Mobile { get; set; }
+        public string? Email { get; set; }
         public string? Address { get; set; }
         public string? AtmCard { get; set; }
         public byte[]? CVFileData { get; set; }
