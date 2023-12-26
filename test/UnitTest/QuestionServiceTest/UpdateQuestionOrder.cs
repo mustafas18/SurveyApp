@@ -28,7 +28,7 @@ namespace UnitTest.QuestionServiceTest
                 new QuestionOrderQDto{ Id=1, order=3}
             };
             var questionOrderDto = new QuestionOrderDto { SheetId = "h4f", Questions = questionOrderQDto };
-            Sheet sheet=new Sheet { Id = 1, SheetId = "h4f", Version = 1, Title = "Test Sheet" };
+            Sheet sheet=new Sheet { Id = 1, SheetId = "h4f", Version = 1 };
             sheet.AddQuestions(new List<Question> {
                 new Question { Id = 1, Order = 1, Text="Q1" },
                 new Question { Id = 2, Order = 2, Text = "Q2" },

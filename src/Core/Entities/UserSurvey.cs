@@ -17,6 +17,7 @@ namespace Domain.Entities
         public string? UserName { get; set; }
         public string Guid { get; set; }
         public string? Link { get; set; }
+        public DateTime? DeadLine { get; set; }
         public DateTime? ParticipateTime { get; set; }
         public DateTime? CreatedTime { get; set; }
         public SurveyStatusEnum? Status { get; set; }

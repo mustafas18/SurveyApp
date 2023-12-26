@@ -51,6 +51,19 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetByGuid(string guid)
+        {
+            try
+            {
+                var survey = await _surveyService.GetSurveyAsync(guid);
+                return StatusCode(200, CustomResult.Ok(survey));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
 
 #if DEBUG
         [AllowAnonymous]

@@ -25,8 +25,8 @@ namespace UnitTest.RepositoryTest
             var dbContext = new Mock<AppDbContext>();
             var dbSetCourseMock = new Mock<DbSet<Sheet>>();
             dbContext.Setup(x => x.Set<Sheet>()).Returns(dbSetCourseMock.Object);
-            var sheet = new Sheet { Id = 1, Title = "Sheet1" };
-            var sheet2 = new Sheet { Id = 2, Title = "Sheet2" };
+            var sheet = new Sheet { Id = 1 };
+            var sheet2 = new Sheet { Id = 2 };
 
             // Act
             var repository = new Repository<Sheet>(dbContext.Object);
@@ -43,8 +43,8 @@ namespace UnitTest.RepositoryTest
             var dbContext = new Mock<AppDbContext>();
             var dbSetUserMock = new Mock<DbSet<Sheet>>();
             dbContext.Setup(x => x.Set<Sheet>()).Returns(dbSetUserMock.Object);
-            var sheet = new Sheet { Id = 1, Title = "Sheet1" };
-            var course2 = new Sheet { Id = 2, Title = "Sheet2" };
+            var sheet = new Sheet { Id = 1 };
+            var course2 = new Sheet { Id = 2 };
 
             // Act
             var repository = new Repository<Sheet>(dbContext.Object);

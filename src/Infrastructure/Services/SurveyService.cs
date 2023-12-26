@@ -35,6 +35,7 @@ namespace Infrastructure.Services
                 SheetId = invitationDto.sheetId,
                 SheetVersion = sheetVersion,
                 SurveyTitle = sheet?.Title,
+                DeadLine = sheet?.DeadlineTime,
                 Guid = invitationDto.guid,
                 UserName = invitationDto.userName,
                 Status = SurveyStatusEnum.Pending
@@ -48,6 +49,10 @@ namespace Infrastructure.Services
         public async Task<UserSurvey> GetSurveyAsync(int surveyId)
         {
             return await _surveyRepository.FirstOrDefaultAsync(s => s.Id == surveyId);
+        }
+        public async Task<UserSurvey> GetSurveyAsync(string surveyGuid)
+        {
+            return await _surveyRepository.FirstOrDefaultAsync(s => s.Guid == surveyGuid);
         }
 
         public async Task<List<UserSurvey>> GetSurveyListAsync(string sheetId)
