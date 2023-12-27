@@ -16,18 +16,23 @@ namespace Infrastructure.Services
     {
         private readonly IRepository<UserAnswer> _userAnswerRepository;
         private readonly IRepository<Question> _questionRepository;
+        private readonly ISurveyService _surveyService;
         private readonly IQuestionRepository _questionDapper;
-
+        //
         public UserAnswerService(IRepository<UserAnswer> userAnswerRepository,
             IRepository<Question> questionRepository,
+            ISurveyService surveyService,
             IQuestionRepository questionDapper)
         {
             _userAnswerRepository = userAnswerRepository;
             _questionRepository = questionRepository;
+            _surveyService = surveyService;
             _questionDapper = questionDapper;
         }
         public async Task Create(List<UserAnswer> answers)
         {
+            var version = _surveyService.GetLatestVersion(answers.FirstOrDefault().SurveyId) + 1;
+            answers.ForEach(a => a.SurveyVersion = version);
             await _userAnswerRepository.AddRangeAsync(answers);
         }
 
@@ -35,7 +40,7 @@ namespace Infrastructure.Services
         {
             return await _userAnswerRepository
                             .AsNoTracking()
-                            .Where(s => s.SurveyId == surveyId)
+                            .Where(s => s.SurveyId == surveyId && s.SurveyVersion == _surveyService.GetLatestVersion(surveyId))
                             .ToListAsync();
         }
 
@@ -50,7 +55,7 @@ namespace Infrastructure.Services
                                 Id = q.Id,
                                 Text = q.Text,
                                 UserAnswers = q.UserAnswers,
-                                Answers= q.Answers,
+                                Answers = q.Answers,
                             })
                             .ToList();
             var answers = _questionDapper.QuestionWithAnswers(sheetId, version);
@@ -60,8 +65,8 @@ namespace Infrastructure.Services
                 {
                     continue;
                 }
-                var questionAnswers =answers.Where(s=>s.QuestionId==question.Id);
-                var userAnswers = question.UserAnswers?.Where(s=>s.QuestionType!= QuestionTypeEnum.TextInput && s.QuestionType!=QuestionTypeEnum.TextArea);
+                var questionAnswers = answers.Where(s => s.QuestionId == question.Id);
+                var userAnswers = question.UserAnswers?.Where(s => s.QuestionType != QuestionTypeEnum.TextInput && s.QuestionType != QuestionTypeEnum.TextArea && s.SurveyVersion == _surveyService.GetLatestVersion(s.SurveyId));
                 Dictionary<string, int> answerCount = new Dictionary<string, int>();
                 int totalAnswers = userAnswers?.GroupBy(s => new { s.SurveyId }).Count() ?? 0;
                 // Count the frequency of each answer
@@ -84,15 +89,15 @@ namespace Infrastructure.Services
                 {
                     if (userAnswers.Where(s => s.AnswerId == ans.AnswerId).Count() == 0)
                     {
-                        answerDtos.Add(new UserAnswerResultDto("_null_",0, ans.AnswerText));
+                        answerDtos.Add(new UserAnswerResultDto("_null_", 0, ans.AnswerText));
                     }
                 }
-                    foreach (var answer in answerCount)
+                foreach (var answer in answerCount)
                 {
                     string? answerLabel = userAnswers.FirstOrDefault(s => s.InputValue == answer.Key)?.InputLabel;
                     answerDtos.Add(new UserAnswerResultDto(answer.Key, answer.Value, answerLabel));
                 }
-                result.Add(new UserQuestionResultDto(question.Id, question.Text, totalAnswers, answerDtos.OrderByDescending(s=>s.Count).ToList()));
+                result.Add(new UserQuestionResultDto(question.Id, question.Text, totalAnswers, answerDtos.OrderByDescending(s => s.Count).ToList()));
             }
 
             return result;

@@ -44,7 +44,11 @@ namespace Infrastructure.Services
             return survey;
         }
 
-
+        public int GetLatestVersion(int surveyId)
+        {
+            int? result = _surveyRepository.AsNoTracking().Where(s => s.Id == surveyId)?.Max(s => s.Version);
+            return result ?? 0;
+        }
 
         public async Task<UserSurvey> GetSurveyAsync(int surveyId)
         {

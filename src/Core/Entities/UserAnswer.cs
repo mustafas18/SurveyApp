@@ -12,6 +12,7 @@ namespace Domain.Entities
     {
         public int SheetId { get; set; }
         public int SurveyId { get; set; }
+        public int SurveyVersion { get; set; }
         public int QuestionId { get; set; }
         public int AnswerId { get; set; }
         public QuestionTypeEnum QuestionType { get; set; }

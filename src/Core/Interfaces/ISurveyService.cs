@@ -13,6 +13,7 @@ namespace Domain.Interfaces
     {
         Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto);
         Task<UserSurvey> GetSurveyAsync(int surveyId);
+        int GetLatestVersion(int surveyId);
         Task<UserSurvey> GetSurveyAsync(string surveyGuid);
         Task<List<UserSurvey>> GetSurveyListAsync(string sheetId);
         Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus);

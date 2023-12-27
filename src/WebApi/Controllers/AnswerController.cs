@@ -74,12 +74,14 @@ namespace WebApi.Controllers
                             inputLabel = answer?.Text;
                             answerId = answer?.Id ?? 0;
                         }
+                        var newVersion = _surveyService.GetLatestVersion(surveyId)+1;
                         userAnswers.Add(new UserAnswer
                         {
                             SheetId = sheet.Id,
                             AnswerId = answerId,
-                            QuestionType=question.Type,
+                            QuestionType = question.Type,
                             SurveyId = surveyId,
+                            SurveyVersion= newVersion,
                             QuestionId = ans.questionId,
                             VariableId = question.VariableId,
                             InputLabel = inputLabel,
