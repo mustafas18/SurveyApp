@@ -12,9 +12,10 @@ namespace Domain.Interfaces
     public interface ISurveyService
     {
         Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto);
-        Task<UserSurvey> GetSurveyAsync(int surveyId);
-        int GetLatestVersion(int surveyId);
         Task<UserSurvey> GetSurveyAsync(string surveyGuid);
+        int GetLatestVersion(string surveyGuid);
+        int GetLatestVersion(int surveyId);
+        string GetSurveyGuid(int surveyId);
         Task<List<UserSurvey>> GetSurveyListAsync(string sheetId);
         Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus);
     }

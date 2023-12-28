@@ -124,7 +124,7 @@ namespace Infrastructure.Data.Repositories
                     ,COUNT(1) AS [AnswerCount]
                 FROM [UserAnswers]  AS A
                 WHERE A.SheetId=(SELECT TOP (1) Id FROM dbo.Sheets WHERE SheetId=@_sheetId AND Version=@_sheetVersion)
-                    AND A.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE Id=A.SurveyId)
+                    AND A.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=(SELECT TOP(1) [Guid] FROM UserSurveys WHERE Id=A.SurveyId))
                 GROUP BY A.[VariableId],A.[InputValue]
                 ORDER BY [AnswerCount] DESC";
 

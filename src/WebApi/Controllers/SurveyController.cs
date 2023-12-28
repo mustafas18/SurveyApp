@@ -43,7 +43,8 @@ namespace WebApi.Controllers
         {
             try
             {
-                var survey = await _surveyService.GetSurveyAsync(surveyId);
+                var surveyGuid = _surveyService.GetSurveyGuid(surveyId);
+                var survey = await _surveyService.GetSurveyAsync(surveyGuid);
                 return StatusCode(200, CustomResult.Ok(survey));
             }
             catch (Exception ex)

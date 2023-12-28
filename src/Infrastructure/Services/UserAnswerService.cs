@@ -17,30 +17,34 @@ namespace Infrastructure.Services
         private readonly IRepository<UserAnswer> _userAnswerRepository;
         private readonly IRepository<Question> _questionRepository;
         private readonly ISurveyService _surveyService;
+        private readonly IRepository<UserSurvey> _surveyRepository;
         private readonly IQuestionRepository _questionDapper;
         //
         public UserAnswerService(IRepository<UserAnswer> userAnswerRepository,
             IRepository<Question> questionRepository,
             ISurveyService surveyService,
+            IRepository<UserSurvey> surveyRepository,
             IQuestionRepository questionDapper)
         {
             _userAnswerRepository = userAnswerRepository;
             _questionRepository = questionRepository;
             _surveyService = surveyService;
+            _surveyRepository = surveyRepository;
             _questionDapper = questionDapper;
         }
         public async Task Create(List<UserAnswer> answers)
         {
-            var version = _surveyService.GetLatestVersion(answers.FirstOrDefault().SurveyId) + 1;
+            var version = _surveyService.GetLatestVersion(answers.FirstOrDefault().SurveyGuid) + 1;
             answers.ForEach(a => a.SurveyVersion = version);
             await _userAnswerRepository.AddRangeAsync(answers);
         }
 
         public async Task<List<UserAnswer>> GetBySurveyId(int surveyId)
         {
+            var surveyGuid= _surveyService.GetSurveyGuid(surveyId);
             return await _userAnswerRepository
                             .AsNoTracking()
-                            .Where(s => s.SurveyId == surveyId && s.SurveyVersion == _surveyService.GetLatestVersion(surveyId))
+                            .Where(s => s.SurveyId == surveyId && s.SurveyVersion == _surveyService.GetLatestVersion(surveyGuid))
                             .ToListAsync();
         }
 
