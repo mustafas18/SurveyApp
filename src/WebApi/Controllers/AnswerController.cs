@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -26,6 +27,7 @@ namespace WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly IUserAnswerService _userAnswerService;
         private readonly ISurveyService _surveyService;
+        private readonly IRepository<UserSurvey> _surveyRepository;
         private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<Sheet> _sheetRepository;
 
@@ -34,6 +36,7 @@ namespace WebApi.Controllers
             IMapper mapper,
             IUserAnswerService userAnswerService,
             ISurveyService surveyService,
+            IRepository<UserSurvey> surveyRepository,
             IRepository<Question> questionRepository,
             IRepository<Sheet> sheetRepository
          )
@@ -42,6 +45,7 @@ namespace WebApi.Controllers
             _mapper = mapper;
             _userAnswerService = userAnswerService;
             _surveyService = surveyService;
+            _surveyRepository = surveyRepository;
             _questionRepository = questionRepository;
             _sheetRepository = sheetRepository;
         }
@@ -52,6 +56,18 @@ namespace WebApi.Controllers
             {
                 var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
                 List<UserAnswer> userAnswers = new();
+                SurveyInvitationDto? survey = _surveyRepository.AsNoTracking()
+                                       .Select(s => new SurveyInvitationDto
+                                       {
+                                           id = s.Id,
+                                           guid = s.Guid,
+                                           sheetId = s.SheetId,
+                                           userName = s.UserName,
+                                           version = s.Version
+                                       })
+                                       .FirstOrDefault(s => s.id == surveyId);
+                var newVersion = (survey.version ?? 0) + 1;
+
                 foreach (var ans in answers)
                 {
                     var question = _questionRepository.AsNoTracking()
@@ -74,14 +90,15 @@ namespace WebApi.Controllers
                             inputLabel = answer?.Text;
                             answerId = answer?.Id ?? 0;
                         }
-                        var newVersion = _surveyService.GetLatestVersion(surveyId)+1;
+
                         userAnswers.Add(new UserAnswer
                         {
                             SheetId = sheet.Id,
+                            SurveyGuid = survey.guid,
                             AnswerId = answerId,
                             QuestionType = question.Type,
-                            SurveyId = surveyId,
-                            SurveyVersion= newVersion,
+                            SurveyId = survey.id ?? 1,
+                            SurveyVersion = newVersion,
                             QuestionId = ans.questionId,
                             VariableId = question.VariableId,
                             InputLabel = inputLabel,
@@ -91,6 +108,13 @@ namespace WebApi.Controllers
                     });
                 }
                 await _userAnswerService.Create(userAnswers);
+
+
+
+                if (newVersion >= 1)
+                {
+                    _surveyService.ReviseSurveyAsync(survey);
+                }
                 await _surveyService.UpdateStatus(surveyId, SurveyStatusEnum.Completed);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
             }

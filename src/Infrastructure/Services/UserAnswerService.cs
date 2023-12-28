@@ -16,18 +16,21 @@ namespace Infrastructure.Services
     {
         private readonly IRepository<UserAnswer> _userAnswerRepository;
         private readonly IRepository<Question> _questionRepository;
+        private readonly ISurveyRepository _surveyDataAccess;
         private readonly ISurveyService _surveyService;
         private readonly IRepository<UserSurvey> _surveyRepository;
         private readonly IQuestionRepository _questionDapper;
         //
         public UserAnswerService(IRepository<UserAnswer> userAnswerRepository,
             IRepository<Question> questionRepository,
+            ISurveyRepository surveyDataAccess,
             ISurveyService surveyService,
             IRepository<UserSurvey> surveyRepository,
             IQuestionRepository questionDapper)
         {
             _userAnswerRepository = userAnswerRepository;
             _questionRepository = questionRepository;
+            _surveyDataAccess = surveyDataAccess;
             _surveyService = surveyService;
             _surveyRepository = surveyRepository;
             _questionDapper = questionDapper;
@@ -41,11 +44,8 @@ namespace Infrastructure.Services
 
         public async Task<List<UserAnswer>> GetBySurveyId(int surveyId)
         {
-            var surveyGuid= _surveyService.GetSurveyGuid(surveyId);
-            return await _userAnswerRepository
-                            .AsNoTracking()
-                            .Where(s => s.SurveyId == surveyId && s.SurveyVersion == _surveyService.GetLatestVersion(surveyGuid))
-                            .ToListAsync();
+            var result=await _surveyDataAccess.GetUserAnswersAsync(surveyId);
+            return  result.ToList();
         }
 
         public List<UserQuestionResultDto> ReportBySurveyId(string sheetId, int? version)
@@ -70,7 +70,7 @@ namespace Infrastructure.Services
                     continue;
                 }
                 var questionAnswers = answers.Where(s => s.QuestionId == question.Id);
-                var userAnswers = question.UserAnswers?.Where(s => s.QuestionType != QuestionTypeEnum.TextInput && s.QuestionType != QuestionTypeEnum.TextArea && s.SurveyVersion == _surveyService.GetLatestVersion(s.SurveyId));
+                var userAnswers =_questionDapper.QuestionUserAnswers(question.Id);
                 Dictionary<string, int> answerCount = new Dictionary<string, int>();
                 int totalAnswers = userAnswers?.GroupBy(s => new { s.SurveyId }).Count() ?? 0;
                 // Count the frequency of each answer

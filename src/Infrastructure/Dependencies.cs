@@ -30,6 +30,7 @@ namespace Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<ISheetRepository, SheetRepository>();
+            services.AddScoped<ISurveyRepository, SurveyRepository>();
             services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ISheetService, SheetService>();

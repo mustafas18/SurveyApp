@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Dtos;
+using Domain.Enums;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -52,7 +53,27 @@ namespace Infrastructure.Data.Repositories
                 return answers;
             }
         }
+       public IEnumerable<UserAnswer> QuestionUserAnswers(int questionId)
+        {
 
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _questionId = questionId });
+
+            var query = $@"SELECT UA.* FROM dbo.UserAnswers AS UA
+                INNER JOIN (
+                    SELECT S.Guid, MAX(s.Version) AS LatestVersion
+                    FROM UserSurveys AS S
+                    GROUP BY S.Guid
+                ) AS Latest_Syrveys
+                ON UA.SurveyGuid = Latest_Syrveys.Guid AND UA.SurveyVersion = Latest_Syrveys.LatestVersion
+                WHERE UA.QuestionId=@_questionId AND UA.QuestionType NOT IN ({(int)QuestionTypeEnum.TextInput},{(int)QuestionTypeEnum.TextArea})";
+
+            using (var connection = _db.CreateConnection())
+            {
+                var result = connection.Query<UserAnswer>(query, parameters);
+                return result;
+            }
+        }
     }
 
 }

@@ -16,12 +16,15 @@ namespace Infrastructure.Services
     public class SurveyService : ISurveyService
     {
         private readonly IRepository<UserSurvey> _surveyRepository;
+        private readonly ISurveyRepository _surveyDataAccess;
         private readonly ISheetService _sheetService;
 
         public SurveyService(IRepository<UserSurvey> surveyRepository,
+            ISurveyRepository surveyDataAccess,
             ISheetService sheetService)
         {
             _surveyRepository = surveyRepository;
+            _surveyDataAccess = surveyDataAccess;
             _sheetService = sheetService;
         }
 
@@ -36,7 +39,8 @@ namespace Infrastructure.Services
                 SheetId = invitationDto.sheetId,
                 SheetVersion = sheetVersion,
                 SurveyTitle = sheet?.Title,
-                Version = 1,
+                Version = 0,
+                CreatedTime = DateTime.Now,
                 DeadLine = sheet?.DeadlineTime,
                 UserName = invitationDto.userName,
                 Status = SurveyStatusEnum.Pending
@@ -44,10 +48,36 @@ namespace Infrastructure.Services
             await _surveyRepository.AddAsync(survey);
             return survey;
         }
+        public async Task<UserSurvey> ReviseSurveyAsync(SurveyInvitationDto invitationDto)
+        {
+            int sheetVersion = _sheetService.GetLatestVersion(invitationDto.sheetId);
+            SheetDto sheet = _sheetService.GetSheetInfo(invitationDto.sheetId, sheetVersion).Result;
+            var survey = _surveyRepository.AsNoTracking()
+                                    .FirstOrDefault(s => s.Guid == invitationDto.guid && s.Version==_surveyDataAccess.LatestVersion(invitationDto.guid));
 
+            var newSurvey = new UserSurvey
+            {
+                CreatedTime = DateTime.Now,
+                DeadLine = sheet?.DeadlineTime,
+                Guid = survey.Guid,
+                Link = survey?.Link,
+                ParticipateTime = DateTime.Now,
+                SheetId = survey.SheetId,
+                SheetVersion = survey.SheetVersion,
+                Status = SurveyStatusEnum.Completed,
+                SurveyTitle = survey.SurveyTitle,
+                UserName = survey.UserName,
+                Version = survey.Version+1,
+
+            };
+            await _surveyRepository.AddAsync(newSurvey);
+            return survey;
+        }
         public int GetLatestVersion(string surveyGuid)
         {
-            int? result = _surveyRepository.AsNoTracking().Where(s => s.Guid == surveyGuid)?.Max(s => s.Version);
+            int? result = _surveyRepository.AsNoTracking()
+                .Where(s => s.Guid == surveyGuid)?
+                .Max(s => s.Version);
             return result ?? 0;
         }
         public string GetSurveyGuid(int surveyId)
@@ -62,31 +92,40 @@ namespace Infrastructure.Services
 
         public async Task<UserSurvey> GetSurveyAsync(string surveyGuid)
         {
-            var latestVersion=GetLatestVersion(surveyGuid);
+            var latestVersion = GetLatestVersion(surveyGuid);
             return await _surveyRepository.FirstOrDefaultAsync(s => s.Guid == surveyGuid && s.Version == latestVersion);
         }
 
-        public async Task<List<UserSurvey>> GetSurveyListAsync(string sheetId)
+        public async Task<IEnumerable<UserSurvey>> GetSurveyListAsync(string sheetId)
         {
-            return await _surveyRepository.AsNoTracking().Where(s=>s.SheetId==sheetId).ToListAsync();
+            return await _surveyDataAccess.GetSurveyListAsync(sheetId);
         }
 
         public async Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus)
         {
-            var survey = await _surveyRepository.FirstOrDefaultAsync(s => s.Id == surveyId && s.Version == GetLatestVersion(surveyId));
+            var survey = await _surveyRepository.FirstOrDefaultAsync(s => s.Id == surveyId && s.Version == GetLatestVersion(surveyId).Result);
             survey.Status = surveyStatus;
-            survey.ParticipateTime= DateTime.Now;
+            survey.ParticipateTime = DateTime.Now;
             await _surveyRepository.UpdateAsync(survey);
         }
 
-        public int GetLatestVersion(int surveyId)
+        public async Task<int> GetLatestVersion(int surveyId)
         {
-            var surveyVersion = _surveyRepository
+            var lastVersion = _surveyRepository.AsNoTracking()
+                    .Where(s2 => s2.Id == surveyId)
+                    .Max(s => s.Version);
+            var surveyVersion = await _surveyRepository
                      .AsNoTracking()
-                     .Where(s => s.Id == surveyId && s.Version==_surveyRepository.AsNoTracking().Where(s2=>s2.Id==surveyId).Max(s=>s.Version))
+                     .Where(s => s.Id == surveyId && s.Version == lastVersion)
                      .Select(s => s.Version)
-                     .FirstOrDefault();
+                     .FirstOrDefaultAsync();
             return surveyVersion;
+        }
+
+        public int GetSurveyId(string guid)
+        {
+            return _surveyDataAccess.GetSurveyId(guid);
+ 
         }
     }
 }
