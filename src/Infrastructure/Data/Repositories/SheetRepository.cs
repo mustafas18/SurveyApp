@@ -96,6 +96,21 @@ WHERE SheetId=@SheetId AND Deleted=0";
                 return result ?? 1;
             }
         }
+        public int GetLatestSheet(string sheetId)
+        {
+            var query = @"
+SELECT 
+    MAX(Version)
+FROM Sheets
+WHERE SheetId=@SheetId AND Deleted=0";
+            var dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add("SheetId", sheetId);
+            using (var connection = _db.CreateConnection())
+            {
+                var result = connection.QueryFirstOrDefault<int?>(query, dynamicParameters);
+                return result ?? 1;
+            }
+        }
 
     }
 }

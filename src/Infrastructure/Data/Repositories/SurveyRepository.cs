@@ -60,15 +60,15 @@ namespace Infrastructure.Data.Repositories
             }
         }
 
-        public int LatestVersion(string guid)
+        public async Task<UserSurvey> LatestSurvey(string guid)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.AddDynamicParams(new { _guid = guid });
-            var query = $@"SELECT MAX(Version) FROM dbo.UserSurveys AS S
-                WHERE S.Guid = @_guid";
+            var query = $@"SELECT * FROM UserSurveys AS S WHERE S.Guid=@_guid AND S.Version=(SELECT MAX(Version) FROM dbo.UserSurveys
+                WHERE Guid = @_guid)";
             using (var connection = _db.CreateConnection())
             {
-                var result =  connection.ExecuteScalar<int>(query, parameters);
+                var result = await connection.QueryFirstAsync<UserSurvey>(query, parameters);
                 return result;
             }
         }

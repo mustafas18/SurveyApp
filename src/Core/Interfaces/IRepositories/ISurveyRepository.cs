@@ -13,6 +13,6 @@ namespace Domain.Interfaces.IRepositories
         Task<IEnumerable<UserSurvey>> GetSurveyListAsync(string sheetId);
         Task<IEnumerable<UserAnswer>> GetUserAnswersAsync(int surveyId);
         int GetSurveyId(string guid);
-        int LatestVersion(string guid);
+        Task<UserSurvey> LatestSurvey(string guid);
     }
 }

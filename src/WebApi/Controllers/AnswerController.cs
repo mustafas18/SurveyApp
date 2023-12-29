@@ -57,13 +57,13 @@ namespace WebApi.Controllers
                 var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
                 List<UserAnswer> userAnswers = new();
                 SurveyInvitationDto? survey = _surveyRepository.AsNoTracking()
-                                       .Select(s => new SurveyInvitationDto
+                                       .Select(p => new SurveyInvitationDto
                                        {
-                                           id = s.Id,
-                                           guid = s.Guid,
-                                           sheetId = s.SheetId,
-                                           userName = s.UserName,
-                                           version = s.Version
+                                           id = p.Id,
+                                           guid = p.Guid,
+                                           sheetId = p.SheetId,
+                                           userName = p.UserName,
+                                           version = p.Version
                                        })
                                        .FirstOrDefault(s => s.id == surveyId);
                 var newVersion = (survey.version ?? 0) + 1;
@@ -106,16 +106,12 @@ namespace WebApi.Controllers
                             UserName = userName
                         });
                     });
+                
+                
                 }
                 await _userAnswerService.Create(userAnswers);
-
-
-
-                if (newVersion >= 1)
-                {
-                    _surveyService.ReviseSurveyAsync(survey);
-                }
-                await _surveyService.UpdateStatus(surveyId, SurveyStatusEnum.Completed);
+                _ = await  _surveyService.ReviseSurveyAsync(survey);
+                //await _surveyService.UpdateStatus(surveyId, SurveyStatusEnum.Completed);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
             }
             catch (Exception ex)

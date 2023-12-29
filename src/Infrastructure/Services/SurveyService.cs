@@ -52,8 +52,7 @@ namespace Infrastructure.Services
         {
             int sheetVersion = _sheetService.GetLatestVersion(invitationDto.sheetId);
             SheetDto sheet = _sheetService.GetSheetInfo(invitationDto.sheetId, sheetVersion).Result;
-            var survey = _surveyRepository.AsNoTracking()
-                                    .FirstOrDefault(s => s.Guid == invitationDto.guid && s.Version==_surveyDataAccess.LatestVersion(invitationDto.guid));
+            var survey = _surveyDataAccess.LatestSurvey(invitationDto.guid).Result;
 
             var newSurvey = new UserSurvey
             {
