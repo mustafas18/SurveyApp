@@ -126,5 +126,15 @@ namespace Infrastructure.Services
             return _surveyDataAccess.GetSurveyId(guid);
  
         }
+
+        public List<int> RevisionList(string guid)
+        {
+            var result = _surveyRepository.AsNoTracking()
+                                .Where(s => s.Guid == guid)
+                                .Select(s=> s.Id)
+                                .Skip(1)
+                                .ToList();
+            return result;
+        }
     }
 }

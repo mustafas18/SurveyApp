@@ -113,5 +113,19 @@ namespace WebApi.Controllers
             return StatusCode(500, CustomResult.InternalError(ex));
         }
     }
-}
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> RevisionList(string surveyGuid)
+        {
+            try
+            {
+                var surveyId = _surveyService.RevisionList(surveyGuid);
+                return StatusCode(200, CustomResult.Ok(surveyId));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+    }
 }

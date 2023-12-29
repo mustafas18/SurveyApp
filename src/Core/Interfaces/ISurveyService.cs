@@ -18,6 +18,7 @@ namespace Domain.Interfaces
         Task<int> GetLatestVersion(int surveyId);
         string GetSurveyGuid(int surveyId);
         int GetSurveyId(string guid);
+        List<int> RevisionList(string guid);
         Task<IEnumerable<UserSurvey>> GetSurveyListAsync(string sheetId);
         Task UpdateStatus(int surveyId, SurveyStatusEnum surveyStatus);
     }
