@@ -9,6 +9,9 @@ namespace Domain.Entities
 {
     public class UserCategory : BaseEntity
     {
+        /// <summary>
+        /// This class is an anemic model,
+        /// </summary>
         public UserCategory()
         {
                 
@@ -18,13 +21,9 @@ namespace Domain.Entities
             NameFa = nameFa;
             NameEn = nameEn;
         }
-        public string NameFa { get;private set; }
-        public string NameEn { get; private set; }
-        public bool IsDelete { get; private set; }
-        public void Delete()
-        {
-            IsDelete = true;
-        }
+        public string NameFa { get; set; }
+        public string NameEn { get;  set; }
+        public bool IsDelete { get;  set; }
     }
 
 }

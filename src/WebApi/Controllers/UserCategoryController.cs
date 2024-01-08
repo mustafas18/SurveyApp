@@ -95,9 +95,9 @@ namespace WebApi.Controllers
             try
             {
                 var result = _repository.FirstOrDefault(s => s.Id == id);
-                result.Delete();
+                result.IsDelete = true;
                 await _repository.UpdateAsync(result);
-                return StatusCode(200, CustomResult.Ok(result.IsDelete));
+                return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
             {
