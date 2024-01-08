@@ -32,6 +32,7 @@ namespace Infrastructure.Data
         public DbSet<UserSurvey> UserSurveys { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
+        public DbSet<UserCategory> UserCategories { get; set; }
         public DbSet<Variable> Variables { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
