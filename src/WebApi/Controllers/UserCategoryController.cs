@@ -11,13 +11,11 @@ namespace WebApi.Controllers
     [ApiController]
     public class UserCategoryController : ControllerBase
     {
-        private readonly IReadRepository<UserCategory> _readRepository;
+
         private readonly IRepository<UserCategory> _repository;
 
-        public UserCategoryController(IReadRepository<UserCategory> readRepository,
-            IRepository<UserCategory> repository)
+        public UserCategoryController(IRepository<UserCategory> repository)
         {
-            _readRepository = readRepository;
             _repository = repository;
         }
         [HttpGet]
@@ -26,7 +24,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _readRepository.ListAsync();
+                var result = await _repository.ListAsync();
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
@@ -43,7 +41,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _readRepository.GetByIdAsync(id);
+                var result = await _repository.FirstOrDefaultAsync(s=>s.Id==id);
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
@@ -69,7 +67,7 @@ namespace WebApi.Controllers
             }
 
         }
-        [HttpPost]
+        [HttpPut]
 #if DEBUG
         [AllowAnonymous]
 #endif

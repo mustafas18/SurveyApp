@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.Entities
@@ -23,7 +25,10 @@ namespace Domain.Entities
         }
         public string NameFa { get; set; }
         public string NameEn { get;  set; }
+        [JsonIgnore]
         public bool IsDelete { get;  set; }
+        [NotMapped]
+        public int Participants { get; set; }
     }
 
 }

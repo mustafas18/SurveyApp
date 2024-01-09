@@ -119,5 +119,12 @@ namespace Infrastructure.Data.Repositories
         {
            return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
+
+
+        public Task<List<TEntity>> ListAsync()
+        {
+            return _context.Set<TEntity>().ToListAsync();
+        }
+
     }
 }

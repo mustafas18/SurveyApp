@@ -30,5 +30,6 @@ namespace Domain.Interfaces
         /// <returns></returns>
         IQueryable<TEntity> Include([NotParameterized] string entityProperties);
         IQueryable<TEntity> AsNoTracking();
+        Task<List<TEntity>> ListAsync();
     }
 }

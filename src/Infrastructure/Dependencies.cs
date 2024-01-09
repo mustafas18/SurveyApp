@@ -24,6 +24,7 @@ namespace Infrastructure
             services.AddScoped<DapperContext>();
             services.AddScoped(typeof(IDapperRepository<>), typeof(DapperRepository<>));
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            //services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
             services.AddScoped<IRedisCacheService, RedisCacheService>();
             //services.AddScoped(typeof(IEfRepository<>), typeof(IEfRepository<>));
             services.AddScoped<IQuestionRepository, QuestionRepository>();

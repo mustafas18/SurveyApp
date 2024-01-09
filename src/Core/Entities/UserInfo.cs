@@ -3,6 +3,7 @@ using Domain.Enums;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,9 @@ namespace Domain.Entities
         public string LastName { get; private set; }
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
-        public List<UserCategory> UserCategory { get; private set; }
+
+        private List<UserCategory>? _userCategoris = new();
+        public IReadOnlyCollection<UserCategory>? UserCategory => _userCategoris.AsReadOnly();
         public GenderEnum? Gender { get; private set; }
         public string? Birthday { get; private set; }
         public string? PictureBase64 { get; private set; }
@@ -45,10 +48,28 @@ namespace Domain.Entities
         public byte[]? CVFileData { get; private set; }
         public string? FileContent { get; private set; }
         public bool Deleted { get; private set; }
+        [DefaultValue(false)]
+        public bool IsVerified { get; private set; }
         public void AddDegree(UserDegree degree)
         {
             _userDegrees.Add(degree);
 
+        }
+        public void RemoveDegree(UserDegree degree)
+        {
+            _userDegrees.Remove(degree);
+
+        }
+        public void AddCategory(UserCategory category) {
+            _userCategoris.Add(category);
+        }
+        public void RemoveCategory(UserCategory category)
+        {
+            _userCategoris.Remove(category);
+        }
+        public void Verify()
+        {
+            IsVerified=true;
         }
         public void UpdateUserInfo(UserInfoDetails infoDetails)
         {
