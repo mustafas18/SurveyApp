@@ -26,9 +26,7 @@ namespace Domain.Entities
         public string LastName { get; private set; }
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
-
-        private List<UserCategory>? _userCategoris = new();
-        public IReadOnlyCollection<UserCategory>? UserCategory => _userCategoris.AsReadOnly();
+        public UserCategory? Category { get; private set; }
         public GenderEnum? Gender { get; private set; }
         public string? Birthday { get; private set; }
         public string? PictureBase64 { get; private set; }
@@ -60,12 +58,8 @@ namespace Domain.Entities
             _userDegrees.Remove(degree);
 
         }
-        public void AddCategory(UserCategory category) {
-            _userCategoris.Add(category);
-        }
-        public void RemoveCategory(UserCategory category)
-        {
-            _userCategoris.Remove(category);
+        public void SetCategory(UserCategory category) {
+            Category = category;
         }
         public void Verify()
         {

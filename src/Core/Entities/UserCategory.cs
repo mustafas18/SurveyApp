@@ -28,7 +28,7 @@ namespace Domain.Entities
         [JsonIgnore]
         public bool IsDelete { get;  set; }
         [NotMapped]
-        public int Participants { get; set; }
+        public ICollection<UserInfo> Participants { get; set; }
     }
 
 }
