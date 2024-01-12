@@ -4,6 +4,7 @@ using Domain.Interfaces.IRepositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Controllers
 {
@@ -13,10 +14,13 @@ namespace WebApi.Controllers
     {
 
         private readonly IRepository<UserCategory> _repository;
+        private readonly IUserCategoryRepository _categoryRepository;
 
-        public UserCategoryController(IRepository<UserCategory> repository)
+        public UserCategoryController(IRepository<UserCategory> repository,
+            IUserCategoryRepository categoryRepository)
         {
             _repository = repository;
+            _categoryRepository = categoryRepository;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -24,7 +28,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _repository.ListAsync();
+                var result = await _categoryRepository.GetListAsync(1);
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)

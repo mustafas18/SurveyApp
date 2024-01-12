@@ -28,7 +28,7 @@ namespace Infrastructure
             services.AddScoped<IRedisCacheService, RedisCacheService>();
             //services.AddScoped(typeof(IEfRepository<>), typeof(IEfRepository<>));
             services.AddScoped<IQuestionRepository, QuestionRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserCategoryRepository, UserCategoryRepository>();
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<ISheetRepository, SheetRepository>();
             services.AddScoped<ISurveyRepository, SurveyRepository>();
