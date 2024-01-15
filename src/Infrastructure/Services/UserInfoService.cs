@@ -23,7 +23,7 @@ namespace Infrastructure.Services
         }
         public UserInfo GetUserInfo(int userId)
         {
-            var user = _userInfoRepository.AsNoTracking().FirstOrDefault(u => u.Id == userId);
+            var user = _userInfoRepository.Include("Category").FirstOrDefault(u => u.Id == userId);
             return user;
         }
         public UserInfo GetUserInfo(string userName)

@@ -5,6 +5,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.ViewModels;
+using WebApi.ViewModels.Acconut;
 
 namespace WebApi.Controllers
 {
@@ -13,10 +14,13 @@ namespace WebApi.Controllers
     public class UserInfoController : ControllerBase
     {
         private readonly IUserInfoService _userInfoService;
+        private readonly IRepository<UserCategory> _categoryRepository;
 
-        public UserInfoController(IUserInfoService userInfoService)
+        public UserInfoController(IUserInfoService userInfoService,
+            IRepository<UserCategory> categoryRepository)
         {
             _userInfoService = userInfoService;
+            _categoryRepository = categoryRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -84,7 +88,7 @@ namespace WebApi.Controllers
                     Mobile = userInfo.Mobile
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
-                _userInfoService.UpdateUserInfo(userInfo);
+                _userInfoService.AddUserInfo(userInfo);
                 return StatusCode(200, CustomResult.Ok(userInfo));
             }
             catch (Exception ex)
@@ -102,8 +106,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                UserCategory userCategory = _categoryRepository.FirstOrDefault(s => s.Id == userInfo.UserCategoryId);
                 UserInfoDetails userInfoDetails = new UserInfoDetails
                 {
+                    Category = userCategory,
                     AtmCard = userInfo.AtmCard,
                     Address = userInfo.Address,
                     Birthday = userInfo.Birthday,
@@ -112,7 +118,8 @@ namespace WebApi.Controllers
                     Gender = userInfo.Gender,
                     Grade = userInfo.Grade,
                     Job = userInfo.Job,
-                    Mobile = userInfo.Mobile
+                    Mobile = userInfo.Mobile,
+                    Email= userInfo.Email
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.UpdateUserInfo(userInfo);

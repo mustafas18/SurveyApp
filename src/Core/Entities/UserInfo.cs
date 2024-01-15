@@ -14,6 +14,10 @@ namespace Domain.Entities
 {
     public class UserInfo : BaseEntity, IAggregateRoot
     {
+        public UserInfo()
+        {
+                
+        }
         public UserInfo(string userName, string firstName, string lastName)
         {
             UserName = userName;
@@ -21,33 +25,35 @@ namespace Domain.Entities
             LastName = lastName;
         }
 
-        public string UserName { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
-        public UserCategory? Category { get; private set; }
-        public GenderEnum? Gender { get; private set; }
-        public string? Birthday { get; private set; }
-        public string? PictureBase64 { get; private set; }
-        public string? Country { get; private set; }
-        public string? City { get; private set; }
-        public int? ResearchInterestId { get; private set; }
+        [NotMapped]
+        public int? UserCategoryId { get; set; }
+        public UserCategory? Category { get; set; }
+        public GenderEnum? Gender { get; set; }
+        public string? Birthday { get; set; }
+        public string? PictureBase64 { get; set; }
+        public string? Country { get; set; }
+        public string? City { get; set; }
+        public int? ResearchInterestId { get; set; }
         private List<UserDegree> _userDegrees = new List<UserDegree>();
         public IReadOnlyCollection<UserDegree>? EducationDegree => _userDegrees.AsReadOnly();
-        public string? Grade { get; private set; }
-        public string? Job { get; private set; }
-        public string? Mobile { get; private set; }
-        public string? Email { get; private set; }
+        public string? Grade { get; set; }
+        public string? Job { get; set; }
+        public string? Mobile { get; set; }
+        public string? Email { get; set; }
         [JsonIgnore]
         public List<Sheet>? Sheets { get; set; }
-        public string? Address { get; private set; }
-        public string? AtmCard { get; private set; }
-        public byte[]? CVFileData { get; private set; }
-        public string? FileContent { get; private set; }
-        public bool Deleted { get; private set; }
+        public string? Address { get; set; }
+        public string? AtmCard { get; set; }
+        public byte[]? CVFileData { get; set; }
+        public string? FileContent { get; set; }
+        public bool Deleted { get; set; }
         [DefaultValue(false)]
-        public bool IsVerified { get; private set; }
+        public bool IsVerified { get; set; }
         public void AddDegree(UserDegree degree)
         {
             _userDegrees.Add(degree);
@@ -59,14 +65,12 @@ namespace Domain.Entities
 
         }
         public void SetCategory(UserCategory category) {
+            IsVerified = true;
             Category = category;
-        }
-        public void Verify()
-        {
-            IsVerified=true;
         }
         public void UpdateUserInfo(UserInfoDetails infoDetails)
         {
+            Category = infoDetails.Category;
             Gender = infoDetails.Gender;
             Birthday = infoDetails.Birthday;
             Country = infoDetails.Country;
@@ -91,6 +95,7 @@ namespace Domain.Entities
         public string? Birthday { get; set; }
         public string? PictureBase64 { get; set; }
         public string? Country { get; set; }
+        public UserCategory? Category { get; set; }  
         public string? City { get; set; }
         public int? ResearchInterestId { get; set; }
         public string? Grade { get; set; }
