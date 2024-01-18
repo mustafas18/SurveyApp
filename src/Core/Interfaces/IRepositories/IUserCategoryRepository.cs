@@ -10,5 +10,6 @@ namespace Domain.Interfaces.IRepositories
     public interface IUserCategoryRepository
     {
         Task<IEnumerable<UserCategory>> GetListAsync(int? page);
+        Task<IEnumerable<UserInfo>> GetCategoryUsers(int categoryId);
     }
 }

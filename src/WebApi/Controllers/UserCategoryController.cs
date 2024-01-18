@@ -45,7 +45,25 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _repository.FirstOrDefaultAsync(s=>s.Id==id);
+                var result = await _repository.FirstOrDefaultAsync(s => s.Id == id);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+
+        [HttpGet]
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        public async Task<IActionResult> GetCategoryUsers(int categoryId)
+        {
+            try
+            {
+                var result = await _categoryRepository.GetCategoryUsers(categoryId);
                 return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
