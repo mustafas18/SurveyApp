@@ -152,17 +152,21 @@ namespace WebApi.Controllers
         {
             try
             {
+                var category = _categoryRepository.FirstOrDefault(s=>s.Id==userInfo.CategoryId);
                 UserInfoDetails userInfoDetails = new UserInfoDetails
                 {
+                    Category= category,
                     AtmCard = userInfo.AtmCard,
                     Address = userInfo.Address,
                     Birthday = userInfo.Birthday,
+                    Email = userInfo.Email,
                     City = userInfo.City,
                     Country = userInfo.Country,
                     Gender = userInfo.Gender,
                     Grade = userInfo.Grade,
                     Job = userInfo.Job,
-                    Mobile = userInfo.Mobile
+                    Mobile = userInfo.Mobile,
+                    ResearchInterest= userInfo.ResearchInterests
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.AddUserInfo(userInfo);
@@ -183,7 +187,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                UserCategory userCategory = _categoryRepository.FirstOrDefault(s => s.Id == userInfo.UserCategoryId);
+                UserCategory userCategory = _categoryRepository.FirstOrDefault(s => s.Id == userInfo.CategoryId);
                 UserInfoDetails userInfoDetails = new UserInfoDetails
                 {
                     Category = userCategory,

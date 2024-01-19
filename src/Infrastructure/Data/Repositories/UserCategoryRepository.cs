@@ -37,7 +37,7 @@ namespace Infrastructure.Data.Repositories
 ,[Email]
 ,[IsVerified]
 FROM UserInfos
-WHERE [CategoryId]=@_categoryId";
+WHERE [CategoryId1]=@_categoryId";
             using (var connection = _db.CreateConnection())
             {
                 var result = await connection.QueryAsync<UserInfo>(query,parameters);

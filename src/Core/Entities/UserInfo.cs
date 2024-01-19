@@ -31,7 +31,7 @@ namespace Domain.Entities
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
         [NotMapped]
-        public int? UserCategoryId { get; set; }
+        public int? CategoryId { get; set; }
         public UserCategory? Category { get; set; }
         public GenderEnum? Gender { get; set; }
         public string? Birthday { get; set; }
