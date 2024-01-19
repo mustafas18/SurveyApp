@@ -25,6 +25,8 @@ namespace Domain.Entities
         }
         public string NameFa { get; set; }
         public string NameEn { get;  set; }
+        [NotMapped]
+        public int UserCount { get; set; }
         [JsonIgnore]
         public bool IsDelete { get;  set; }
         [NotMapped]

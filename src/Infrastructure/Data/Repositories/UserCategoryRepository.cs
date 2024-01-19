@@ -30,6 +30,8 @@ namespace Infrastructure.Data.Repositories
             var query = @$"SELECT 
 [Id]
 ,[UserName]
+,FirstName
+,LastName
 ,CONCAT(FirstName, ' ', LastName) Name
 ,[Mobile]
 ,[Email]

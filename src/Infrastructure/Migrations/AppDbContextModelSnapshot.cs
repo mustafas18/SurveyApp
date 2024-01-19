@@ -313,6 +313,15 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDelete = false,
+                            NameEn = "UnCategorized",
+                            NameFa = "دسته بندی نشده"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.UserDegree", b =>
@@ -379,6 +388,37 @@ namespace Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.UserDegreeMajor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MajorTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserInfoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DegreeId");
+
+                    b.HasIndex("UserInfoId");
+
+                    b.ToTable("UserDegreeMajor");
+                });
+
             modelBuilder.Entity("Domain.Entities.UserInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -443,8 +483,8 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PictureBase64")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ResearchInterestId")
-                        .HasColumnType("int");
+                    b.Property<string>("ResearchInterests")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -572,6 +612,13 @@ namespace Infrastructure.Migrations
                     b.HasIndex("VariableId");
 
                     b.ToTable("VariableValueLabel");
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Views.vw_UserCategory", b =>
+                {
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_UserCategories", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -833,6 +880,21 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserInfoId");
                 });
 
+            modelBuilder.Entity("Domain.Entities.UserDegreeMajor", b =>
+                {
+                    b.HasOne("Domain.Entities.UserDegree", "Degree")
+                        .WithMany()
+                        .HasForeignKey("DegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.UserInfo", null)
+                        .WithMany("UserDegreeMajor")
+                        .HasForeignKey("UserInfoId");
+
+                    b.Navigation("Degree");
+                });
+
             modelBuilder.Entity("Domain.Entities.UserInfo", b =>
                 {
                     b.HasOne("Domain.Entities.UserCategory", "Category")
@@ -930,6 +992,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.UserInfo", b =>
                 {
                     b.Navigation("EducationDegree");
+
+                    b.Navigation("UserDegreeMajor");
                 });
 
             modelBuilder.Entity("Domain.Entities.Variable", b =>

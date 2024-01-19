@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231216082250_d2")]
-    partial class d2
+    [Migration("20240119151338_hkk8")]
+    partial class hkk8
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Core.Entities.Language", b =>
+            modelBuilder.Entity("Domain.Entities.Language", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Core.Entities.Question", b =>
+            modelBuilder.Entity("Domain.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -116,7 +116,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("Core.Entities.QuestionAnswer", b =>
+            modelBuilder.Entity("Domain.Entities.QuestionAnswer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -147,7 +147,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("QuestionAnswers");
                 });
 
-            modelBuilder.Entity("Core.Entities.Sheet", b =>
+            modelBuilder.Entity("Domain.Entities.Sheet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,7 +181,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Link")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SheetId")
@@ -206,7 +205,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Sheets");
                 });
 
-            modelBuilder.Entity("Core.Entities.SheetPage", b =>
+            modelBuilder.Entity("Domain.Entities.SheetPage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,7 +241,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("SheetPages");
                 });
 
-            modelBuilder.Entity("Core.Entities.UserAnswer", b =>
+            modelBuilder.Entity("Domain.Entities.UserAnswer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,13 +249,32 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InputLabel")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("InputValue")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
+                    b.Property<int>("QuestionType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SheetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SurveyGuid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SurveyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SurveyVersion")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -266,6 +284,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("UserResponseTime")
                         .HasColumnType("int");
 
+                    b.Property<int?>("VariableId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
@@ -273,7 +294,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserAnswers");
                 });
 
-            modelBuilder.Entity("Core.Entities.UserDegree", b =>
+            modelBuilder.Entity("Domain.Entities.UserCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameFa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDelete = false,
+                            NameEn = "UnCategorized",
+                            NameFa = "دسته بندی نشده"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserDegree", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -337,7 +391,38 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Core.Entities.UserInfo", b =>
+            modelBuilder.Entity("Domain.Entities.UserDegreeMajor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MajorTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserInfoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DegreeId");
+
+                    b.HasIndex("UserInfoId");
+
+                    b.ToTable("UserDegreeMajor");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -357,6 +442,9 @@ namespace Infrastructure.Migrations
                     b.Property<byte[]>("CVFileData")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
@@ -365,6 +453,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileContent")
                         .HasColumnType("nvarchar(max)");
@@ -379,6 +470,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Grade")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Job")
                         .HasColumnType("nvarchar(max)");
 
@@ -392,8 +486,8 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PictureBase64")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ResearchInterestId")
-                        .HasColumnType("int");
+                    b.Property<string>("ResearchInterests")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -401,10 +495,12 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("UserInfos");
                 });
 
-            modelBuilder.Entity("Core.Entities.UserSurvey", b =>
+            modelBuilder.Entity("Domain.Entities.UserSurvey", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -415,12 +511,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeadLine")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Guid")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Link")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ParticipateTime")
@@ -442,12 +540,15 @@ namespace Infrastructure.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("UserSurveys");
                 });
 
-            modelBuilder.Entity("Core.Entities.Variable", b =>
+            modelBuilder.Entity("Domain.Entities.Variable", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -490,7 +591,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Variables");
                 });
 
-            modelBuilder.Entity("Core.Entities.VariableValueLabel", b =>
+            modelBuilder.Entity("Domain.Entities.VariableValueLabel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -502,8 +603,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("VariableId")
                         .HasColumnType("int");
@@ -513,6 +615,13 @@ namespace Infrastructure.Migrations
                     b.HasIndex("VariableId");
 
                     b.ToTable("VariableValueLabel");
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Views.vw_UserCategory", b =>
+                {
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_UserCategories", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -737,46 +846,70 @@ namespace Infrastructure.Migrations
                     b.ToTable("SheetUserInfo");
                 });
 
-            modelBuilder.Entity("Core.Entities.AppUser", b =>
+            modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("Core.Entities.Question", b =>
+            modelBuilder.Entity("Domain.Entities.Question", b =>
                 {
-                    b.HasOne("Core.Entities.Sheet", null)
+                    b.HasOne("Domain.Entities.Sheet", null)
                         .WithMany("Questions")
                         .HasForeignKey("SheetId1");
                 });
 
-            modelBuilder.Entity("Core.Entities.QuestionAnswer", b =>
+            modelBuilder.Entity("Domain.Entities.QuestionAnswer", b =>
                 {
-                    b.HasOne("Core.Entities.Question", null)
+                    b.HasOne("Domain.Entities.Question", null)
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId");
                 });
 
-            modelBuilder.Entity("Core.Entities.UserAnswer", b =>
+            modelBuilder.Entity("Domain.Entities.UserAnswer", b =>
                 {
-                    b.HasOne("Core.Entities.Question", null)
+                    b.HasOne("Domain.Entities.Question", null)
                         .WithMany("UserAnswers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Entities.UserDegree", b =>
+            modelBuilder.Entity("Domain.Entities.UserDegree", b =>
                 {
-                    b.HasOne("Core.Entities.UserInfo", null)
+                    b.HasOne("Domain.Entities.UserInfo", null)
                         .WithMany("EducationDegree")
                         .HasForeignKey("UserInfoId");
                 });
 
-            modelBuilder.Entity("Core.Entities.VariableValueLabel", b =>
+            modelBuilder.Entity("Domain.Entities.UserDegreeMajor", b =>
                 {
-                    b.HasOne("Core.Entities.Variable", null)
+                    b.HasOne("Domain.Entities.UserDegree", "Degree")
+                        .WithMany()
+                        .HasForeignKey("DegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.UserInfo", null)
+                        .WithMany("UserDegreeMajor")
+                        .HasForeignKey("UserInfoId");
+
+                    b.Navigation("Degree");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserInfo", b =>
+                {
+                    b.HasOne("Domain.Entities.UserCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Domain.Entities.VariableValueLabel", b =>
+                {
+                    b.HasOne("Domain.Entities.Variable", null)
                         .WithMany("Values")
                         .HasForeignKey("VariableId");
                 });
@@ -834,37 +967,39 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("SheetUserInfo", b =>
                 {
-                    b.HasOne("Core.Entities.Sheet", null)
+                    b.HasOne("Domain.Entities.Sheet", null)
                         .WithMany()
                         .HasForeignKey("SheetsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.UserInfo", null)
+                    b.HasOne("Domain.Entities.UserInfo", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Entities.Question", b =>
+            modelBuilder.Entity("Domain.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
 
                     b.Navigation("UserAnswers");
                 });
 
-            modelBuilder.Entity("Core.Entities.Sheet", b =>
+            modelBuilder.Entity("Domain.Entities.Sheet", b =>
                 {
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("Core.Entities.UserInfo", b =>
+            modelBuilder.Entity("Domain.Entities.UserInfo", b =>
                 {
                     b.Navigation("EducationDegree");
+
+                    b.Navigation("UserDegreeMajor");
                 });
 
-            modelBuilder.Entity("Core.Entities.Variable", b =>
+            modelBuilder.Entity("Domain.Entities.Variable", b =>
                 {
                     b.Navigation("Values");
                 });

@@ -77,7 +77,7 @@ namespace Domain.Entities
             Birthday = infoDetails.Birthday;
             Country = infoDetails.Country;
             City = infoDetails.City;
-            ResearchInterestId = infoDetails.ResearchInterestId;
+            ResearchInterests = infoDetails.ResearchInterest;
             Grade = infoDetails.Grade;
             Job = infoDetails.Job;
             Mobile = infoDetails.Mobile;
@@ -99,7 +99,7 @@ namespace Domain.Entities
         public string? Country { get; set; }
         public UserCategory? Category { get; set; }  
         public string? City { get; set; }
-        public int? ResearchInterestId { get; set; }
+        public string? ResearchInterest { get; set; }
         public string? Grade { get; set; }
         public string? Job { get; set; }
         public string? Mobile { get; set; }
