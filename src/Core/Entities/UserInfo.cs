@@ -38,9 +38,11 @@ namespace Domain.Entities
         public string? PictureBase64 { get; set; }
         public string? Country { get; set; }
         public string? City { get; set; }
-        public int? ResearchInterestId { get; set; }
+        public string? ResearchInterests { get; set; }
         private List<UserDegree> _userDegrees = new List<UserDegree>();
         public IReadOnlyCollection<UserDegree>? EducationDegree => _userDegrees.AsReadOnly();
+        public IReadOnlyCollection<UserDegreeMajor>? UserDegreeMajor => _userMajor.AsReadOnly();
+        private List<UserDegreeMajor> _userMajor = new List<UserDegreeMajor>();
         public string? Grade { get; set; }
         public string? Job { get; set; }
         public string? Mobile { get; set; }

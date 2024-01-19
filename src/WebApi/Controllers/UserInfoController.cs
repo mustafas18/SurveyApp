@@ -15,12 +15,18 @@ namespace WebApi.Controllers
     {
         private readonly IUserInfoService _userInfoService;
         private readonly IRepository<UserCategory> _categoryRepository;
+        private readonly IRepository<UserDegree> _degreeRepository;
+        private readonly IRepository<UserDegreeMajor> _majorRepository;
 
         public UserInfoController(IUserInfoService userInfoService,
-            IRepository<UserCategory> categoryRepository)
+            IRepository<UserCategory> categoryRepository,
+            IRepository<UserDegree> degreeRepository,
+             IRepository<UserDegreeMajor> majorRepository)
         {
             _userInfoService = userInfoService;
             _categoryRepository = categoryRepository;
+            _degreeRepository = degreeRepository;
+            _majorRepository = majorRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -59,6 +65,77 @@ namespace WebApi.Controllers
                 var result = _userInfoService.GetUserInfo(userName);
                 UserFullNameViewModel userFullNameViewModel = new UserFullNameViewModel(result.Id, result.FullName);
                 return StatusCode(200, CustomResult.Ok(userFullNameViewModel));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetDegree()
+        {
+            try
+            {
+                var result = _degreeRepository.AsNoTracking().ToList();
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetMajors(string userName)
+        {
+            try
+            {
+                var majors = _majorRepository.AsNoTracking()
+                    .Where(s => s.UserName == userName)
+                    .ToList();
+                return StatusCode(200, CustomResult.Ok(majors));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddDegree([FromBody] UserDegreeViewModel degreeMajor)
+        {
+            try
+            {
+                var degree = _degreeRepository.AsNoTracking().FirstOrDefault(s => s.Id == degreeMajor.DegreeId);
+                UserDegreeMajor userDegreeMajor = new UserDegreeMajor
+                {
+                    Degree = degree,
+                    MajorTitle = degreeMajor.MajorTitle,
+                    UserName = degreeMajor.UserName
+
+                };
+                _majorRepository.AddAsync(userDegreeMajor);
+                return StatusCode(200, CustomResult.Ok(degreeMajor));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDegree(int degreeMajorId)
+        {
+            try
+            {
+                var major = _majorRepository.FirstOrDefault(s => s.Id == degreeMajorId);
+                if (major != null)
+                {
+                    _majorRepository.DeleteAsync(major);
+                    return StatusCode(200, CustomResult.Ok("OK"));
+                }
+                return StatusCode(400, CustomResult.NotFound());
             }
             catch (Exception ex)
             {
@@ -119,7 +196,7 @@ namespace WebApi.Controllers
                     Grade = userInfo.Grade,
                     Job = userInfo.Job,
                     Mobile = userInfo.Mobile,
-                    Email= userInfo.Email
+                    Email = userInfo.Email
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.UpdateUserInfo(userInfo);
