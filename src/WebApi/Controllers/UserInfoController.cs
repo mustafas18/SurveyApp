@@ -91,9 +91,11 @@ namespace WebApi.Controllers
         {
             try
             {
-                var majors = _majorRepository.AsNoTracking()
+                var majors = _majorRepository.Include("Degree")
                     .Where(s => s.UserName == userName)
                     .ToList();
+
+             
                 return StatusCode(200, CustomResult.Ok(majors));
             }
             catch (Exception ex)
@@ -107,7 +109,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var degree = _degreeRepository.AsNoTracking().FirstOrDefault(s => s.Id == degreeMajor.DegreeId);
+                var degree = _degreeRepository.FirstOrDefault(s => s.Id == degreeMajor.DegreeId);
                 UserDegreeMajor userDegreeMajor = new UserDegreeMajor
                 {
                     Degree = degree,
@@ -115,7 +117,7 @@ namespace WebApi.Controllers
                     UserName = degreeMajor.UserName
 
                 };
-                _majorRepository.AddAsync(userDegreeMajor);
+               await _majorRepository.AddAsync(userDegreeMajor);
                 return StatusCode(200, CustomResult.Ok(degreeMajor));
             }
             catch (Exception ex)
@@ -125,11 +127,11 @@ namespace WebApi.Controllers
 
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteDegree(int degreeMajorId)
+        public async Task<IActionResult> DeleteDegree(int majorId)
         {
             try
             {
-                var major = _majorRepository.FirstOrDefault(s => s.Id == degreeMajorId);
+                var major = _majorRepository.FirstOrDefault(s => s.Id == majorId);
                 if (major != null)
                 {
                     _majorRepository.DeleteAsync(major);
