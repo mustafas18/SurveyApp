@@ -54,7 +54,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault().Subject.Name;
+                var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault()?.Subject.Name;
                 List<UserAnswer> userAnswers = new();
                 SurveyInvitationDto? survey = _surveyRepository.AsNoTracking()
                                        .Select(p => new SurveyInvitationDto
@@ -70,8 +70,7 @@ namespace WebApi.Controllers
 
                 foreach (var ans in answers)
                 {
-                    var question = _questionRepository.AsNoTracking()
-                                        .Include(s => s.Answers)
+                    var question = _questionRepository.Include("Answers")
                                         .FirstOrDefault(v => v.Id == ans.questionId && v.Deleted == false);
                     if (question == null)
                     {
@@ -103,7 +102,7 @@ namespace WebApi.Controllers
                             VariableId = question.VariableId,
                             InputLabel = inputLabel,
                             InputValue = s,
-                            UserName = userName
+                            UserName = userName ?? "guest"
                         });
                     });
                 

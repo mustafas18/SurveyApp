@@ -100,31 +100,15 @@ namespace Infrastructure.Services
 
         public async Task<List<VariableResultDto>> ReportBySurveyId(string sheetId, int? version)
         {
-            List<VariableViewDto> varsResult = _varDataAcess.VariableAnswers(sheetId, version).ToList();
+            List<VariableAnswerDto> userAnswers = _varDataAcess.VariableAnswers(sheetId, version).ToList();
             var variables = await _varDataAcess.GetBySheetId(sheetId, version);
             var result = new List<VariableResultDto>();
             foreach (var variable in variables)
             {
-                var res = varsResult.Where(s => s.VariableId == variable.Id).ToList();
-
-                var varResult = new VariableResultDto(variable.Id, variable.Name, variable.Messure, variable.Label);
-                res.ForEach(s =>
-                {
-                    varResult.AddAnswer(new VariableAnswer(s.InputValue, s.AnswerLabel, s.AnswerCount));
-                });
-                variable.Values = _varDataAcess.GetVariableValues(variable.Id).Result.ToList();
-                if (variable.Values != null)
-                {
-                    foreach (var item in variable.Values)
-                    {
-                        if (varResult.Answers.Where(a => a.InputValue == item.Value).Count() == 0)
-                        {
-                            varResult.AddAnswer(new VariableAnswer(item.Value, item.Label, 0));
-                        }
-                    }
-                }
-               
-                result.Add(varResult);
+                var variableWithAnswers=new VariableResultDto(variable.Id,variable.Name,variable.Messure,variable.Label);
+                List<VariableAnswerDto> answers = userAnswers.Where(s=>s.VariableId == variable.Id).ToList();
+                variableWithAnswers.AddAnswerList(answers);
+                result.Add(variableWithAnswers);
             }
 
             return result;

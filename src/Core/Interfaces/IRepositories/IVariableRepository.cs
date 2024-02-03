@@ -15,6 +15,6 @@ namespace Domain.Interfaces.IRepositories
         Task<IEnumerable<VariableValueLabel>> GetVariableValues(int variableId);
         Task<IEnumerable<VariableWithValuesDto>> GetVariableWithValues(string sheetId, int? sheetVersion);
         Task<IEnumerable<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
-        IEnumerable<VariableViewDto> VariableAnswers(string sheetId, int? sheetVersion);
+        IEnumerable<VariableAnswerDto> VariableAnswers(string sheetId, int? sheetVersion);
     }
 }

@@ -27,33 +27,23 @@ namespace Domain.Dtos
         // Using a private collection field, better for DDD Aggregate's encapsulation
         // so _variableAnswers cannot be added from "outside the AggregateRoot" directly to the collection,
         // but only through the method AddAnswers() which includes behavior.
-        private readonly List<VariableAnswer> _variableAnswers = new List<VariableAnswer>();
+        private readonly List<VariableAnswerDto> _variableAnswers = new List<VariableAnswerDto>();
         
         // Using List<>.AsReadOnly() 
         // This will create a read only wrapper around the private list so is protected against "external updates".
         // It's much cheaper than .ToList() because it will not have to copy all items in a new collection. (Just one heap alloc for the wrapper instance)
-        public IReadOnlyCollection<VariableAnswer?> Answers => _variableAnswers.AsReadOnly();
+        public IReadOnlyCollection<VariableAnswerDto?> Answers => _variableAnswers.AsReadOnly();
 
 
-        public void AddAnswer(VariableAnswer answer)
+        public void AddAnswer(VariableAnswerDto answer)
         {
             Guard.Against.Null(answer);
             _variableAnswers.Add(answer);
         }
-    }
-    public class VariableAnswer
-    {
-        public VariableAnswer(string inputValue,string valueLabel, int count)
+        public void AddAnswerList(List<VariableAnswerDto> answers)
         {
-            ValueLabel = valueLabel;
-            InputValue = inputValue;
-            Count = count;
-
+            Guard.Against.Null(answer);
+            _variableAnswers.AddRange(answer);
         }
-        [JsonIgnore]
-        public int VariableId { get; set; }
-        public string InputValue { get;  set; }
-        public string ValueLabel { get;  set; }
-        public int Count { get;  set; }
-    }
+    }     
 }

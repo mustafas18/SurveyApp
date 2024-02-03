@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Dtos
 {
-    public class VariableViewDto
+    public class VariableAnswerDto
     {
-        public VariableViewDto(int variableId, string inputValue, string answerLabel,int answerCount)
+        public VariableAnswerDto(int variableId, string inputValue, string answerLabel,int answerCount)
         {
             VariableId=variableId;
             AnswerLabel = answerLabel;

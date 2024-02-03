@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Dtos;
+using System.Data;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -112,25 +113,16 @@ namespace Infrastructure.Data.Repositories
             }
             return true;
         }
-        public IEnumerable<VariableViewDto> VariableAnswers(string sheetId, int? sheetVersion)
+        public IEnumerable<VariableAnswerDto> VariableAnswers(string sheetId, int? sheetVersion)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.AddDynamicParams(new { _sheetId = sheetId,_sheetVersion=sheetVersion ?? 1});
+            parameters.AddDynamicParams(new { SheetId = sheetId,SheetVersion=sheetVersion ?? 1});
 
-            var query = $@"
-                SELECT A.[VariableId]
-                    ,A.[InputValue]
-                    ,(SELECT TOP(1) Label FROM VariableValueLabel WHERE VariableId=A.VariableId AND [Value]=A.InputValue) AS AnswerLabel
-                    ,COUNT(1) AS [AnswerCount]
-                FROM [UserAnswers]  AS A
-                WHERE A.SheetId=(SELECT TOP (1) Id FROM dbo.Sheets WHERE SheetId=@_sheetId AND Version=@_sheetVersion)
-                    AND A.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=(SELECT TOP(1) [Guid] FROM UserSurveys WHERE Id=A.SurveyId))
-                GROUP BY A.[VariableId],A.[InputValue]
-                ORDER BY [AnswerCount] DESC";
+            var query = $@"sp_GetVariableAnswers";
 
             using (var connection = _db.CreateConnection())
             {
-                var variable = connection.Query<VariableViewDto>(query, parameters);
+                var variable = connection.Query<VariableAnswerDto>(query, parameters,commandType: CommandType.StoredProcedure);
                 return variable;
             }
 
