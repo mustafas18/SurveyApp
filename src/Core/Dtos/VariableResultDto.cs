@@ -42,8 +42,8 @@ namespace Domain.Dtos
         }
         public void AddAnswerList(List<VariableAnswerDto> answers)
         {
-            Guard.Against.Null(answer);
-            _variableAnswers.AddRange(answer);
+            Guard.Against.Null(answers);
+            _variableAnswers.AddRange(answers);
         }
     }     
 }
