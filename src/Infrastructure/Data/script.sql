@@ -40,7 +40,7 @@ SELECT B.Id
 ,BV.Label AnswerLabel,
 0 AS [Count]
 FROM dbo.Variables B
-INNER JOIN [VariableValueLabel] BV
+LEFT JOIN [VariableValueLabel] BV
 ON B.Id=BV.VariableId
 WHERE B.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
 )
