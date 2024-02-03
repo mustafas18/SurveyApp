@@ -53,7 +53,7 @@ namespace Infrastructure.Services
             List<UserQuestionResultDto> result = new List<UserQuestionResultDto>();
 
             var questions = _questionRepository.AsNoTracking().Include("UserAnswers")
-                            .Where(s => s.SheetId == sheetId && s.SheetVersion == (version ?? 1))
+                            .Where(s => s.SheetId == sheetId && s.SheetVersion == (version ?? 1) && s.Deleted==false)
                             .Select(q => new Question
                             {
                                 Id = q.Id,
@@ -72,7 +72,7 @@ namespace Infrastructure.Services
                 var questionAnswers = answers.Where(s => s.QuestionId == question.Id);
                 var userAnswers =_questionDapper.QuestionUserAnswers(question.Id);
                 Dictionary<string, int> answerCount = new Dictionary<string, int>();
-                int totalAnswers = userAnswers?.GroupBy(s => new { s.SurveyId }).Count() ?? 0;
+                int totalAnswers = userAnswers?.GroupBy(s => new { s.SurveyId,s.SurveyVersion,s.UserName }).Count() ?? 0;
                 // Count the frequency of each answer
                 foreach (var answer in userAnswers)
                 {
