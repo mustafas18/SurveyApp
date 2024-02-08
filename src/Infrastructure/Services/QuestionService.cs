@@ -123,5 +123,13 @@ namespace Infrastructure.Services
             await _mediator.Publish(new SheetUpdatedEvent(questionDto.SheetId, sheet.Version));
             return sheet.Questions.ToList();
         }
+
+        public async Task<Question> GetQuestionAnswers(int questionId)
+        {
+            return await _questionRepository.AsNoTracking()
+                .Include("Answers")
+                .Where(q => q.Id == questionId)
+                .FirstOrDefaultAsync();
+        }
     }
 }

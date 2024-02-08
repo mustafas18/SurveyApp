@@ -14,6 +14,7 @@ namespace Domain.Interfaces
         Task<string> CreateAsync(string sheetId, Question question);
         Task<List<Question>> UpdateQuestionOrder(QuestionOrderDto question);
         Task<bool> DeleteQuestionAsync(int questionId);
+        Task<Question> GetQuestionAnswers(int questionId); 
         int CountSheetQuestion(string sheetId, int? sheetVersion);
         Task<IEnumerable<QuestionDto>> GetBySheetId(string sheetId, int? sheetVersion);
     }

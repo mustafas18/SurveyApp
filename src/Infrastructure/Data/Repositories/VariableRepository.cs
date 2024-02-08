@@ -70,33 +70,14 @@ namespace Infrastructure.Data.Repositories
                 return variableValues;
             }
         }
-            public async Task<IEnumerable<Variable>> GetBySheetId(string sheetId, int? sheetVersion)
+        public async Task<IEnumerable<Variable>> GetBySheetId(string sheetId, int? sheetVersion)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.AddDynamicParams(new { _sheetId = sheetId, _sheetVersion = sheetVersion });
+            parameters.AddDynamicParams(new { SheetId = sheetId, SheetVersion = sheetVersion });
 
-            string versionCondition = string.Empty;
-
-  
-            if (sheetVersion == null)
-            {
-                versionCondition = $" SheetVersion=(SELECT MAX(Version) FROM Sheets WHERE SheetId=@_sheetId) AND ";
-            }
-
-            var query = @$"SELECT V.[Id]
-                      ,[Name]
-                      ,[Type]
-                      ,CASE WHEN [Label]='' THEN (SELECT Text FROM Questions WHERE VariableId=V.Id) ELSE V.Label END AS Label
-                      ,[MaxValue]
-                      ,[Messure]
-                      ,[SheetId]
-                      ,[SheetVersion]
-                      ,[Deleted]
-                FROM Variables AS V
-                WHERE {versionCondition} Deleted=0 AND SheetId=@_sheetId";
             using (var connection = _db.CreateConnection())
             {
-                var variable = await connection.QueryAsync<Variable>(query,parameters);
+                var variable = await connection.QueryAsync<Variable>("sp_GetSheetVariables", parameters, commandType: CommandType.StoredProcedure);
                 return variable;
             }
         }

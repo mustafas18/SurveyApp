@@ -7,6 +7,7 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.ViewModels;
 
@@ -43,7 +44,20 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
-
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetQuestionWithAnswers(int questionId)
+        {
+            try
+            {
+                var result = await _questionService.GetQuestionAnswers(questionId);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] QuestionViewModel questionViewModel)
         {

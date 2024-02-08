@@ -19,5 +19,11 @@ namespace Domain.Dtos
         public int? VariableId { get; set; }
         public bool Required { get; set; }
         public int Order { get; set; }
+        public List<AnswerDto>? Answer { get; set; }
+    }
+    public class AnswerDto
+    {
+        public string text { get; set; }
+        public int value { get; set; }
     }
 }
