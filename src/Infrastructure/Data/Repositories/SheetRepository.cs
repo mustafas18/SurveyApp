@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Data;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -34,6 +35,31 @@ namespace Infrastructure.Data.Repositories
                 .Include(nameof(Sheet.Questions))
                 .FirstOrDefault();
             sheet.AddQuestion(question);
+            _efContext.Update(sheet);
+            await _efContext.SaveChangesAsync();
+            return sheet;
+        }
+        public async Task<Sheet> UpdateQuestion(string sheetId, Question question)
+        {
+            var sheet = _efContext.Sheets
+                .AsNoTracking()
+                .Where(s => s.SheetId == sheetId && s.Version == GetLatestVersion(sheetId))
+                .Include(nameof(Sheet.Questions))
+                .FirstOrDefault();
+
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _questionId = question.Id});
+            var query = $@"
+DELETE FROM [QuestionAnswers] WHERE QuestionId=@_questionId
+";
+            using (var connection = _db.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+
+            }
+
+            //  _efContext.QuestionAnswers.Where(s=>s.)
+            sheet.UpdateQuestion(question);
             _efContext.Update(sheet);
             await _efContext.SaveChangesAsync();
             return sheet;

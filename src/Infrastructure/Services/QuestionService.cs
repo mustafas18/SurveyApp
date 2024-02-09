@@ -44,6 +44,14 @@ namespace Infrastructure.Services
             await _mediator.Publish(new SheetUpdatedEvent(sheetId,1));
             return "OK";
         }
+        public async Task<string> UpdateAsync(string sheetId, Question question)
+        {
+            question.SheetId = sheetId;
+            question.UserId = "";
+            await _sheetDapperRepository.UpdateQuestion(sheetId, question);
+            await _mediator.Publish(new SheetUpdatedEvent(sheetId, 1));
+            return "OK";
+        }
         public async Task<bool> DeleteQuestionAsync(int questionId)
         {
             var sheetId = await _questionDapper.DeleteAsync(questionId);

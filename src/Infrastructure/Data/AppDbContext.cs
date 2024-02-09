@@ -56,6 +56,7 @@ namespace Infrastructure.Data
                         .HasNoKey()
                         .ToView(nameof(vw_UserCategories));
 
+
             modelBuilder.Entity<UserCategory>()
               .HasData(new UserCategory
               {

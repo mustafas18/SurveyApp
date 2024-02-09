@@ -35,7 +35,7 @@ namespace Infrastructure.Services
 
             var survey = new UserSurvey
             {
-                Guid = Guid.NewGuid().ToString(),
+                Guid = invitationDto.guid,
                 SheetId = invitationDto.sheetId,
                 SheetVersion = sheetVersion,
                 SurveyTitle = sheet?.Title,

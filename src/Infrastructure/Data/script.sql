@@ -7,16 +7,8 @@ UC.NameEn,
 (SELECT COUNT(1) FROM UserInfos WHERE CategoryId1 = UC.Id) UserCount
 FROM UserCategories UC WHERE UC.IsDelete = 0
 GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
+CREATE PROCEDURE [dbo].[sp_GetVariableAnswers]
 	-- Add the parameters for the stored procedure here
 	@SheetId NVARCHAR(50), 
 	@SheetVersion INT = 1
@@ -40,11 +32,40 @@ SELECT B.Id
 ,BV.Label AnswerLabel,
 0 AS [Count]
 FROM dbo.Variables B
-LEFT JOIN [VariableValueLabel] BV
+INNER JOIN [VariableValueLabel] BV
 ON B.Id=BV.VariableId
 WHERE B.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
 )
 SELECT VariableId,[InputValue],AnswerLabel,SUM([Count]) AS [AnswerCount] FROM cte
 GROUP BY VariableId,[InputValue],AnswerLabel
 
+--ORDER BY [AnswerCount] DESC
+
+
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_GetSheetVariables]
+	-- Add the parameters for the stored procedure here
+	@SheetId NVARCHAR(50), 
+	@SheetVersion INT
+AS
+BEGIN
+	IF (@SheetVersion IS NULL) 
+		SET @SheetVersion= (SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId);
+
+		SELECT DISTINCT V.[Id]
+                ,[Name]
+                ,V.[Type]
+                ,CASE WHEN [Label]='' THEN Q.Text ELSE V.Label END AS Label
+				,(SELECT CONCAT('{', STRING_AGG(CONCAT([Label],':',[Value]), ','),'}') FROM [VariableValueLabel] WHERE VariableId=V.Id) AS valuesAsString
+                ,[MaxValue]
+                ,[Messure]
+                ,V.[SheetId]
+                ,V.[SheetVersion]
+                ,V.[Deleted]
+        FROM Variables AS V
+		LEFT JOIN Questions Q
+			ON V.Id=Q.VariableId
+		WHERE V.Deleted=0 AND V.SheetId=@SheetId AND V.SheetVersion=@SheetVersion
 END

@@ -48,6 +48,16 @@ namespace Domain.Entities
                 return;
             }
         }
+        public void UpdateQuestion(Question quest)
+        {
+            var question = Questions.Where(q=>q.Id == quest.Id).FirstOrDefault();
+            quest.Order = question.Order;
+            //quest.Type = question.Type;
+            Questions.Remove(question);
+            question = quest;
+            question.SheetVersion = Version;
+            Questions.Add(question);
+        }
         public void ClearQuestions()
         {
             Questions.Clear();

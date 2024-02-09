@@ -74,10 +74,18 @@ namespace WebApi.Controllers
                 };
                 question.Answers = new List<QuestionAnswer>();
                 questionViewModel.Answers.ForEach(a => question.Answers.Add(new QuestionAnswer(a.Text, a.Value)));
-                var result = await _questionService.CreateAsync(questionViewModel.SheetId, question);
+                if (questionViewModel.Id == 0)
+                {
+                    var result = await _questionService.CreateAsync(questionViewModel.SheetId, question);
+                    return StatusCode(200, CustomResult.Ok(result));
+                }
+                else
+                {
+                    question.Id = questionViewModel.Id ?? 0;
+                    var result = await _questionService.UpdateAsync(questionViewModel.SheetId, question);
+                    return StatusCode(200, CustomResult.Ok(result));
+                }
 
-
-                return StatusCode(200, CustomResult.Ok(result));
             }
             catch (Exception ex)
             {

@@ -5,6 +5,7 @@ namespace WebApi.ViewModels
 {
     public class QuestionViewModel
     {
+        public int? Id { get; set; }
         public string SheetId { get; set; }
         public int Type { get; set; }
         public string Text { get; set; }

@@ -12,6 +12,7 @@ namespace Domain.Interfaces
     public interface IQuestionService
     {
         Task<string> CreateAsync(string sheetId, Question question);
+        Task<string> UpdateAsync(string sheetId, Question question);
         Task<List<Question>> UpdateQuestionOrder(QuestionOrderDto question);
         Task<bool> DeleteQuestionAsync(int questionId);
         Task<Question> GetQuestionAnswers(int questionId); 
