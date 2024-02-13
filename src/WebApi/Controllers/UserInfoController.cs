@@ -1,9 +1,11 @@
-﻿using Domain.Entities;
-using Domain.Enums;
+﻿using ClosedXML.Excel;
+using Domain.Entities;
+using Domain.Extension;
 using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using WebApi.ViewModels;
 using WebApi.ViewModels.Acconut;
 
@@ -95,7 +97,7 @@ namespace WebApi.Controllers
                     .Where(s => s.UserName == userName)
                     .ToList();
 
-             
+
                 return StatusCode(200, CustomResult.Ok(majors));
             }
             catch (Exception ex)
@@ -117,7 +119,7 @@ namespace WebApi.Controllers
                     UserName = degreeMajor.UserName
 
                 };
-               await _majorRepository.AddAsync(userDegreeMajor);
+                await _majorRepository.AddAsync(userDegreeMajor);
                 return StatusCode(200, CustomResult.Ok(degreeMajor));
             }
             catch (Exception ex)
@@ -154,10 +156,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                var category = _categoryRepository.FirstOrDefault(s=>s.Id==userInfo.CategoryId);
+                var category = _categoryRepository.FirstOrDefault(s => s.Id == userInfo.CategoryId);
                 UserInfoDetails userInfoDetails = new UserInfoDetails
                 {
-                    Category= category,
+                    Category = category,
                     AtmCard = userInfo.AtmCard,
                     Address = userInfo.Address,
                     Birthday = userInfo.Birthday,
@@ -168,7 +170,7 @@ namespace WebApi.Controllers
                     Grade = userInfo.Grade,
                     Job = userInfo.Job,
                     Mobile = userInfo.Mobile,
-                    ResearchInterest= userInfo.ResearchInterests
+                    ResearchInterest = userInfo.ResearchInterests
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.AddUserInfo(userInfo);
@@ -207,6 +209,51 @@ namespace WebApi.Controllers
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.UpdateUserInfo(userInfo);
                 return StatusCode(200, CustomResult.Ok(userInfo));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+
+        }
+#if DEBUG
+        [AllowAnonymous]
+#endif  
+        [HttpGet]
+        public async Task<IActionResult> ExportExcel()
+        {
+            try
+            {
+                var userList = _userInfoService.GetUserInfoList();
+
+                var userDataSet = userList.ToDataSet();
+
+                string base64String;
+
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.AddWorksheet(userDataSet.Tables[0]);
+
+                    // Apply font color to columns 1 to 5
+                    sheet.Columns(1, 5).Style.Font.FontColor = XLColor.Black;
+
+                    using (var ms = new MemoryStream())
+                    {
+                        wb.SaveAs(ms);
+
+                        // Convert the Excel workbook to a base64-encoded string
+                        base64String = Convert.ToBase64String(ms.ToArray());
+                    }
+                }
+
+                // Return a CreatedResult with the base64-encoded Excel data
+                return new CreatedResult(string.Empty, new
+                {
+                    Code = 200,
+                    Status = true,
+                    Message = "",
+                    Data = base64String
+                });
             }
             catch (Exception ex)
             {
