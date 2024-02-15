@@ -2,6 +2,7 @@
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Domain.Interfaces.IRepositories
         Task<IEnumerable<VariableValueLabel>> GetVariableValues(int variableId);
         Task<IEnumerable<VariableWithValuesDto>> GetVariableWithValues(string sheetId, int? sheetVersion);
         Task<IEnumerable<Variable>> GetBySheetId(string sheetId, int? sheetVersion);
+        Task<DataTable> GetSurveyData(string sheetId);
         IEnumerable<VariableAnswerDto> VariableAnswers(string sheetId, int? sheetVersion);
     }
 }

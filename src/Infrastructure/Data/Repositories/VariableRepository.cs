@@ -8,17 +8,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Dtos;
 using System.Data;
+using System.Text.Json;
+using Microsoft.Data.SqlClient;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data.Repositories
 {
     public class VariableRepository : IVariableRepository
     {
         private readonly DapperContext _db;
-        public VariableRepository(DapperContext db)
+        private readonly IConfiguration configuration;
+
+        public VariableRepository(DapperContext db, IConfiguration configuration)
         {
             _db = db;
+            this.configuration = configuration;
         }
-        public async Task<Variable> GetByName(string sheetId,string name)
+        public async Task<Variable> GetByName(string sheetId, string name)
         {
             var query = @$"SELECT * 
             FROM Variables 
@@ -81,6 +88,24 @@ namespace Infrastructure.Data.Repositories
                 return variable;
             }
         }
+        public async Task<DataTable> GetSurveyData(string sheetId)
+        {
+            var _connectionString = string.Empty;
+#if DEBUG
+            _connectionString = this.configuration.GetConnectionString("DefaultConnectionString");
+#else
+            _connectionString = this.configuration.GetConnectionString("ReleaseConnectionString");
+#endif
+            DataTable dt = new DataTable();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand cmd = new SqlCommand($"sp_GetSurveyData @SheetId='{sheetId}'", connection);
+            connection.Open();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            connection.Close();
+            da.Dispose();
+            return dt;
+        }
         public async Task<bool> DeleteAsync(int variableId)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -97,17 +122,17 @@ namespace Infrastructure.Data.Repositories
         public IEnumerable<VariableAnswerDto> VariableAnswers(string sheetId, int? sheetVersion)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.AddDynamicParams(new { SheetId = sheetId,SheetVersion=sheetVersion ?? 1});
+            parameters.AddDynamicParams(new { SheetId = sheetId, SheetVersion = sheetVersion ?? 1 });
 
             var query = $@"sp_GetVariableAnswers";
 
             using (var connection = _db.CreateConnection())
             {
-                var variable = connection.Query<VariableAnswerDto>(query, parameters,commandType: CommandType.StoredProcedure);
+                var variable = connection.Query<VariableAnswerDto>(query, parameters, commandType: CommandType.StoredProcedure);
                 return variable;
             }
 
         }
-        
-        }
+
+    }
 }

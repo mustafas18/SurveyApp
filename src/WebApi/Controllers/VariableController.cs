@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Domain.Entities;
+using Domain.Extension;
 using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -73,6 +75,23 @@ namespace WebApi.Controllers
             {
                 var userAnswers =await _variableService.ReportBySurveyId(sheetId, version);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        [HttpGet]
+        public async Task<IActionResult> GetSheetData(string sheetId)
+        {
+            try
+            {
+                var dataSet =await  _variableService.SheetData(sheetId,null);
+
+                return StatusCode(200, CustomResult.Ok(dataSet.DataSetToBase64()));
             }
             catch (Exception ex)
             {

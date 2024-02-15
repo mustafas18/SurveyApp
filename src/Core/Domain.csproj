@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="Ardalis.GuardClauses" Version="4.2.0" />
     <PackageReference Include="Ardalis.Specification" Version="7.0.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />

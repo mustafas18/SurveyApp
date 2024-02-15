@@ -7,8 +7,12 @@ using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Data;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -112,6 +116,19 @@ namespace Infrastructure.Services
             }
 
             return result;
+        }
+
+        public async Task<DataSet> SheetData(string sheetId, int? sheetVersion)
+        {
+           // var sheetVariables=  await _varDataAcess.GetBySheetId(sheetId, sheetVersion);
+      
+
+            var dt = await _varDataAcess.GetSurveyData(sheetId);
+            DataSet dataSet = new DataSet();
+        
+
+            dataSet.Tables.Add(dt);
+            return  dataSet;
         }
     }
 }
