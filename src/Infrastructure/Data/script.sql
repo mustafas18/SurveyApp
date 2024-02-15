@@ -69,3 +69,46 @@ BEGIN
 			ON V.Id=Q.VariableId
 		WHERE V.Deleted=0 AND V.SheetId=@SheetId AND V.SheetVersion=@SheetVersion
 END
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_GetSurveyData]
+	-- Add the parameters for the stored procedure here
+	@SheetId NVARCHAR(50)
+AS
+BEGIN
+	DECLARE @cols NVARCHAR(MAX);
+	DECLARE @query NVARCHAR(MAX);
+
+	select @cols=STUFF((SELECT ',' + QUOTENAME([Name])
+	 FROM [iSurveyApp].[dbo].[Variables] V
+	  WHERE V.SheetId=@SheetId AND  V.SheetVersion=(SELECT MAX(Version) FROM dbo.Sheets WHERE SheetId=V.SheetId) AND V.Deleted=0
+	FOR XML PATH(''), TYPE
+				).value('.', 'NVARCHAR(MAX)') 
+			,1,1,'');
+
+
+	 SET @query = N'
+	 DECLARE @SheetId NVARCHAR(10) =''' + @SheetId + N''';
+	 DECLARE @SheetId1 INT = (SELECT Id FROM dbo.Sheets WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM dbo.Sheets WHERE SheetId=@SheetId));
+	 SELECT [UserName],' + @cols  + N' FROM 
+				 (
+					SELECT A.[UserName],A.[InputValue], V.[Name]
+					FROM [UserAnswers] AS A
+					INNER JOIN dbo.Variables V
+						ON V.Id=A.VariableId
+					WHERE A.Id IN (SELECT Id FROM dbo.UserAnswers WHERE SheetId=@SheetId1)
+						AND A.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=(SELECT TOP(1) [Guid] FROM UserSurveys WHERE Id=A.SurveyId))       
+				) X
+				PIVOT 
+				(
+					MAX([InputValue])
+					FOR [Name] IN (' + @cols + N')
+				) P ';
+	 PRINT @query;
+	 exec sp_executesql @query;
+END
+GO
