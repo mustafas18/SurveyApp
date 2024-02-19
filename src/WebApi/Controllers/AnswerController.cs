@@ -102,7 +102,7 @@ namespace WebApi.Controllers
                             VariableId = question.VariableId,
                             InputLabel = inputLabel,
                             InputValue = s,
-                            UserName = userName ?? "guest"
+                            UserName = survey.userName
                         });
                     });
                 

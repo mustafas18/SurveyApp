@@ -50,7 +50,7 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<UserAnswer>> GetUserAnswersAsync(int surveyId)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.AddDynamicParams(new { _previousSurveyId = surveyId -1 });
+            parameters.AddDynamicParams(new { _previousSurveyId = surveyId  });
             var query = $@"SELECT * FROM dbo.UserAnswers AS U
                 WHERE U.SurveyId = @_previousSurveyId";
             using (var connection = _db.CreateConnection())

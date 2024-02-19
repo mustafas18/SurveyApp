@@ -70,11 +70,7 @@ BEGIN
 		WHERE V.Deleted=0 AND V.SheetId=@SheetId AND V.SheetVersion=@SheetVersion
 END
 GO
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
+
 CREATE PROCEDURE [dbo].[sp_GetSurveyData]
 	-- Add the parameters for the stored procedure here
 	@SheetId NVARCHAR(50)

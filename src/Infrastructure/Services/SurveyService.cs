@@ -132,7 +132,7 @@ namespace Infrastructure.Services
             var result = _surveyRepository.AsNoTracking()
                                 .Where(s => s.Guid == guid)
                                 .Select(s=> s.Id)
-                                .Skip(1)
+                                //.Skip(1)
                                 .ToList();
             return result;
         }
