@@ -1,6 +1,8 @@
 ﻿using Ardalis.GuardClauses;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
+    [Index(nameof(UserName), Name = "Index_UserName")]
     public class UserInfo : BaseEntity, IAggregateRoot
     {
         public UserInfo()
@@ -24,7 +27,6 @@ namespace Domain.Entities
             FirstName = firstName;
             LastName = lastName;
         }
-
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

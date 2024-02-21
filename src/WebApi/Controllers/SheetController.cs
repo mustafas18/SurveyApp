@@ -51,7 +51,8 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = sheetRepository.GetSheetList();
+                var userName = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault()?.Subject.Name;
+                var result = sheetRepository.GetSheetList(userName);
 
                 return StatusCode(200, CustomResult.Ok(_mapper.Map<List<SheetDto>, List<SheetViewModel>>(result.Result.ToList())));
             }

@@ -10,7 +10,7 @@ namespace Domain.Interfaces.IRepositories
 {
     public interface ISheetRepository
     {
-        Task<IEnumerable<SheetDto>> GetSheetList();
+        Task<IEnumerable<SheetDto>> GetSheetList(string username);
         Sheet GetSheetById(string sheetId);
         Task<Sheet?> GetSheetInfo(string sheetId, int? sheetVersion);
         Task<Sheet> AddQuestion(string sheetId, Question question);

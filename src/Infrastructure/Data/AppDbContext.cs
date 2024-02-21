@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Data.Views;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -25,14 +26,14 @@ namespace Infrastructure.Data
 
 
         public DbSet<AppUser> Users { get; set; }
-        public DbSet<Sheet> Sheets { get; set; }
+        public DbSet<Domain.Entities.Sheet> Sheets { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<SheetPage> SheetPages { get; set; }
         public DbSet<UserSurvey> UserSurveys { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
-        public DbSet<UserInfo> UserInfos { get; set; }
+        public DbSet<Domain.Entities.UserInfo> UserInfos { get; set; }
         public DbSet<UserCategory> UserCategories { get; set; }
         public DbSet<Variable> Variables { get; set; }
 
@@ -55,7 +56,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<vw_UserCategory>()
                         .HasNoKey()
                         .ToView(nameof(vw_UserCategories));
-
 
             modelBuilder.Entity<UserCategory>()
               .HasData(new UserCategory

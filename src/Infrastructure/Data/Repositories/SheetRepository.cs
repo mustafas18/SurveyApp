@@ -11,6 +11,8 @@ using Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Sheet = Domain.Entities.Sheet;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -24,12 +26,12 @@ namespace Infrastructure.Data.Repositories
             _db = db;
             _efContext = efContext;
         }
-        public void SaveChanges(Sheet sheet)
+        public void SaveChanges(Domain.Entities.Sheet sheet)
         {
             _efContext.Sheets.Update(sheet);
             _efContext.SaveChanges();
         }
-        public async Task<Sheet> AddQuestion(string sheetId, Question question)
+        public async Task<Domain.Entities.Sheet> AddQuestion(string sheetId, Question question)
         {
             var sheet = _efContext.Sheets.Where(s => s.SheetId == sheetId && s.Version == GetLatestVersion(sheetId))
                 .Include(nameof(Sheet.Questions))
@@ -64,7 +66,7 @@ DELETE FROM [QuestionAnswers] WHERE QuestionId=@_questionId
             await _efContext.SaveChangesAsync();
             return sheet;
         }
-        public async Task<IEnumerable<SheetDto>> GetSheetList()
+        public async Task<IEnumerable<SheetDto>> GetSheetList(string username)
         {
             /*
             var query = @"
@@ -75,15 +77,17 @@ DELETE FROM [QuestionAnswers] WHERE QuestionId=@_questionId
             LEFT JOIN UserInfos AS UI ON UI.Id=SU.UsersId
             GROUP BY S.SheetId,S.Title,S.LanguageId,S.Link,S.DurationTime,S.DeadlineTime,S.CreateTime,S.Deleted";
             */
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _userName = username });
             var query = @"
             SELECT 
                 SheetId,Title,LanguageId,Link,CreateTime,DurationTime,DeadlineTime,CreateTime,Deleted
-            FROM Sheets";
+            FROM Sheets WHERE CreatedByUserId = @_userName";
 
 
             using (var connection = _db.CreateConnection())
             {
-                var sheets = await connection.QueryAsync<SheetDto>(query);
+                var sheets = await connection.QueryAsync<SheetDto>(query, parameters);
                 return sheets;
             }
         }
