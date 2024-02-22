@@ -40,6 +40,7 @@ namespace Infrastructure.Services
                 SheetVersion = sheetVersion,
                 SurveyTitle = sheet?.Title,
                 Version = 0,
+                CategoryId = invitationDto.categoryId,
                 CreatedTime = DateTime.Now,
                 DeadLine = sheet?.DeadlineTime,
                 UserName = invitationDto.userName,

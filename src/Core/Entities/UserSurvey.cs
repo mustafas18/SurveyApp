@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,10 +18,12 @@ namespace Domain.Entities
         public int SheetVersion { get; set; }
         public string? SurveyTitle { get; set; }
         public string? UserName { get; set; }
+        public int? CategoryId { get; set; }
         public string? Link { get; set; }
         public DateTime? DeadLine { get; set; }
         public DateTime? ParticipateTime { get; set; }
         public DateTime? CreatedTime { get; set; }
+        [Comment($"0: Pending, 1: Completed")]
         public SurveyStatusEnum? Status { get; set; }
     }
 

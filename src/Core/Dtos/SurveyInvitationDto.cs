@@ -11,8 +11,9 @@ namespace Domain.Dtos
     {
         [JsonIgnore]
         public int? id { get; set; }
+        public int? categoryId { get; set; }
         public string sheetId { get; set; }
-        public string userName { get; set; }
+        public string? userName { get; set; }
         public string? guid { get; set; }
         [JsonIgnore]
         public int? version { get; set; }
