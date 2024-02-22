@@ -40,7 +40,7 @@ namespace Infrastructure.Services
             AppUser user = new AppUser();
             user.UserName = userRegister.UserName;
             user.PhoneNumber = userRegister.Mobile;
-            // user.Email = 
+            user.Email = userRegister.Email;
             if (userRegister.Role == null || userRegister.Role == "client")
             {
                 await _userInfoRepository.AddAsync(new UserInfo(userRegister.UserName, userRegister.FirstName, userRegister.LastName));
