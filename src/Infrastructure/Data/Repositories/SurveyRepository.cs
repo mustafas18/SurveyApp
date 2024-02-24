@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using DocumentFormat.OpenXml.Presentation;
 using Domain.Dtos;
 using Domain.Entities;
 using Domain.Interfaces.IRepositories;
@@ -52,7 +53,7 @@ namespace Infrastructure.Data.Repositories
             DynamicParameters parameters = new DynamicParameters();
             parameters.AddDynamicParams(new { _previousSurveyId = surveyId  });
             var query = $@"SELECT * FROM dbo.UserAnswers AS U
-                WHERE U.SurveyId = @_previousSurveyId";
+                WHERE U.SurveyId = @_previousSurveyId AND U.IsTemplate=0";
             using (var connection = _db.CreateConnection())
             {
                 var result = await connection.QueryAsync<UserAnswer>(query, parameters);
@@ -70,6 +71,59 @@ namespace Infrastructure.Data.Repositories
             {
                 var result = await connection.QueryFirstAsync<UserSurvey>(query, parameters);
                 return result;
+            }
+        }
+
+        public async Task<UserSurvey> SubmitSurvey(UserSurvey survey)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _guid = survey.Guid,
+
+                _SurveyTitle=survey.SurveyTitle,
+                _UserName = survey.UserName,
+                _Link = survey.Link,
+                _DeadLine = survey.DeadLine,
+                _ParticipateTime = survey.CreatedTime,
+                _Status = survey.Status,
+                _CategoryId = survey.CategoryId,
+                _CreatedTime = survey.CreatedTime
+            });
+            var query = $@"--BEGIN TRAN T1;
+UPDATE [UserSurveys] SET IsDelete=1 WHERE IsTemplate=1 AND Guid=@_guid;
+INSERT INTO UserSurveys (
+       [Guid]
+      ,[Version]
+      ,[SheetId]
+      ,[SheetVersion]
+      ,[SurveyTitle]
+      ,[UserName]
+      ,[Link]
+      ,[DeadLine]
+      ,[ParticipateTime]
+      ,[CreatedTime]
+      ,[Status]
+      ,[CategoryId]
+)
+OUTPUT INSERTED.[Id]
+VALUES (
+       '{survey.Guid}'
+      ,'{survey.Version}'
+      ,'{survey.SheetId}'
+      ,'{survey.SheetVersion}'
+      ,@_SurveyTitle
+      ,@_UserName
+      ,@_Link
+      ,@_DeadLine
+      ,@_ParticipateTime
+      ,@_CreatedTime
+      ,@_Status
+      ,@_CategoryId);
+--COMMIT T1
+";
+            using (var connection = _db.CreateConnection())
+            {
+                var result = await connection.ExecuteAsync(query, parameters);
+                return survey;
             }
         }
     }

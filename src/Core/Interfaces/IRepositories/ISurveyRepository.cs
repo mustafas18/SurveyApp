@@ -14,5 +14,6 @@ namespace Domain.Interfaces.IRepositories
         Task<IEnumerable<UserAnswer>> GetUserAnswersAsync(int surveyId);
         int GetSurveyId(string guid);
         Task<UserSurvey> LatestSurvey(string guid);
+        Task<UserSurvey> SubmitSurvey(UserSurvey survey);
     }
 }

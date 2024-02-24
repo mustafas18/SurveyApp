@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var survey = await _surveyService.CreateSurveyAsync(invitaiton);
+                var survey = await _surveyService.CreateSurveyAsync(invitaiton, invitaiton.isTemplate ?? false);
                 return StatusCode(200, CustomResult.Ok(survey));
             }
             catch (Exception ex)
@@ -82,6 +82,23 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        [HttpGet]
+        public async Task<IActionResult> GetUserSurveys(string username)
+        {
+            try
+            {
+                var surveyList = await _surveyService.GetUserSurveysAsync(username);
+                return StatusCode(200, CustomResult.Ok(surveyList));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+
 #if DEBUG
         [AllowAnonymous]
 #endif

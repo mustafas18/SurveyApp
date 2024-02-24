@@ -17,5 +17,6 @@ namespace Domain.Dtos
         public string? guid { get; set; }
         [JsonIgnore]
         public int? version { get; set; }
+        public bool? isTemplate { get; set; }
     }
 }

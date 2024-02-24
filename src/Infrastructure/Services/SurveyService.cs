@@ -1,4 +1,5 @@
-﻿using Domain.Dtos;
+﻿using DocumentFormat.OpenXml.Presentation;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -28,7 +29,7 @@ namespace Infrastructure.Services
             _sheetService = sheetService;
         }
 
-        public async Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto)
+        public async Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto, bool isTemplate = false)
         {
             int sheetVersion = _sheetService.GetLatestVersion(invitationDto.sheetId);
             SheetDto sheet = await _sheetService.GetSheetInfo(invitationDto.sheetId, sheetVersion);
@@ -44,6 +45,7 @@ namespace Infrastructure.Services
                 CreatedTime = DateTime.Now,
                 DeadLine = sheet?.DeadlineTime,
                 UserName = invitationDto.userName,
+                IsTemplate = isTemplate,
                 Status = SurveyStatusEnum.Pending
             };
             await _surveyRepository.AddAsync(survey);
@@ -70,7 +72,7 @@ namespace Infrastructure.Services
                 Version = survey.Version+1,
 
             };
-            await _surveyRepository.AddAsync(newSurvey);
+            await _surveyDataAccess.SubmitSurvey(newSurvey);
             return survey;
         }
         public int GetLatestVersion(string surveyGuid)
@@ -135,6 +137,15 @@ namespace Infrastructure.Services
                                 .Select(s=> s.Id)
                                 //.Skip(1)
                                 .ToList();
+            return result;
+        }
+
+        public Task<List<UserSurvey>> GetUserSurveysAsync(string userName)
+        {
+            var result = _surveyRepository.AsNoTracking()
+                     .Where(s => s.UserName == userName)
+                     .OrderByDescending(s=>s.CreatedTime)
+                     .ToListAsync();
             return result;
         }
     }

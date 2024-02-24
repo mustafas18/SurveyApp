@@ -25,6 +25,8 @@ namespace Domain.Entities
         public DateTime? CreatedTime { get; set; }
         [Comment($"0: Pending, 1: Completed")]
         public SurveyStatusEnum? Status { get; set; }
+        public bool IsTemplate { get; set; }
+        public bool IsDelete { get; set; }
     }
 
 }
