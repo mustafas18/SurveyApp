@@ -41,7 +41,8 @@ namespace Infrastructure.Data.Repositories
             DynamicParameters parameters = new DynamicParameters();
             parameters.AddDynamicParams(new { _sheetId = sheetId});
             var query = $@"SELECT * FROM UserSurveys AS S
-                WHERE S.SheetId=@_sheetId AND S.Version=(SELECT MAX(Version) FROM UserSurveys WHERE Guid=S.Guid)";
+                WHERE S.SheetId=@_sheetId AND S.Version=(SELECT MAX(Version) FROM UserSurveys WHERE Guid=S.Guid)
+                    AND IsDelete=0";
             using (var connection = _db.CreateConnection())
             {
                 var surveys = await connection.QueryAsync<UserSurvey>(query, parameters);
@@ -53,7 +54,7 @@ namespace Infrastructure.Data.Repositories
             DynamicParameters parameters = new DynamicParameters();
             parameters.AddDynamicParams(new { _previousSurveyId = surveyId  });
             var query = $@"SELECT * FROM dbo.UserAnswers AS U
-                WHERE U.SurveyId = @_previousSurveyId AND U.IsTemplate=0";
+                WHERE U.SurveyId = @_previousSurveyId";
             using (var connection = _db.CreateConnection())
             {
                 var result = await connection.QueryAsync<UserAnswer>(query, parameters);
@@ -88,7 +89,10 @@ namespace Infrastructure.Data.Repositories
                 _CategoryId = survey.CategoryId,
                 _CreatedTime = survey.CreatedTime
             });
-            var query = $@"--BEGIN TRAN T1;
+            var query = $@"BEGIN TRANSACTION;
+DECLARE @InsertedId TABLE(Id INT);
+DECLARE @SurveyVersion INT = (SELECT MAX(Version) FROM UserSurveys WHERE Guid=@_guid);
+DECLARE @PreSurveyId INT = (SELECT Id FROM [UserSurveys] WHERE Guid=@_guid AND Version=@SurveyVersion);
 UPDATE [UserSurveys] SET IsDelete=1 WHERE IsTemplate=1 AND Guid=@_guid;
 INSERT INTO UserSurveys (
        [Guid]
@@ -104,7 +108,7 @@ INSERT INTO UserSurveys (
       ,[Status]
       ,[CategoryId]
 )
-OUTPUT INSERTED.[Id]
+OUTPUT INSERTED.[Id] INTO @InsertedId(Id)
 VALUES (
        '{survey.Guid}'
       ,'{survey.Version}'
@@ -118,7 +122,11 @@ VALUES (
       ,@_CreatedTime
       ,@_Status
       ,@_CategoryId);
---COMMIT T1
+DECLARE @SurveyId INT = (SELECT TOP(1) Id FROM @InsertedId);
+SET @SurveyVersion = (SELECT MAX(SurveyVersion) FROM UserAnswers WHERE SurveyGuid=@_guid);
+UPDATE [UserAnswers] SET SurveyId=@SurveyId 
+    WHERE SurveyGuid=@_guid AND SurveyId = @PreSurveyId AND SurveyVersion=@SurveyVersion;
+COMMIT TRANSACTION
 ";
             using (var connection = _db.CreateConnection())
             {

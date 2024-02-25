@@ -133,7 +133,7 @@ namespace Infrastructure.Services
         public List<int> RevisionList(string guid)
         {
             var result = _surveyRepository.AsNoTracking()
-                                .Where(s => s.Guid == guid)
+                                .Where(s => s.Guid == guid && s.IsTemplate==false)
                                 .Select(s=> s.Id)
                                 //.Skip(1)
                                 .ToList();
