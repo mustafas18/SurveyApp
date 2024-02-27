@@ -49,6 +49,21 @@ namespace Infrastructure.Data.Repositories
                 return surveys;
             }
         }
+        public async Task<IEnumerable<UserSurvey>> GetUserSurveyListAsync(string userName)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _userName = userName });
+            var query = $@"SELECT 
+u.Id, u.CategoryId,(SELECT TOP(1) CreatedTime FROM dbo.UserSurveys WHERE [Guid] = u.Guid AND Version=0) AS CreatedTime, u.DeadLine, u.Guid, u.IsDelete, u.IsTemplate, u.Link, u.ParticipateTime, u.SheetId, u.SheetVersion, u.Status, u.SurveyTitle, u.UserName, u.Version
+FROM UserSurveys AS u
+WHERE u.UserName = @_userName AND u.IsDelete = 0 AND u.Version = (SELECT MAX(Version) FROM dbo.UserSurveys WHERE [Guid] = u.Guid) 
+ORDER BY u.CreatedTime DESC";
+            using (var connection = _db.CreateConnection())
+            {
+                var surveys = await connection.QueryAsync<UserSurvey>(query, parameters);
+                return surveys;
+            }
+        }
         public async Task<IEnumerable<UserAnswer>> GetUserAnswersAsync(int surveyId)
         {
             DynamicParameters parameters = new DynamicParameters();

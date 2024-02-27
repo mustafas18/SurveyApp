@@ -11,6 +11,7 @@ namespace Domain.Interfaces.IRepositories
     public interface  ISurveyRepository
     {
         Task<IEnumerable<UserSurvey>> GetSurveyListAsync(string sheetId);
+        Task<IEnumerable<UserSurvey>> GetUserSurveyListAsync(string userName);
         Task<IEnumerable<UserAnswer>> GetUserAnswersAsync(int surveyId);
         int GetSurveyId(string guid);
         Task<UserSurvey> LatestSurvey(string guid);

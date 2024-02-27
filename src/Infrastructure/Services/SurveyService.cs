@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Domain.Dtos;
 using Domain.Entities;
 using Domain.Enums;
@@ -7,6 +8,7 @@ using Domain.Interfaces.IRepositories;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -140,12 +142,9 @@ namespace Infrastructure.Services
             return result;
         }
 
-        public Task<List<UserSurvey>> GetUserSurveysAsync(string userName)
+        public async Task<IEnumerable<UserSurvey>> GetUserSurveysAsync(string userName)
         {
-            var result = _surveyRepository.AsNoTracking()
-                     .Where(s => s.UserName == userName)
-                     .OrderByDescending(s=>s.CreatedTime)
-                     .ToListAsync();
+            var result = await _surveyDataAccess.GetUserSurveyListAsync(userName);
             return result;
         }
     }
