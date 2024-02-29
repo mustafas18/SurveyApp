@@ -37,6 +37,7 @@ namespace Domain.Entities
         public string DeadlineString { get;private set; }
         public string? CreatedByUserId { get; private set; }
         public DateTime CreateTime { get; set; }
+        public bool IsRevisable { get; set; }
         public bool Deleted { get; set; }
 
         public List<Question>? Questions { get; set; }
@@ -95,6 +96,7 @@ namespace Domain.Entities
             Link = sheetDetail.Link;
             DeadlineTime = sheetDetail.DeadlineTime;
             DeadlineString = sheetDetail.DeadlineString;
+            IsRevisable = sheetDetail.IsRevisable ?? false;
         }
     }
     public record struct SheetDetail
@@ -112,5 +114,6 @@ namespace Domain.Entities
         public DateTime DeadlineTime { get; set; }
         public string DeadlineString { get; set; }
         public string? CreatedByUserId { get; set; }
+        public bool? IsRevisable { get; set; }
     }
 }

@@ -23,5 +23,6 @@ namespace Domain.Dtos
         public int DurationTime { get; set; } // in seconds
         public DateTime DeadlineTime { get; set; }
         public DateTime CreateTime { get; set; }
+        public bool? IsRevisable { get; set; }
     }
 }
