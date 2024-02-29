@@ -66,6 +66,8 @@ namespace Infrastructure.Services
                 DeadlineString = sheet.DeadlineString,
                 DeadlineTime = sheet.DeadlineTime,
                 DurationTime = sheet.DurationTime,
+                IsRevisable = sheet.IsRevisable
+                
             });
             await _sheetRepository.UpdateAsync(result);
 

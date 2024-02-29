@@ -18,6 +18,7 @@ namespace WebApi.ViewModels
         public DateTime DeadlineTime { get; set; }
         public string? DeadlineString { get; set; }
         public string? CreatedByUserId { get; set; }
+        public bool? IsRevisable { get; set; }
         public bool Deleted { get; set; }
 
         
