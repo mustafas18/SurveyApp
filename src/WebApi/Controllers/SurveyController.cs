@@ -144,5 +144,20 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> CountSurveys()
+        {
+            try
+            {
+                var surveyId = await _surveyService.CountSurveys();
+                return StatusCode(200, CustomResult.Ok(surveyId));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
     }
 }

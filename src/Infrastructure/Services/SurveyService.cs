@@ -147,5 +147,11 @@ namespace Infrastructure.Services
             var result = await _surveyDataAccess.GetUserSurveyListAsync(userName);
             return result;
         }
+
+        public async Task<SurveysCount> CountSurveys()
+        {
+            var result = await _surveyDataAccess.CountSurveys();
+            return result;
+        }
     }
 }

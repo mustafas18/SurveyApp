@@ -14,6 +14,7 @@ namespace Domain.Interfaces
         Task<UserSurvey> CreateSurveyAsync(SurveyInvitationDto invitationDto, bool isTemplate);
         Task<UserSurvey> ReviseSurveyAsync(SurveyInvitationDto invitationDto);
         Task<UserSurvey> GetSurveyAsync(string surveyGuid);
+        Task<SurveysCount> CountSurveys();
         Task<IEnumerable<UserSurvey>> GetUserSurveysAsync(string userName);
         
         int GetLatestVersion(string surveyGuid);

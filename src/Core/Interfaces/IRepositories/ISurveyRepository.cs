@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Domain.Interfaces.IRepositories
         Task<IEnumerable<UserSurvey>> GetSurveyListAsync(string sheetId);
         Task<IEnumerable<UserSurvey>> GetUserSurveyListAsync(string userName);
         Task<IEnumerable<UserAnswer>> GetUserAnswersAsync(int surveyId);
+        Task<SurveysCount> CountSurveys();
         int GetSurveyId(string guid);
         Task<UserSurvey> LatestSurvey(string guid);
         Task<UserSurvey> SubmitSurvey(UserSurvey survey);

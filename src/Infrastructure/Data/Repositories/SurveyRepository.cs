@@ -149,5 +149,18 @@ COMMIT TRANSACTION
                 return survey;
             }
         }
+
+        public async Task<SurveysCount> CountSurveys()
+        {
+            var query = $@"DECLARE @ActiveSurveyCount INT = ( SELECT COUNT(1) FROM  (SELECT DISTINCT [Guid] FROM [dbo].[UserSurveys]  WHERE DeadLine < GETDATE()) AS tbl); 
+                    DECLARE @TotalSurveyCount INT = (SELECT COUNT(1) FROM (SELECT DISTINCT [Guid] FROM [dbo].[UserSurveys]) AS tbl); 
+                    DECLARE @RevisedCount INT = (SELECT COUNT(1) FROM [dbo].[UserSurveys]  WHERE Version > 0);
+                    SELECT @ActiveSurveyCount AS ActiveSurveyCount,@TotalSurveyCount TotalSurveyCount,@RevisedCount RevisedCount";
+            using (var connection = _db.CreateConnection())
+            {
+                var result = await connection.QueryFirstAsync<SurveysCount>(query);
+                return result;
+            }
+        }
     }
 }
