@@ -29,6 +29,7 @@ namespace Infrastructure
             //services.AddScoped(typeof(IEfRepository<>), typeof(IEfRepository<>));
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IUserCategoryRepository, UserCategoryRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<ISheetRepository, SheetRepository>();
             services.AddScoped<ISurveyRepository, SurveyRepository>();

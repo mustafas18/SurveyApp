@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,14 @@ namespace Infrastructure.Services
     public class UserInfoService: IUserInfoService
     {
         private readonly IRepository<UserInfo> _userInfoRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserInfoService(IRepository<UserInfo> userInfoRepository )
+        public UserInfoService(IRepository<UserInfo> userInfoRepository,
+            IUserRepository userRepository
+            )
         {
             _userInfoRepository = userInfoRepository;
+            _userRepository = userRepository;
         }
         public List<UserInfo> GetUserInfoList()
         {
@@ -37,7 +42,7 @@ namespace Infrastructure.Services
         }
         public async Task UpdateUserInfo(UserInfo userInfo)
         {
-            await _userInfoRepository.UpdateAsync(userInfo);
+         await _userRepository.UpdateInfo(userInfo);
         }
     }
 }

@@ -5,9 +5,10 @@ namespace WebApi.ViewModels
 {
     public class UserFullNameViewModel
     {
-        public UserFullNameViewModel(int id,string fullName)
+        public UserFullNameViewModel(int id,string userName,string fullName)
         {
             Id = id;
+            UserName = userName;
             FullName = fullName;
         }
         public UserFullNameViewModel(UserDto appUser)

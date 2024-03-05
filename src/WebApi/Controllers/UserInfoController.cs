@@ -65,7 +65,7 @@ namespace WebApi.Controllers
             try
             {
                 var result = _userInfoService.GetUserInfo(userName);
-                UserFullNameViewModel userFullNameViewModel = new UserFullNameViewModel(result.Id, result.FullName);
+                UserFullNameViewModel userFullNameViewModel = new UserFullNameViewModel(result.Id, userName, result.FullName);
                 return StatusCode(200, CustomResult.Ok(userFullNameViewModel));
             }
             catch (Exception ex)
@@ -204,7 +204,9 @@ namespace WebApi.Controllers
                     Grade = userInfo.Grade,
                     Job = userInfo.Job,
                     Mobile = userInfo.Mobile,
-                    Email = userInfo.Email
+                    Email = userInfo.Email,
+                    ResearchInterest=userInfo.ResearchInterests
+                    
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.UpdateUserInfo(userInfo);

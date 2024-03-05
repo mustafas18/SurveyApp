@@ -45,7 +45,7 @@ namespace Domain.Entities
         public IReadOnlyCollection<UserDegree>? EducationDegree => _userDegrees.AsReadOnly();
         public IReadOnlyCollection<UserDegreeMajor>? UserDegreeMajor => _userMajor.AsReadOnly();
         private List<UserDegreeMajor> _userMajor = new List<UserDegreeMajor>();
-        public string? Grade { get; set; }
+        public GradeEnum? Grade { get; set; }
         public string? Job { get; set; }
         public string? Mobile { get; set; }
         public string? Email { get; set; }
@@ -88,6 +88,7 @@ namespace Domain.Entities
             AtmCard = infoDetails.AtmCard;
             CVFileData = infoDetails.CVFileData;
             FileContent = infoDetails.FileContent;
+            ResearchInterests = infoDetails.ResearchInterest;
         }
     }
     public record struct UserInfoDetails
@@ -102,7 +103,7 @@ namespace Domain.Entities
         public UserCategory? Category { get; set; }  
         public string? City { get; set; }
         public string? ResearchInterest { get; set; }
-        public string? Grade { get; set; }
+        public GradeEnum? Grade { get; set; }
         public string? Job { get; set; }
         public string? Mobile { get; set; }
         public string? Email { get; set; }
