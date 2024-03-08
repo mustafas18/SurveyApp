@@ -18,5 +18,6 @@ namespace Domain.Dtos
         [JsonIgnore]
         public int? version { get; set; }
         public bool? isTemplate { get; set; }
+        public string? inviteType { get; set; }
     }
 }
