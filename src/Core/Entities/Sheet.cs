@@ -52,7 +52,7 @@ namespace Domain.Entities
         public void UpdateQuestion(Question quest)
         {
             var question = Questions.Where(q=>q.Id == quest.Id).FirstOrDefault();
-            quest.Order = question.Order;
+            quest.Order = question?.Order ?? quest.Order;
             //quest.Type = question.Type;
             Questions.Remove(question);
             question = quest;
