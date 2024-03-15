@@ -119,6 +119,24 @@ namespace Infrastructure.Data.Repositories
             }
             return true;
         }
+        public async Task<IEnumerable<VariableSurveyResultDto>> SurveyVariableReportAsync(int surveyId)
+        {
+            var result = new List<VariableSurveyResultDto>();
+            
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _surveyId = surveyId });
+
+            var query = $@"SELECT V.Id,V.Name,V.Label,SUM(CAST(UA.InputValue AS INT)) AS [Sum] FROM [iSurveyApp].[dbo].[UserAnswers] UA
+INNER JOIN dbo.Variables V
+	ON V.Id=UA.VariableId
+WHERE UA.SurveyId=@_surveyId AND v.Messure=0
+GROUP BY V.Id,V.Name,V.Label";
+
+            using (var connection = _db.CreateConnection())
+            {
+                return await connection.QueryAsync<VariableSurveyResultDto>(query, parameters);
+            }
+        }
         public IEnumerable<VariableAnswerDto> VariableAnswers(string sheetId, int? sheetVersion)
         {
             DynamicParameters parameters = new DynamicParameters();

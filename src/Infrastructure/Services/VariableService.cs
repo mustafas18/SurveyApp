@@ -117,7 +117,11 @@ namespace Infrastructure.Services
 
             return result;
         }
-
+        public async Task<IEnumerable<VariableSurveyResultDto>> SurveyReport(int surveyId)
+        {
+            var result = await _varDataAcess.SurveyVariableReportAsync(surveyId);
+            return result;
+        }
         public async Task<DataSet> SheetData(string sheetId, int? sheetVersion)
         {
            // var sheetVariables=  await _varDataAcess.GetBySheetId(sheetId, sheetVersion);

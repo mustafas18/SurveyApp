@@ -19,6 +19,7 @@ namespace Domain.Interfaces
         string ConvertValueLabelToString(List<VariableValueLabel> values);
         Task<List<VariableResultDto>> ReportBySurveyId(string sheetId, int? version);
         Task<DataSet> SheetData(string sheetId, int? version);
+        Task<IEnumerable<VariableSurveyResultDto>> SurveyReport(int surveyId);
 
     }
 }

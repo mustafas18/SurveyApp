@@ -81,6 +81,20 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> IndividualVariableReport(int surveyId)
+        {
+            try
+            {
+                var result = await _variableService.SurveyReport(surveyId);
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
 #if DEBUG
         [AllowAnonymous]
 #endif
