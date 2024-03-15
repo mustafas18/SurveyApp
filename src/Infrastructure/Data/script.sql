@@ -90,18 +90,19 @@ BEGIN
 	 SET @query = N'
 	 DECLARE @SheetId NVARCHAR(10) =''' + @SheetId + N''';
 	 DECLARE @SheetId1 INT = (SELECT Id FROM dbo.Sheets WHERE SheetId=@SheetId AND Version=(SELECT MAX(Version) FROM dbo.Sheets WHERE SheetId=@SheetId));
-	 SELECT [UserName],' + @cols  + N' FROM 
+	 SELECT [SurveyGuid],' + @cols  + N' FROM 
 				 (
-					SELECT A.[UserName],A.[InputValue], V.[Name]
-					FROM [UserAnswers] AS A
-					INNER JOIN dbo.Variables V
-						ON V.Id=A.VariableId
-					WHERE A.Id IN (SELECT Id FROM dbo.UserAnswers WHERE SheetId=@SheetId1)
-						AND A.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=(SELECT TOP(1) [Guid] FROM UserSurveys WHERE Id=A.SurveyId))       
+						SELECT A.[SurveyGuid],CAST(A.[InputValue] AS INT) [InputValue], V.[Name]
+						FROM [UserAnswers] AS A
+						INNER JOIN dbo.Variables V
+							ON V.Id=A.VariableId
+						WHERE A.Id IN (SELECT Id FROM dbo.UserAnswers WHERE SheetId=@SheetId1)
+							AND A.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=(SELECT TOP(1) [Guid] FROM UserSurveys WHERE Id=A.SurveyId))   
+							AND V.Type=0 AND A.QuestionType NOT IN (3,4,7,8,9)
 				) X
 				PIVOT 
 				(
-					MAX([InputValue])
+					SUM([InputValue])
 					FOR [Name] IN (' + @cols + N')
 				) P ';
 	 PRINT @query;
