@@ -179,8 +179,14 @@ GROUP BY V.Id,V.Name,V.Label";
             var query = new StringBuilder();
             variables.ForEach(v =>
             {
-                query.AppendLine(@$"UPDATE UserAnswers SET [InputValue]={v.Value} WHERE [VariableId]={v.Id};");
+                query.AppendLine(@$"UPDATE UserAnswers SET [InputValue]={v.Value} 
+                                WHERE [VariableId]={v.Id} AND [SurveyGuid]=@_guidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) FROM UserAnswers WHERE [SurveyGuid]=@_guidId);");
             });
+            query.AppendLine(@$"SELECT UA.VariableId,V.[Name],UA.InputValue [Sum] WHERE [SurveyGuid]=@_guidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) 
+FROM UserAnswers UA
+INNER JOIN Variables V
+    ON V.Id = UA.VariableId
+WHERE [SurveyGuid]=@_guidId);");
             using (var connection = _db.CreateConnection())
             {
                 return await connection.QueryAsync<VariableSurveyResultDto>(query.ToString(), parameters);

@@ -15,5 +15,6 @@ namespace Domain.Dtos
         public VariableTypeEnum? Type { get; set; }
         public int Sum { get; set; }
         public int? Value { get; set; }
+        public bool ReadOnly { get; set; }=false;
     }
 }

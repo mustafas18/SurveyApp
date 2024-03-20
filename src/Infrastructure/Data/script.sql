@@ -110,21 +110,56 @@ BEGIN
 END
 GO
 
-ALTER  PROCEDURE [dbo].[sp_SurveyVariableData]
+CREATE  PROCEDURE [dbo].[sp_SurveyVariableData]
+	-- Add the parameters for the stored procedure here
 	@_surveyGuid NVARCHAR(50)
 AS
 BEGIN
-	SELECT 
+DECLARE @SheetId VARCHAR(50)=(SELECT TOP(1) SheetId FROM [dbo].[UserSurveys] WHERE Guid=@_surveyGuid);
+DECLARE @SheetVersion INT = (SELECT TOP(1) MAX(SheetVersion) FROM [dbo].[UserSurveys] WHERE Guid=@_surveyGuid);
+
+;WITH cte1
+AS 
+(
+	SELECT
 		V.Id,
 		V.Name,
 		V.Type,
-		SUM(CAST(UA.InputValue AS INT)) [Sum]
-	FROM [dbo].[UserAnswers] UA
-	INNER JOIN dbo.Variables V
-		ON V.Id = UA.VariableId
-	WHERE V.Type=0 AND V.Deleted=0 AND UA.SurveyGuid=@_surveyGuid
-		AND UA.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=@_surveyGuid)   
-	GROUP BY
-		V.Id,V.Name,V.Type
+		SUM(CAST(UA.InputValue AS INT)) [Sum],
+		CAST(1 AS BIT) ReadOnly
+	FROM dbo.Variables V
+	INNER JOIN dbo.UserAnswers UA
+		ON UA.VariableId = V.Id
+	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
+	GROUP BY V.Id,V.Name,V.Type
+), cte2
+AS
+(
+	SELECT
+		V.Id,
+		V.Name,
+		V.Type,
+		0 [Sum],
+		CAST(0 AS BIT) ReadOnly
+	FROM dbo.Variables V
+	right OUTER JOIN dbo.UserAnswers UA
+		ON UA.VariableId = V.Id
+	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
+),variable_cte
+AS(
+	SELECT
+		V.Id,
+		V.Name,
+		V.Type,
+		0 [Sum],
+		CAST(0 AS BIT) ReadOnly
+	FROM dbo.Variables V
+	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
+)
+SELECT * FROM cte1
+UNION 
+SELECT * FROM variable_cte
+EXCEPT 
+SELECT * FROM cte2
 END
 GO

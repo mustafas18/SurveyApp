@@ -37,6 +37,7 @@ namespace Infrastructure.Services
         public async Task<Variable> Create(Variable variable)
         {
             Guard.Against.Null(variable);
+            variable.Name = variable.Name.Replace("-", "_");
             variable.Values = ConvertStringIntoList(variable.ValuesAsString);
             variable.SheetVersion = _sheetRepository.GetLatestVersion(variable.SheetId);
             await _varRepository.AddAsync(variable);

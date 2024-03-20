@@ -107,7 +107,11 @@ namespace Code {
             code.AppendLine("List<VariableDto> variableDtos = new List<VariableDto>(){");
             foreach (var p in variables)
             {
-                code.AppendLine($"new VariableDto({p.Id},\"{p.Name}\",{(int)p.Type},{p.Sum}),");
+                if(!p.ReadOnly)
+                {
+                    code.AppendLine($"new VariableDto({p.Id},\"{p.Name}\",{(int)p.Type},{p.Sum}),");
+                }
+                
             }
             code.AppendLine("};");
             code.AppendLine(@"return variableDtos;}
@@ -138,10 +142,12 @@ namespace Code {
                         EmitResult result = compilation.Emit(ms);
                         if (!result.Success)
                         {
+                            var error = new StringBuilder();
                             foreach (var err in result.Diagnostics)
                             {
-                                // errors
+                                error.AppendLine(err.Descriptor.Title.ToString());
                             }
+                            throw new Exception(error.ToString());
                         }
                         else
                         {
