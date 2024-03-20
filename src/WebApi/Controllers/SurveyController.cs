@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using Domain.Interfaces.IRepositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,13 @@ namespace WebApi.Controllers
     public class SurveyController : ControllerBase
     {
         private readonly ISurveyService _surveyService;
+        private readonly ICSharpCompiler _compiler;
 
-        public SurveyController(ISurveyService surveyService)
+        public SurveyController(ISurveyService surveyService,
+            ICSharpCompiler compiler)
         {
             _surveyService = surveyService;
+            _compiler = compiler;
         }
 #if DEBUG
         [AllowAnonymous]
@@ -159,5 +163,23 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        [HttpGet]
+        public async Task<IActionResult> CompileScript(string surveyGuid,string script)
+        {
+            try
+            {
+                var result = _compiler.CompileCode(surveyGuid, script);
+
+                return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+
     }
 }

@@ -109,3 +109,22 @@ BEGIN
 	 exec sp_executesql @query;
 END
 GO
+
+ALTER  PROCEDURE [dbo].[sp_SurveyVariableData]
+	@_surveyGuid NVARCHAR(50)
+AS
+BEGIN
+	SELECT 
+		V.Id,
+		V.Name,
+		V.Type,
+		SUM(CAST(UA.InputValue AS INT)) [Sum]
+	FROM [dbo].[UserAnswers] UA
+	INNER JOIN dbo.Variables V
+		ON V.Id = UA.VariableId
+	WHERE V.Type=0 AND V.Deleted=0 AND UA.SurveyGuid=@_surveyGuid
+		AND UA.SurveyVersion=(SELECT MAX(Version) FROM UserSurveys WHERE [Guid]=@_surveyGuid)   
+	GROUP BY
+		V.Id,V.Name,V.Type
+END
+GO

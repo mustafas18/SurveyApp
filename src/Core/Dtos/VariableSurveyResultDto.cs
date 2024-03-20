@@ -12,6 +12,7 @@ namespace Domain.Dtos
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Label { get; set; }
+        public VariableTypeEnum? Type { get; set; }
         public int Sum { get; set; }
     }
 }

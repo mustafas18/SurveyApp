@@ -17,6 +17,7 @@ namespace WebApi.Controllers
         private readonly IMapper _mapper;
 
         public VariableController(IVariableService variableService,
+
             IMapper mapper)
         {
             _variableService = variableService;
@@ -112,5 +113,6 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+
     }
 }

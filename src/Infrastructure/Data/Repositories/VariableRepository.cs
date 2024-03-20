@@ -12,6 +12,7 @@ using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.Extensions.Configuration;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -152,5 +153,19 @@ GROUP BY V.Id,V.Name,V.Label";
 
         }
 
+        public async Task<IEnumerable<VariableSurveyResultDto>> GetSurveyVariableData(string surveyGuid)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _surveyGuid = surveyGuid });
+
+            var query = $@"sp_SurveyVariableData";
+
+            using (var connection = _db.CreateConnection())
+            {
+                var variable = await connection.QueryAsync<VariableSurveyResultDto>(query, parameters, commandType: CommandType.StoredProcedure);
+                return variable;
+            }
+
+        }
     }
 }
