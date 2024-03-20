@@ -20,5 +20,6 @@ namespace Domain.Interfaces.IRepositories
         IEnumerable<VariableAnswerDto> VariableAnswers(string sheetId, int? sheetVersion);
         Task<IEnumerable<VariableSurveyResultDto>> SurveyVariableReportAsync(int surveyId);
         Task<IEnumerable<VariableSurveyResultDto>> GetSurveyVariableData(string surveyGuid);
+        Task<IEnumerable<VariableSurveyResultDto>> UpdateVariables(List<VariableSurveyResultDto> variables, string guidId);
     }
 }

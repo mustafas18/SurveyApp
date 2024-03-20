@@ -102,15 +102,13 @@ namespace Code {
                 };
                 code.AppendLine(fieldLine);
             }
-            code.Append(@"public List<VariableDto> Main(){
-List<VariableDto> variableDtos=new List<VariableDto>();");
+            code.Append(@"public List<VariableDto> Main(){");
             code.Append(script);
             code.AppendLine("List<VariableDto> variableDtos = new List<VariableDto>(){");
             foreach (var p in variables)
             {
-                code.AppendLine($"new VariableDto({p.Id},{(int)p.Type},{p.Sum}),");
+                code.AppendLine($"new VariableDto({p.Id},\"{p.Name}\",{(int)p.Type},{p.Sum}),");
             }
-            code.Length -= 1;
             code.AppendLine("};");
             code.AppendLine(@"return variableDtos;}
                          }//end class
@@ -186,11 +184,12 @@ List<VariableDto> variableDtos=new List<VariableDto>();");
             }
 
         }
-        private void UpdateVariables(object variables, string guidId)
+        private async Task UpdateVariables(object variables, string guidId)
         {
             if (variables != null)
             {
-                Console.WriteLine(variables.ToString());
+                List<VariableSurveyResultDto> variableList = System.Text.Json.JsonSerializer.Deserialize<List<VariableSurveyResultDto>>(System.Text.Json.JsonSerializer.Serialize(variables));
+                await _variableRepository.UpdateVariables(variableList, guidId);
             }
 
         }

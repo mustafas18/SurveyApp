@@ -13,6 +13,8 @@ using Microsoft.Data.SqlClient;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.Extensions.Configuration;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2013.Excel;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -166,6 +168,23 @@ GROUP BY V.Id,V.Name,V.Label";
                 return variable;
             }
 
+        }
+
+        public async Task<IEnumerable<VariableSurveyResultDto>> UpdateVariables(List<VariableSurveyResultDto> variables, string guidId)
+        {
+            var result = new List<VariableSurveyResultDto>();
+
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { _guidId = guidId });
+            var query = new StringBuilder();
+            variables.ForEach(v =>
+            {
+                query.AppendLine(@$"UPDATE UserAnswers SET [InputValue]={v.Value} WHERE [VariableId]={v.Id};");
+            });
+            using (var connection = _db.CreateConnection())
+            {
+                return await connection.QueryAsync<VariableSurveyResultDto>(query.ToString(), parameters);
+            }
         }
     }
 }

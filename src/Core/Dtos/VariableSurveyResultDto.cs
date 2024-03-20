@@ -14,5 +14,6 @@ namespace Domain.Dtos
         public string? Label { get; set; }
         public VariableTypeEnum? Type { get; set; }
         public int Sum { get; set; }
+        public int? Value { get; set; }
     }
 }
