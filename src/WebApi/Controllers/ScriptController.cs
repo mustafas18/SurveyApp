@@ -32,7 +32,7 @@ namespace WebApi.Controllers
             try
             {
                 var latestVersion = _sheetRepository.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version);
-                var sheet = _sheetRepository.FirstOrDefault(s => s.SheetId == sheetId && s.Version == latestVersion);
+                var sheet = _sheetRepository.Include("Script").FirstOrDefault(s => s.SheetId == sheetId && s.Version == latestVersion);
                 if (sheet.Script == null)
                 {
                     return StatusCode(200, CustomResult.Ok(null));
