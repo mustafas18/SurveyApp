@@ -110,7 +110,8 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_SurveyVariableData]
+
+ALTER  PROCEDURE [dbo].[sp_SurveyVariableData]
 	-- Add the parameters for the stored procedure here
 	@_surveyGuid NVARCHAR(50)
 AS
@@ -146,6 +147,7 @@ AS
 	right OUTER JOIN dbo.UserAnswers UA
 		ON UA.VariableId = V.Id
 	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0)) 
+	AND UA.InputLabel<>'$DynamicVariable$'
 ),variable_cte
 AS(
 	SELECT
@@ -156,15 +158,30 @@ AS(
 		CAST(0 AS BIT) ReadOnly
 	FROM dbo.Variables V
 	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
-)
+	UNION 
+	SELECT
+		V.Id,
+		V.Name,
+		V.Type,
+		SUM(CAST(UA.InputValue AS INT)) [Sum],
+	 CAST(0 AS BIT)  ReadOnly
+	FROM dbo.Variables V
+	INNER JOIN dbo.UserAnswers UA
+		ON UA.VariableId = V.Id
+	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
+		AND UA.QuestionType NOT IN (3,4,7,8,9) AND UA.InputLabel='$DynamicVariable$'
+	GROUP BY V.Id,V.Name,V.Type
+),result_cte
+AS(
 SELECT * FROM cte1
 UNION 
 SELECT * FROM variable_cte
 EXCEPT 
 SELECT * FROM cte2
-
+)
+SELECT Id,Name,Type,SUM([Sum]) [Sum],[ReadOnly] FROM result_cte
+GROUP BY Id,Name,Type,ReadOnly
 	END
-
 GO
 
 CREATE  PROCEDURE [dbo].[sp_UpdateVariable]
