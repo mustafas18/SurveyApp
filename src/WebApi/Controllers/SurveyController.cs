@@ -171,9 +171,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = _compiler.CompileCode(surveyGuid, script);
+                await _compiler.CompileCode(surveyGuid, script);
 
-                return StatusCode(200, CustomResult.Ok(result));
+                return StatusCode(200, CustomResult.Ok("OK"));
+                ;
             }
             catch (Exception ex)
             {

@@ -110,7 +110,7 @@ BEGIN
 END
 GO
 
-CREATE  PROCEDURE [dbo].[sp_SurveyVariableData]
+CREATE PROCEDURE [dbo].[sp_SurveyVariableData]
 	-- Add the parameters for the stored procedure here
 	@_surveyGuid NVARCHAR(50)
 AS
@@ -126,11 +126,12 @@ AS
 		V.Name,
 		V.Type,
 		SUM(CAST(UA.InputValue AS INT)) [Sum],
-		CAST(1 AS BIT) ReadOnly
+	 CAST(1 AS BIT)  ReadOnly
 	FROM dbo.Variables V
 	INNER JOIN dbo.UserAnswers UA
 		ON UA.VariableId = V.Id
 	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
+		AND UA.QuestionType NOT IN (3,4,7,8,9) AND UA.InputLabel<>'$DynamicVariable$'
 	GROUP BY V.Id,V.Name,V.Type
 ), cte2
 AS
@@ -144,7 +145,7 @@ AS
 	FROM dbo.Variables V
 	right OUTER JOIN dbo.UserAnswers UA
 		ON UA.VariableId = V.Id
-	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0))
+	WHERE V.Id IN ((SELECT Id FROM dbo.Variables WHERE SheetId=@SheetId AND SheetVersion=@SheetVersion AND Deleted=0)) 
 ),variable_cte
 AS(
 	SELECT
@@ -161,5 +162,68 @@ UNION
 SELECT * FROM variable_cte
 EXCEPT 
 SELECT * FROM cte2
+
+	END
+
+GO
+
+CREATE  PROCEDURE [dbo].[sp_UpdateVariable]
+	-- Add the parameters for the stored procedure here
+	@GuidId NVARCHAR(50),
+	@VariableId INT,
+	@InputValue INT 
+AS
+BEGIN
+IF EXISTS(SELECT 1 FROM dbo.UserAnswers  WHERE [VariableId]=@VariableId AND [SurveyGuid]=@GuidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) FROM UserAnswers WHERE [SurveyGuid]=@GuidId))
+BEGIN 
+	UPDATE UserAnswers SET [InputValue]=@InputValue
+                                WHERE [VariableId]=@VariableId AND [SurveyGuid]=@GuidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) FROM UserAnswers WHERE [SurveyGuid]=@GuidId);
+      
+END 
+ELSE
+BEGIN
+DECLARE @SheetId INT,@SurveyVersion INT,@QuestionId INT,@AnswerId INT ,@QuestionType INT;
+DECLARE @SurveyId INT , @UserResponseTime INT;
+DECLARE @SurveyGuid varchar(50),@UserName varchar(50),@InputLabel varchar(50);
+
+SET @InputLabel='$DynamicVariable$';
+
+SELECT @SheetId=SheetId,@SurveyId=[SurveyId],
+			@SurveyGuid=[SurveyGuid]
+           ,@SurveyVersion=[SurveyVersion]
+           ,@QuestionId=0
+           ,@AnswerId=0
+           ,@QuestionType=0
+           ,@UserName=UserName
+           ,@UserResponseTime=0
+	FROM UserAnswers WHERE [SurveyGuid]=@GuidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) FROM UserAnswers WHERE [SurveyGuid]=@GuidId);
+	
+	INSERT INTO [dbo].[UserAnswers]
+           ([SheetId]
+           ,[SurveyId]
+           ,[SurveyGuid]
+           ,[SurveyVersion]
+           ,[QuestionId]
+           ,[AnswerId]
+           ,[QuestionType]
+           ,[VariableId]
+           ,[UserName]
+           ,[InputLabel]
+           ,[InputValue]
+           ,[UserResponseTime])
+     VALUES
+           (@SheetId
+           ,@SurveyId
+           ,@SurveyGuid
+           ,@SurveyVersion
+           ,@QuestionId
+           ,@AnswerId
+           ,@QuestionType
+           ,@VariableId
+           ,@UserName
+           ,@InputLabel
+           ,@InputValue
+           ,@UserResponseTime)
+END
 END
 GO

@@ -176,17 +176,13 @@ GROUP BY V.Id,V.Name,V.Label";
 
             DynamicParameters parameters = new DynamicParameters();
             parameters.AddDynamicParams(new { _guidId = guidId });
-            var query = new StringBuilder();
+            var query = new StringBuilder("ALTER TABLE [UserAnswers] NOCHECK CONSTRAINT [FK_UserAnswers_Questions_QuestionId];");
             variables.ForEach(v =>
             {
-                query.AppendLine(@$"UPDATE UserAnswers SET [InputValue]={v.Value} 
-                                WHERE [VariableId]={v.Id} AND [SurveyGuid]=@_guidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) FROM UserAnswers WHERE [SurveyGuid]=@_guidId);");
+                query.AppendLine(@$"exec sp_UpdateVariable @GuidId=@_guidId, @VariableId={v.Id},@InputValue={v.Value};");
             });
-            query.AppendLine(@$"SELECT UA.VariableId,V.[Name],UA.InputValue [Sum] WHERE [SurveyGuid]=@_guidId AND [SurveyVersion] = (SELECT MAX([SurveyVersion]) 
-FROM UserAnswers UA
-INNER JOIN Variables V
-    ON V.Id = UA.VariableId
-WHERE [SurveyGuid]=@_guidId);");
+            query.AppendLine(@$"ALTER TABLE [UserAnswers] CHECK CONSTRAINT [FK_UserAnswers_Questions_QuestionId];
+");
             using (var connection = _db.CreateConnection())
             {
                 return await connection.QueryAsync<VariableSurveyResultDto>(query.ToString(), parameters);

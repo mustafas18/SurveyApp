@@ -109,7 +109,7 @@ namespace Code {
             {
                 if(!p.ReadOnly)
                 {
-                    code.AppendLine($"new VariableDto({p.Id},\"{p.Name}\",{(int)p.Type},{p.Sum}),");
+                    code.AppendLine($"new VariableDto({p.Id},\"{p.Name}\",{(int)p.Type},{p.Name}),");
                 }
                 
             }
