@@ -19,10 +19,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class CSharpCompiler : ICSharpCompiler
+    public class ScriptService : ICSharpCompiler
     {
         private readonly IVariableRepository _variableRepository;
-        public CSharpCompiler(IVariableRepository variableRepository)
+        public ScriptService(IVariableRepository variableRepository)
         {
             _variableRepository = variableRepository;
         }
@@ -119,7 +119,7 @@ namespace Code {
                         }//endNameSpace");
             return code.ToString();
         }
-
+       
         public async Task CompileCode(string guidId, string script)
         {
             List<MetadataReference> nativeReferences = new List<MetadataReference>();

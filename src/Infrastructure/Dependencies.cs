@@ -41,7 +41,7 @@ namespace Infrastructure
             services.AddScoped<IUserAnswerService, UserAnswerService>();
             services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IUserService,UserService>();
-            services.AddScoped<ICSharpCompiler, CSharpCompiler>();
+            services.AddScoped<ICSharpCompiler, ScriptService>();
         }
     }
 }

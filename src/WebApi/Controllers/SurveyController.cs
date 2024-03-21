@@ -15,13 +15,12 @@ namespace WebApi.Controllers
     public class SurveyController : ControllerBase
     {
         private readonly ISurveyService _surveyService;
-        private readonly ICSharpCompiler _compiler;
+       
 
-        public SurveyController(ISurveyService surveyService,
-            ICSharpCompiler compiler)
+        public SurveyController(ISurveyService surveyService
+           )
         {
             _surveyService = surveyService;
-            _compiler = compiler;
         }
 #if DEBUG
         [AllowAnonymous]
@@ -157,24 +156,6 @@ namespace WebApi.Controllers
             {
                 var surveyId = await _surveyService.CountSurveys();
                 return StatusCode(200, CustomResult.Ok(surveyId));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, CustomResult.InternalError(ex));
-            }
-        }
-#if DEBUG
-        [AllowAnonymous]
-#endif
-        [HttpGet]
-        public async Task<IActionResult> CompileScript(string surveyGuid,string script)
-        {
-            try
-            {
-                await _compiler.CompileCode(surveyGuid, script);
-
-                return StatusCode(200, CustomResult.Ok("OK"));
-                ;
             }
             catch (Exception ex)
             {
