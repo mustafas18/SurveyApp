@@ -30,6 +30,7 @@ namespace WebApi.Controllers
         private readonly IRepository<UserSurvey> _surveyRepository;
         private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<Sheet> _sheetRepository;
+        private readonly ICSharpCompiler _cSharpCompiler;
 
         public AnswerController(
             IHttpContextAccessor httpContextAccessor,
@@ -38,7 +39,8 @@ namespace WebApi.Controllers
             ISurveyService surveyService,
             IRepository<UserSurvey> surveyRepository,
             IRepository<Question> questionRepository,
-            IRepository<Sheet> sheetRepository
+            IRepository<Sheet> sheetRepository,
+            ICSharpCompiler cSharpCompiler
          )
         {
             _httpContextAccessor = httpContextAccessor;
@@ -48,6 +50,7 @@ namespace WebApi.Controllers
             _surveyRepository = surveyRepository;
             _questionRepository = questionRepository;
             _sheetRepository = sheetRepository;
+            _cSharpCompiler = cSharpCompiler;
         }
         [HttpPost]
         public async Task<IActionResult> Create(int surveyId, List<UserAnswerViewModel> answers)
@@ -110,6 +113,7 @@ namespace WebApi.Controllers
                 }
                 await _userAnswerService.Create(userAnswers);
                 _ = await  _surveyService.ReviseSurveyAsync(survey);
+                await _cSharpCompiler.CompileCode(survey.guid);
                 //await _surveyService.UpdateStatus(surveyId, SurveyStatusEnum.Completed);
                 return StatusCode(200, CustomResult.Ok(userAnswers));
             }

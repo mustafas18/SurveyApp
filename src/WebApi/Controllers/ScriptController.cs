@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Services;
@@ -13,22 +14,46 @@ namespace WebApi.Controllers
     {
         private readonly ICSharpCompiler _compiler;
         private readonly IRepository<Script> _scriptRepository;
+        private readonly IRepository<Sheet> _sheetRepository;
 
-        public ScriptController(ICSharpCompiler compiler,IRepository<Script> scriptRepository)
+        public ScriptController(ICSharpCompiler compiler,IRepository<Script> scriptRepository,
+            IRepository<Sheet> sheetRepository)
         {
             _compiler= compiler;
             _scriptRepository = scriptRepository;
+            _sheetRepository = sheetRepository;
         }
-
 #if DEBUG
         [AllowAnonymous]
 #endif
         [HttpGet]
-        public async Task<IActionResult> CompileScript(string surveyGuid, string script)
+        public async Task<IActionResult> GetSheetScript(string sheetId)
         {
             try
             {
-                await _compiler.CompileCode(surveyGuid, script);
+                var latestVersion = _sheetRepository.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version);
+                var sheet = _sheetRepository.FirstOrDefault(s => s.SheetId == sheetId && s.Version == latestVersion);
+                if (sheet.Script == null)
+                {
+                    return StatusCode(200, CustomResult.Ok(null));
+                }
+
+                return StatusCode(200, CustomResult.Ok(sheet.Script));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+#if DEBUG
+        [AllowAnonymous]
+#endif
+        [HttpGet]
+        public async Task<IActionResult> CompileScript(string surveyGuid)
+        {
+            try
+            {
+                await _compiler.CompileCode(surveyGuid);
 
                 return StatusCode(200, CustomResult.Ok("OK"));
                 ;
@@ -42,27 +67,17 @@ namespace WebApi.Controllers
         [AllowAnonymous]
 #endif
         [HttpPost]
-        public async Task<IActionResult> AddUpdateScript(string sheetId, string script)
+        public async Task<IActionResult> AddUpdateScript([FromBody] ScriptDto script)
         {
             try
             {
-                var sheetScript = _scriptRepository.FirstOrDefault(s => s.SheetId == sheetId);
-                if(sheetScript == null)
-                {
-                    await _scriptRepository.AddAsync(new Script
-                    {
-                        SheetId = sheetId,
-                        Code = script
-                    });
-                }
-                else
-                {
-                    sheetScript.Code = script;
-                    await _scriptRepository.UpdateAsync(sheetScript);
-                }
+                var latestVersion = _sheetRepository.Where(s2 => s2.SheetId == script.SheetId).Max(s2 => s2.Version);
+                var sheet = _sheetRepository.FirstOrDefault(s => s.SheetId == script.SheetId && s.Version== latestVersion);
+                sheet.Script = new Script(script.Code);
+                sheet.Script.Code = script.Code;
+                await _sheetRepository.SaveChangesAsync();
 
-                return StatusCode(200, CustomResult.Ok(sheetScript));
-                ;
+                return StatusCode(200, CustomResult.Ok(sheet.Script));
             }
             catch (Exception ex)
             {

@@ -31,5 +31,6 @@ namespace Domain.Interfaces
         IQueryable<TEntity> Include([NotParameterized] string entityProperties);
         IQueryable<TEntity> AsNoTracking();
         Task<List<TEntity>> ListAsync();
+        Task SaveChangesAsync();
     }
 }

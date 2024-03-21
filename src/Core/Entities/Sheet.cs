@@ -31,6 +31,7 @@ namespace Domain.Entities
         public int WelcomePageId { get; private set; }
         public int EndPageId { get; private set; }
         public string? Link { get; private set; }
+        public Script? Script { get; set; }
         public int DurationTime { get; private set; } // in seconds
         public DateTime DeadlineTime { get; private set; }
         [NotMapped]

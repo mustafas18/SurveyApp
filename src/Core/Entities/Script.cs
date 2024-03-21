@@ -8,7 +8,14 @@ namespace Domain.Entities
 {
     public class Script : BaseEntity
     {
-        public string SheetId { get; set; }
+        public Script()
+        {
+            
+        }
+        public Script(string code)
+        {
+            Code = code;
+        }
         public string Code { get; set; }
     }
 }

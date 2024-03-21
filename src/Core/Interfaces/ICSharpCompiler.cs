@@ -9,5 +9,6 @@ namespace Domain.Interfaces
     public interface ICSharpCompiler
     {
         Task CompileCode(string guidId, string script);
+        Task CompileCode(string guidId);
     }
 }

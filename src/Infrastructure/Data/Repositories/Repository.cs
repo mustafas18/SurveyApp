@@ -126,5 +126,9 @@ namespace Infrastructure.Data.Repositories
             return _context.Set<TEntity>().ToListAsync();
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

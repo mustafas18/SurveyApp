@@ -20,13 +20,16 @@ namespace Infrastructure.Services
         private readonly ISurveyService _surveyService;
         private readonly IRepository<UserSurvey> _surveyRepository;
         private readonly IQuestionRepository _questionDapper;
+        private readonly ICSharpCompiler _cSharpCompiler;
+
         //
         public UserAnswerService(IRepository<UserAnswer> userAnswerRepository,
             IRepository<Question> questionRepository,
             ISurveyRepository surveyDataAccess,
             ISurveyService surveyService,
             IRepository<UserSurvey> surveyRepository,
-            IQuestionRepository questionDapper)
+            IQuestionRepository questionDapper,
+            ICSharpCompiler cSharpCompiler)
         {
             _userAnswerRepository = userAnswerRepository;
             _questionRepository = questionRepository;
@@ -34,12 +37,15 @@ namespace Infrastructure.Services
             _surveyService = surveyService;
             _surveyRepository = surveyRepository;
             _questionDapper = questionDapper;
+            _cSharpCompiler = cSharpCompiler;
         }
         public async Task Create(List<UserAnswer> answers)
         {
-            var version = _surveyService.GetLatestVersion(answers.FirstOrDefault().SurveyGuid) + 1;
+            var surveyGuid = answers.FirstOrDefault().SurveyGuid;
+            var version = _surveyService.GetLatestVersion(surveyGuid) + 1;
             answers.ForEach(a => a.SurveyVersion = version);
             await _userAnswerRepository.AddRangeAsync(answers);
+            await _cSharpCompiler.CompileCode(surveyGuid);
         }
 
         public async Task<List<UserAnswer>> GetBySurveyId(int surveyId)

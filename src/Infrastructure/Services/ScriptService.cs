@@ -22,9 +22,16 @@ namespace Infrastructure.Services
     public class ScriptService : ICSharpCompiler
     {
         private readonly IVariableRepository _variableRepository;
-        public ScriptService(IVariableRepository variableRepository)
+        private readonly IRepository<Sheet> _sheetRepository;
+        private readonly IRepository<UserSurvey> _surveyRepository;
+
+        public ScriptService(IVariableRepository variableRepository,
+            IRepository<Sheet> sheetRepository,
+            IRepository<UserSurvey> surveyRepository)
         {
             _variableRepository = variableRepository;
+            _sheetRepository = sheetRepository;
+            _surveyRepository = surveyRepository;
         }
         private static List<MetadataReference> DefaultReferences = new List<MetadataReference>()
             {
@@ -107,11 +114,11 @@ namespace Code {
             code.AppendLine("List<VariableDto> variableDtos = new List<VariableDto>(){");
             foreach (var p in variables)
             {
-                if(!p.ReadOnly)
+                if (!p.ReadOnly)
                 {
                     code.AppendLine($"new VariableDto({p.Id},\"{p.Name}\",{(int)p.Type},{p.Name}),");
                 }
-                
+
             }
             code.AppendLine("};");
             code.AppendLine(@"return variableDtos;}
@@ -119,7 +126,7 @@ namespace Code {
                         }//endNameSpace");
             return code.ToString();
         }
-       
+
         public async Task CompileCode(string guidId, string script)
         {
             List<MetadataReference> nativeReferences = new List<MetadataReference>();
@@ -187,6 +194,17 @@ namespace Code {
             if (!thread.Join(TimeSpan.FromSeconds(6)))
             {
                 thread.Interrupt();
+            }
+
+        }
+        public async Task CompileCode(string guidId)
+        {
+            var sheetId = _surveyRepository.FirstOrDefault(s => s.Guid == guidId).SheetId;
+            var latestVersion = _sheetRepository.Where(s2 => s2.SheetId == sheetId).Max(s2 => s2.Version);
+            var script = _sheetRepository.FirstOrDefault(s => s.SheetId == sheetId && s.Version == latestVersion).Script?.Code;
+            if (script != null && script != "")
+            {
+                await CompileCode(guidId, script);
             }
 
         }
