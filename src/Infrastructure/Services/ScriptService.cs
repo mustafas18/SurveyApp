@@ -53,8 +53,7 @@ namespace Infrastructure.Services
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Collections")).Location),
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("netstandard")).Location)
             };
-
-        private async Task<string> sourceCode(string guidId, string script)
+        private async Task<string> sourceCode(string refId, string script, CompileEnvironment compileEnvironment)
         {
             StringBuilder code = new StringBuilder();
             code.Append(@"using System;
@@ -98,8 +97,15 @@ namespace Code {
             {
 
 ");
-
-            var variables = await _variableRepository.GetSurveyVariableData(guidId);
+            var variables = new List<VariableSurveyResultDto>();
+            if (compileEnvironment == CompileEnvironment.Execute)
+            {
+                variables = _variableRepository.GetSurveyVariableData(refId).Result.ToList();
+            }
+            else
+            {
+                variables = _variableRepository.GetSheetVariableData(refId).Result.ToList();
+            }
             foreach (var variable in variables)
             {
                 var fieldLine = variable.Type switch
@@ -127,18 +133,18 @@ namespace Code {
             return code.ToString();
         }
 
-        public async Task CompileCode(string guidId, string script)
+        public async Task<List<CompilerDiagnoisticDto>> CompileCode(string refId, string script, CompileEnvironment compileEnvironment)
         {
             List<MetadataReference> nativeReferences = new List<MetadataReference>();
             var nativeReferencesBinaries = new List<byte[]>();
 
-
             CSharpCompilation compilation = CSharpCompilation.Create(
            Path.GetRandomFileName(),
-           syntaxTrees: new[] { CSharpSyntaxTree.ParseText(await sourceCode(guidId, script)) },
+           syntaxTrees: new[] { CSharpSyntaxTree.ParseText(await sourceCode(refId, script, compileEnvironment)) },
            references: DefaultReferences.Concat(nativeReferences),
            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
+            var errorList = new List<CompilerDiagnoisticDto>();
 
             Thread thread = new Thread(() =>
             {
@@ -149,12 +155,11 @@ namespace Code {
                         EmitResult result = compilation.Emit(ms);
                         if (!result.Success)
                         {
-                            var error = new StringBuilder();
                             foreach (var err in result.Diagnostics)
                             {
-                                error.AppendLine(err.Descriptor.Title.ToString());
+                                errorList.Add(new CompilerDiagnoisticDto(err.Severity, err.GetMessage().ToString()));
                             }
-                            throw new Exception(error.ToString());
+                            //throw new Exception(error.ToString());
                         }
                         else
                         {
@@ -176,9 +181,12 @@ namespace Code {
                                     null,
                                     Activator.CreateInstance(type),
                                     null);
-                            UpdateVariables(methodOutput, guidId);
-
+                            if (compileEnvironment == CompileEnvironment.Execute)
+                            {
+                                UpdateVariables(methodOutput, refId);
+                            }
                             assemblyContext.Unload();
+                            errorList.Add(new CompilerDiagnoisticDto(DiagnosticSeverity.Info, "Ok"));
                         }
                     }
                     catch (Exception ex)
@@ -195,7 +203,7 @@ namespace Code {
             {
                 thread.Interrupt();
             }
-
+            return errorList;
         }
         public async Task CompileCode(string guidId)
         {
@@ -204,7 +212,7 @@ namespace Code {
             var script = _sheetRepository.FirstOrDefault(s => s.SheetId == sheetId && s.Version == latestVersion).Script?.Code;
             if (script != null && script != "")
             {
-                await CompileCode(guidId, script);
+                await CompileCode(guidId, script, CompileEnvironment.Execute);
             }
 
         }
@@ -215,7 +223,11 @@ namespace Code {
                 List<VariableSurveyResultDto> variableList = System.Text.Json.JsonSerializer.Deserialize<List<VariableSurveyResultDto>>(System.Text.Json.JsonSerializer.Serialize(variables));
                 await _variableRepository.UpdateVariables(variableList, guidId);
             }
+        }
 
+        public async Task<List<CompilerDiagnoisticDto>> TestCode(string sheetId, string script)
+        {
+            return await CompileCode(sheetId, script, CompileEnvironment.Test);
         }
     }
 

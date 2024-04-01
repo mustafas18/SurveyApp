@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Dtos;
+using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,8 @@ namespace Domain.Interfaces
 {
     public interface ICSharpCompiler
     {
-        Task CompileCode(string guidId, string script);
+        Task<List<CompilerDiagnoisticDto>> CompileCode(string guidId, string script,CompileEnvironment compileEnvironment);
         Task CompileCode(string guidId);
+        Task<List<CompilerDiagnoisticDto>> TestCode(string sheetId,string script);
     }
 }

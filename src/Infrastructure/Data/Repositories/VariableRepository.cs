@@ -125,7 +125,7 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<VariableSurveyResultDto>> SurveyVariableReportAsync(int surveyId)
         {
             var result = new List<VariableSurveyResultDto>();
-            
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.AddDynamicParams(new { _surveyId = surveyId });
 
@@ -187,6 +187,31 @@ GROUP BY V.Id,V.Name,V.Label";
             {
                 return await connection.QueryAsync<VariableSurveyResultDto>(query.ToString(), parameters);
             }
+        }
+
+        public async Task<IEnumerable<VariableSurveyResultDto>> GetSheetVariableData(string sheetId)
+        {
+            List<VariableSurveyResultDto> variables = new List<VariableSurveyResultDto>();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.AddDynamicParams(new { SheetId = sheetId ,SheetVersion=""});
+
+            using (var connection = _db.CreateConnection())
+            {
+                var variable = await connection.QueryAsync<Variable>("sp_GetSheetVariables", parameters, commandType: CommandType.StoredProcedure);
+                foreach (var item in variable)
+                {
+                    variables.Add(new VariableSurveyResultDto
+                    {
+                        Id = item.Id,
+                        Label = item.Label,
+                        Name = item.Name,
+                        Type = item.Type,
+                        Sum = 0
+                    });
+                }
+            }
+            return variables;
+
         }
     }
 }

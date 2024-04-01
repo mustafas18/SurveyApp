@@ -63,6 +63,19 @@ namespace WebApi.Controllers
                 return StatusCode(500, CustomResult.InternalError(ex));
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> TestScript(ScriptDto script)
+        {
+            try
+            {
+               var result =  await _compiler.TestCode(script.SheetId, script.Code);
+               return StatusCode(200, CustomResult.Ok(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
 #if DEBUG
         [AllowAnonymous]
 #endif
