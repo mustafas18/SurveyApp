@@ -193,7 +193,7 @@ GROUP BY V.Id,V.Name,V.Label";
         {
             List<VariableSurveyResultDto> variables = new List<VariableSurveyResultDto>();
             DynamicParameters parameters = new DynamicParameters();
-            parameters.AddDynamicParams(new { SheetId = sheetId ,SheetVersion=""});
+            parameters.AddDynamicParams(new { SheetId = sheetId ,SheetVersion=0});
 
             using (var connection = _db.CreateConnection())
             {

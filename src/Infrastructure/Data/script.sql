@@ -51,7 +51,7 @@ CREATE PROCEDURE [dbo].[sp_GetSheetVariables]
 	@SheetVersion INT
 AS
 BEGIN
-	IF (@SheetVersion IS NULL) 
+	IF (@SheetVersion IS NULL OR @SheetVersion=0) 
 		SET @SheetVersion= (SELECT MAX(Version) FROM Sheets WHERE SheetId=@SheetId);
 
 		SELECT DISTINCT V.[Id]
