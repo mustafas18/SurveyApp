@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.Extension;
 using Domain.Interfaces;
@@ -6,6 +7,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Linq.Expressions;
 using WebApi.ViewModels;
 using WebApi.ViewModels.Acconut;
 
@@ -147,10 +149,43 @@ namespace WebApi.Controllers
             }
 
         }
-        [Authorize(Roles = "Admin,SurveyDesigner")]
-#if DEBUG
+
+        [HttpPost]
+        public async Task<IActionResult> UploadFile([FromForm] FileUploadDto uploadViewModel)
+        {
+            try
+            {
+                if (uploadViewModel.Data.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        uploadViewModel.Data.CopyTo(ms);
+                        uploadViewModel.DataBytes = ms.ToArray();
+                        //string s = Convert.ToBase64String(fileBytes);
+                    }
+                }
+                var result = await _userInfoService.UploadCV(uploadViewModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> DownloadFile([FromQuery] int userInfoId)
+        {
+            try
+            {
+                var result= _userInfoService.DownloadCV(userInfoId);
+                return File(result.DataBytes,result.FileContent);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, CustomResult.InternalError(ex));
+            }
+        }
         [AllowAnonymous]
-#endif
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserInfo userInfo)
         {
@@ -205,8 +240,8 @@ namespace WebApi.Controllers
                     Job = userInfo.Job,
                     Mobile = userInfo.Mobile,
                     Email = userInfo.Email,
-                    ResearchInterest=userInfo.ResearchInterests
-                    
+                    ResearchInterest = userInfo.ResearchInterests
+
                 };
                 userInfo.UpdateUserInfo(userInfoDetails);
                 _userInfoService.UpdateUserInfo(userInfo);

@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using Domain.Enums;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,8 @@ namespace Domain.Entities
         public List<Sheet>? Sheets { get; set; }
         public string? Address { get; set; }
         public string? AtmCard { get; set; }
+        [NotMapped]
+        public IFormFile? CVFile { get; set; }
         public byte[]? CVFileData { get; set; }
         public string? FileContent { get; set; }
         public bool Deleted { get; set; }

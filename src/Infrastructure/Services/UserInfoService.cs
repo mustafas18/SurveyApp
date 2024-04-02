@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Interfaces.IRepositories;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class UserInfoService: IUserInfoService
+    public class UserInfoService : IUserInfoService
     {
         private readonly IRepository<UserInfo> _userInfoRepository;
         private readonly IUserRepository _userRepository;
@@ -43,6 +44,27 @@ namespace Infrastructure.Services
         public async Task UpdateUserInfo(UserInfo userInfo)
         {
          await _userRepository.UpdateInfo(userInfo);
+        }
+
+        public async Task<bool> UploadCV(FileUploadDto fileUploadDto)
+        {
+            var userInfo = _userInfoRepository.FirstOrDefault(s => s.Id == fileUploadDto.UserInfoId);
+            userInfo.CVFileData = fileUploadDto.DataBytes;
+            userInfo.FileContent = fileUploadDto.FileContent;
+            await _userInfoRepository.UpdateAsync(userInfo);
+            return true;
+        }
+
+        public FileUploadDto DownloadCV(int userInfoId)
+        {
+            var userInfo = _userInfoRepository.FirstOrDefault(s => s.Id == userInfoId);
+            var result = new FileUploadDto
+            {
+                DataBytes = userInfo.CVFileData,
+                FileContent = userInfo.FileContent,
+                UserInfoId = userInfoId
+            };
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace Domain.Interfaces
         UserInfo GetUserInfo(int userId);
         Task AddUserInfo(UserInfo userInfo);
         Task UpdateUserInfo(UserInfo userInfo);
+        Task<bool> UploadCV(FileUploadDto fileUploadDto);
+        FileUploadDto DownloadCV(int userInfoId);
     }
 }
