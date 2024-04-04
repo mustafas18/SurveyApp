@@ -173,7 +173,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> DownloadFile([FromQuery] int userInfoId)
+        public async Task<IActionResult> DownloadFile(int userInfoId)
         {
             try
             {
@@ -191,10 +191,11 @@ namespace WebApi.Controllers
         {
             try
             {
+                var defaultCategory = _categoryRepository.FirstOrDefault(s => s.Id == 1);
                 var category = _categoryRepository.FirstOrDefault(s => s.Id == userInfo.CategoryId);
                 UserInfoDetails userInfoDetails = new UserInfoDetails
                 {
-                    Category = category,
+                    Category = category ?? defaultCategory,
                     AtmCard = userInfo.AtmCard,
                     Address = userInfo.Address,
                     Birthday = userInfo.Birthday,
