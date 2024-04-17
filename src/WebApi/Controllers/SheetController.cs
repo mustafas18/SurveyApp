@@ -70,14 +70,14 @@ namespace WebApi.Controllers
             {
                 if (cache)
                 {
-                    var cacheData = _redisCacheService.GetData<SheetDto>($"sheet_{sheetId}_{version}");
-                    if (cacheData != null)
-                    {
-                        return StatusCode(200, CustomResult.Ok(cacheData));
-                    }
-                    cacheData = await _sheetService.GetByIdAsync(sheetId);
+                    //var cacheData = _redisCacheService.GetData<SheetDto>($"sheet_{sheetId}_{version}");
+                    //if (cacheData != null)
+                    //{
+                    //    return StatusCode(200, CustomResult.Ok(cacheData));
+                    //}
+                   var cacheData = await _sheetService.GetByIdAsync(sheetId);
                     var expirationTime = TimeSpan.FromMinutes(1);
-                    await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}_{version}", cacheData, expirationTime);
+                   // await _redisCacheService.SetDataAsync<SheetDto>($"sheet_{sheetId}_{version}", cacheData, expirationTime);
                     return StatusCode(200, CustomResult.Ok(cacheData));
                 }
                 var result = await _sheetService.GetByIdAsync(sheetId);

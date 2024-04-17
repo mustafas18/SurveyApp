@@ -12,7 +12,7 @@ public class SheetUpdatedEventHandler : INotificationHandler<SheetUpdatedEvent>
     }
     public Task Handle(SheetUpdatedEvent notification, CancellationToken cancellationToken)
     {
-        _redisCacheService.RemoveData($"sheet_{notification.SheetId}_{notification.Version}");
+       // _redisCacheService.RemoveData($"sheet_{notification.SheetId}_{notification.Version}");
         return Task.CompletedTask;
     }
 }

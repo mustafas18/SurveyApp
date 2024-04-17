@@ -80,7 +80,7 @@ BEGIN
 	DECLARE @query NVARCHAR(MAX);
 
 	select @cols=STUFF((SELECT ',' + QUOTENAME([Name])
-	 FROM [iSurveyApp].[dbo].[Variables] V
+	 FROM [dbo].[Variables] V
 	  WHERE V.SheetId=@SheetId AND  V.SheetVersion=(SELECT MAX(Version) FROM dbo.Sheets WHERE SheetId=V.SheetId) AND V.Deleted=0
 	FOR XML PATH(''), TYPE
 				).value('.', 'NVARCHAR(MAX)') 
