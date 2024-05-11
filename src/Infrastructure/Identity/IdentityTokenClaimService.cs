@@ -13,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Identity
 {
@@ -40,7 +41,7 @@ namespace Infrastructure.Identity
         {
             var user = await _userManager.FindByNameAsync(loginInfo.UserName);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginInfo.Password))
-                throw new Exception("UserName or Password is wrong.");
+                throw new ValidationException("UserName or Password is wrong.");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(AuthorizationConstants.SecurityKey);
