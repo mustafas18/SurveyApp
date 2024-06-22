@@ -14,7 +14,7 @@ The SurveyApp is a web-based platform that allows users to create and conduct on
     StackExchange.Redis
     MediatR
     
-## List of projects integrating the repository: 
+## List of apps integrating the repository: 
 The API has been integrated into the following apps:
 
 1. https//survey.caralsoft.ir/Login
