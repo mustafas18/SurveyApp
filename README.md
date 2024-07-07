@@ -17,5 +17,5 @@ The SurveyApp is a web-based platform that allows users to create and conduct on
 ## List of apps integrating the repository: 
 The API has been integrated into the following apps:
 
-1. https//survey.caralsoft.ir/Login
+1. https//survey.caralsoft.ir/login
 
