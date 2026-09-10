@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class SheetPage:BaseEntity
+    public class SheetPage : BaseEntity
     {
         public string SheetId { get; set; }
         public int SheetVersion { get; set; }
@@ -14,6 +14,6 @@ namespace Domain.Entities
         public string Text { get; set; }
         public string HtmlText { get; set; }
         public string ThumbnailBase64 { get; set; }
-       
+
     }
 }

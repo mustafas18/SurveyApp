@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Specifications
 {
-  public sealed class SheetWithQuestions : Specification<Sheet>, ISingleResultSpecification 
+    public sealed class SheetWithQuestions : Specification<Sheet>, ISingleResultSpecification
     {
         public SheetWithQuestions(int sheetId)
         {

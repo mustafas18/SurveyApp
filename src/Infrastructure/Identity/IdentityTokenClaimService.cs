@@ -40,7 +40,10 @@ namespace Infrastructure.Identity
         public async Task<string> GetTokenAsync(LoginInfoDto loginInfo)
         {
             var user = await _userManager.FindByNameAsync(loginInfo.UserName);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginInfo.Password))
+            if (user == null)
+                throw new ValidationException("UserName does not exist.");
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, loginInfo.Password);
+            if (!passwordCheck)
                 throw new ValidationException("UserName or Password is wrong.");
 
             var tokenHandler = new JwtSecurityTokenHandler();
